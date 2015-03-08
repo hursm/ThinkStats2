@@ -178,6 +178,7 @@ Version \theversion
 
 {\Large
 Allen B. Downey\\
+Victor KC Lee
 }
 
 
@@ -1452,6 +1453,7 @@ logic applied to raw data.
 \end{itemize}
 
 
+\begin{comment}
 
 \chapter{Distributions}
 \label{descriptive}
@@ -1564,7 +1566,7 @@ for val, freq in hist.Items():
 
 \begin{figure}
 % first.py
-\centerline{\includegraphics[height=2.5in]{figs/first_wgt_lb_hist.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/first_wgt_lb_hist.pdf}}
 \caption{Histogram of the pound part of birth weight.}
 \label{first_wgt_lb_hist}
 \end{figure}
@@ -1591,7 +1593,7 @@ You can read the documentation for {\tt thinkplot} at
 
 \begin{figure}
 % first.py
-\centerline{\includegraphics[height=2.5in]{figs/first_wgt_oz_hist.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/first_wgt_oz_hist.pdf}}
 \caption{Histogram of the ounce part of birth weight.}
 \label{first_wgt_oz_hist}
 \end{figure}
@@ -1617,7 +1619,7 @@ features of histograms.
 
 \begin{figure}
 % first.py
-\centerline{\includegraphics[height=2.5in]{figs/first_agepreg_hist.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/first_agepreg_hist.pdf}}
 \caption{Histogram of mother's age at end of pregnancy.}
 \label{first_agepreg_hist}
 \end{figure}
@@ -1656,7 +1658,7 @@ in the legend when the Hist is plotted.
 
 \begin{figure}
 % first.py
-\centerline{\includegraphics[height=2.5in]{figs/first_prglngth_hist.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/first_prglngth_hist.pdf}}
 \caption{Histogram of pregnancy length in weeks.}
 \label{first_prglngth_hist}
 \end{figure}
@@ -1785,7 +1787,7 @@ an appropriate collection of colors.
 
 \begin{figure}
 % first.py
-\centerline{\includegraphics[height=2.5in]{figs/first_nsfg_hist.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/first_nsfg_hist.pdf}}
 \caption{Histogram of pregnancy lengths.}
 \label{first_nsfg_hist}
 \end{figure}
@@ -2276,7 +2278,7 @@ Since I use Hist objects, I usually don't use {\tt pyplot.hist}.
 
 \begin{figure}
 % probability.py
-\centerline{\includegraphics[height=3.0in]{figs/probability_nsfg_pmf.pdf}}
+%\centerline{\includegraphics[height=3.0in]{figs/probability_nsfg_pmf.pdf}}
 \caption{PMF of pregnancy lengths for first babies and others, using
   bar graphs and step functions.}
 \label{probability_nsfg_pmf}
@@ -2365,7 +2367,7 @@ and 42.
 
 \begin{figure}
 % probability.py
-\centerline{\includegraphics[height=2.5in]{figs/probability_nsfg_diffs.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/probability_nsfg_diffs.pdf}}
 \caption{Difference, in percentage points, by week.}
 \label{probability_nsfg_diffs}
 \end{figure}
@@ -2470,7 +2472,7 @@ Now we can plot the actual and observed distributions:
 
 \begin{figure}
 % probability.py
-\centerline{\includegraphics[height=3.0in]{figs/class_size1.pdf}}
+%\centerline{\includegraphics[height=3.0in]{figs/class_size1.pdf}}
 \caption{Distribution of class sizes, actual and as observed by students.}
 \label{class_size1}
 \end{figure}
@@ -2795,7 +2797,7 @@ the PMF of these values for first babies and others.
 
 \begin{figure}
 % cumulative.py
-\centerline{\includegraphics[height=2.5in]{figs/nsfg_birthwgt_pmf.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/nsfg_birthwgt_pmf.pdf}}
 \caption{PMF of birth weights.  This figure shows a limitation
 of PMFs: they are hard to compare visually.}
 \label{nsfg_birthwgt_pmf}
@@ -2946,7 +2948,7 @@ If $x$ is greater than the largest value, $\CDF(x)$ is 1.
 
 \begin{figure}
 % cumulative.py
-\centerline{\includegraphics[height=2.5in]{figs/cumulative_example_cdf.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/cumulative_example_cdf.pdf}}
 \caption{Example of a CDF.}
 \label{example_cdf}
 \end{figure}
@@ -2977,7 +2979,7 @@ corresponding value, {\tt x}; that is, the {\bf inverse CDF} of {\tt p}.
 
 \begin{figure}
 % cumulative.py
-\centerline{\includegraphics[height=2.5in]{figs/cumulative_prglngth_cdf.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/cumulative_prglngth_cdf.pdf}}
 \caption{CDF of pregnancy length.}
 \label{cumulative_prglngth_cdf}
 \end{figure}
@@ -3042,7 +3044,7 @@ weight for first babies and others.
 
 \begin{figure}
 % cumulative.py
-\centerline{\includegraphics[height=2.5in]{figs/cumulative_birthwgt_cdf.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/cumulative_birthwgt_cdf.pdf}}
 \caption{CDF of birth weights for first babies and others.}
 \label{cumulative_birthwgt_cdf}
 \end{figure}
@@ -3156,7 +3158,7 @@ Finally we make and plot the Cdf of the percentile ranks.
 
 \begin{figure}
 % cumulative.py
-\centerline{\includegraphics[height=2.5in]{figs/cumulative_random.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/cumulative_random.pdf}}
 \caption{CDF of percentile ranks for a random sample of birth weights.}
 \label{cumulative_random}
 \end{figure}
@@ -12386,6 +12388,7 @@ distribution of this change, and is it statistically significant?
   \index{significant} \index{statistically significant}
 \end{exercise}
 
+\end{comment}
 
 \printindex
 
