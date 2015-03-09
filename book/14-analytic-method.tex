@@ -1,0 +1,955 @@
+
+\chapter{Analytic methods}
+\label{analysis}
+
+This book has focused on computational methods like simulation and
+resampling, but some of the problems we solved have
+analytic solutions that can be much faster.
+\index{resampling}
+\index{analytic methods}
+\index{computational methods}
+
+I present some of these methods in this chapter, and explain
+how they work.  At the end of the chapter, I make suggestions
+for integrating computational and analytic methods for exploratory
+data analysis.
+
+The code in this chapter is in {\tt normal.py}.  For information
+about downloading and working with this code, see Section~\ref{code}.
+
+
+\section{Normal distributions}
+\label{why_normal}
+\index{normal distribution}
+\index{distribution!normal}
+\index{Gaussian distribution}
+\index{distribution!Gaussian}
+
+As a motivating example, let's review the problem from
+Section~\ref{gorilla}:
+\index{gorilla}
+
+\begin{quotation}
+\noindent Suppose you are a scientist studying gorillas in a wildlife
+preserve.  Having weighed 9 gorillas, you find sample mean $\xbar=90$ kg and
+sample standard deviation, $S=7.5$ kg.  If you use $\xbar$ to estimate
+the population mean, what is the standard error of the estimate?
+\end{quotation}
+
+To answer that question, we need the sampling
+distribution of $\xbar$.  In Section~\ref{gorilla} we approximated
+this distribution by simulating the experiment (weighing
+9 gorillas), computing $\xbar$ for each simulated experiment, and
+accumulating the distribution of estimates.
+\index{standard error}
+\index{standard deviation}
+
+The result is an approximation of the sampling distribution.  Then we
+use the sampling distribution to compute standard errors and
+confidence intervals:
+\index{confidence interval}
+\index{sampling distribution}
+
+\begin{enumerate}
+
+\item The standard deviation of the sampling distribution is the
+  standard error of the estimate; in the example, it is about
+  2.5 kg.
+
+\item The interval between the 5th and 95th percentile of the sampling
+  distribution is a 90\% confidence interval.  If we run the
+  experiment many times, we expect the estimate to fall in this
+  interval 90\% of the time.  In the example, the 90\% CI is
+  $(86, 94)$ kg.
+
+\end{enumerate}
+
+Now we'll do the same calculation analytically.  We
+take advantage of the fact that the weights of adult female gorillas
+are roughly normally distributed.  Normal distributions have two
+properties that make them amenable for analysis: they are ``closed'' under
+linear transformation and addition.  To explain what that means, I
+need some notation.  \index{analysis}
+\index{linear transformation}
+\index{addition, closed under}
+
+If the distribution of a quantity, $X$, is
+normal with parameters $\mu$ and $\sigma$, you can write
+%
+\[ X \sim \normal~(\mu, \sigma^{2})\]
+%
+where the symbol $\sim$ means ``is distributed'' and the script letter
+$\normal$ stands for ``normal.''
+
+%The other analytic distributions in this chapter are sometimes
+%written $\mathrm{Exponential}(\lambda)$, $\mathrm{Pareto}(x_m,
+%\alpha)$ and, for lognormal, $\mathrm{Log}-\normal~(\mu,
+%\sigma^2)$.
+
+A linear transformation of $X$ is something like $X' = a X + b$, where
+$a$ and $b$ are real numbers.\index{linear transformation}
+A family of distributions is closed under
+linear transformation if $X'$ is in the same family as $X$.  The normal
+distribution has this property; if $X \sim \normal~(\mu,
+\sigma^2)$,
+%
+\[ X' \sim \normal~(a \mu + b, a^{2} \sigma^2) \tag*{(1)} \]
+%
+Normal distributions are also closed under addition.  
+If $Z = X + Y$ and
+$X \sim \normal~(\mu_{X}, \sigma_{X}^{2})$ and
+$Y \sim \normal~(\mu_{Y}, \sigma_{Y}^{2})$ then
+%
+\[ Z \sim \normal~(\mu_X + \mu_Y, \sigma_X^2 + \sigma_Y^2)  \tag*{(2)}\]
+%
+In the special case $Z = X + X$, we have
+%
+\[ Z \sim \normal~(2 \mu_X, 2 \sigma_X^2) \]
+%
+and in general if we draw $n$ values of $X$ and add them up, we have
+%
+\[ Z \sim \normal~(n \mu_X, n \sigma_X^2)  \tag*{(3)}\]
+
+
+\section{Sampling distributions}
+
+Now we have everything we need to compute the sampling distribution of
+$\xbar$.  Remember that we compute $\xbar$ by weighing $n$ gorillas,
+adding up the total weight, and dividing by $n$.
+\index{sampling distribution}
+\index{gorilla}
+\index{weight}
+
+Assume that the distribution of gorilla weights, $X$, is
+approximately normal:
+%
+\[ X \sim \normal~(\mu, \sigma^2)\]
+%
+If we weigh $n$ gorillas, the total weight, $Y$, is distributed
+%
+\[ Y \sim \normal~(n \mu, n \sigma^2) \]
+%
+using Equation 3.  And if we divide by $n$, the sample mean,
+$Z$, is distributed
+%
+\[ Z \sim \normal~(\mu, \sigma^2/n) \]
+%
+using Equation 1 with $a = 1/n$.
+
+The distribution of $Z$ is the sampling distribution of $\xbar$.
+The mean of $Z$ is $\mu$, which shows that $\xbar$ is an unbiased
+estimate of $\mu$.  The variance of the sampling distribution
+is $\sigma^2 / n$.
+\index{biased estimator}
+\index{estimator!biased}
+
+So the standard deviation of the sampling distribution, which is the
+standard error of the estimate, is $\sigma / \sqrt{n}$.  In the
+example, $\sigma$ is 7.5 kg and $n$ is 9, so the standard error is 2.5
+kg.  That result is consistent with what we estimated by simulation,
+but much faster to compute!
+\index{standard error}
+\index{standard deviation}
+
+We can also use the sampling distribution to compute confidence
+intervals.  A 90\% confidence interval for $\xbar$ is the interval
+between the 5th and 95th percentiles of $Z$.  Since $Z$ is normally
+distributed, we can compute percentiles by evaluating the inverse
+CDF.
+\index{inverse CDF}
+\index{CDF, inverse}
+\index{confidence interval}
+
+There is no closed form for the CDF of the normal distribution
+or its inverse, but there are fast numerical methods and they
+are implemented in SciPy, as we saw in Section~\ref{normal}.
+{\tt thinkstats2} provides a wrapper function that makes the
+SciPy function a little easier to use:
+\index{SciPy}
+\index{normal distribution}
+\index{wrapper}
+\index{closed form}
+
+\begin{verbatim}
+def EvalNormalCdfInverse(p, mu=0, sigma=1):
+    return scipy.stats.norm.ppf(p, loc=mu, scale=sigma)
+\end{verbatim}
+
+Given a probability, {\tt p}, it returns the corresponding
+percentile from a normal distribution with parameters {\tt mu}
+and {\tt sigma}.  For the 90\% confidence interval of $\xbar$,
+we compute the 5th and 95th percentiles like this:
+\index{percentile}
+
+\begin{verbatim}
+>>> thinkstats2.EvalNormalCdfInverse(0.05, mu=90, sigma=2.5)
+85.888
+
+>>> thinkstats2.EvalNormalCdfInverse(0.95, mu=90, sigma=2.5)
+94.112
+\end{verbatim}
+
+So if we run the experiment many times, we expect the
+estimate, $\xbar$, to fall in the range $(85.9, 94.1)$ about
+90\% of the time.  Again, this is consistent with the result
+we got by simulation.
+\index{simulation}
+
+
+\section{Representing normal distributions}
+
+To make these calculations easier, I have defined a class called
+{\tt Normal} that represents a normal distribution and encodes
+the equations in the previous sections.  Here's what it looks
+like:
+\index{Normal}
+
+\begin{verbatim}
+class Normal(object):
+
+    def __init__(self, mu, sigma2):
+        self.mu = mu
+        self.sigma2 = sigma2
+
+    def __str__(self):
+        return 'N(%g, %g)' % (self.mu, self.sigma2)
+\end{verbatim}
+
+So we can instantiate a Normal that represents the distribution
+of gorilla weights:
+\index{gorilla}
+
+\begin{verbatim}
+>>> dist = Normal(90, 7.5**2)
+>>> dist
+N(90, 56.25)
+\end{verbatim}
+
+{\tt Normal} provides {\tt Sum}, which takes a sample size, {\tt n},
+and returns the distribution of the sum of {\tt n} values, using
+Equation 3:
+
+\begin{verbatim}
+    def Sum(self, n):
+        return Normal(n * self.mu, n * self.sigma2)
+\end{verbatim}
+
+Normal also knows how to multiply and divide using
+Equation 1:
+
+\begin{verbatim}
+    def __mul__(self, factor):
+        return Normal(factor * self.mu, factor**2 * self.sigma2)
+
+    def __div__(self, divisor):
+        return 1 / divisor * self
+\end{verbatim}
+
+So we can compute the sampling distribution of the mean with sample
+size 9:
+\index{sampling distribution}
+\index{sample size}
+
+\begin{verbatim}
+>>> dist_xbar = dist.Sum(9) / 9
+>>> dist_xbar.sigma
+2.5
+\end{verbatim}
+
+The standard deviation of the sampling distribution is 2.5 kg, as we
+saw in the previous section.  Finally, Normal provides {\tt
+  Percentile}, which we can use to compute a confidence interval:
+\index{standard deviation}
+\index{confidence interval}
+
+\begin{verbatim}
+>>> dist_xbar.Percentile(5), dist_xbar.Percentile(95)
+85.888 94.113
+\end{verbatim}
+
+And that's the same answer we got before.  We'll use the Normal
+class again later, but before we go on, we need one more bit of
+analysis.
+
+
+\section{Central limit theorem}
+\label{CLT}
+
+As we saw in the previous sections, if we add values drawn from normal
+distributions, the distribution of the sum is normal.
+Most other distributions don't have this property;
+if we add values drawn from other distributions, the sum does not
+generally have an analytic distribution.
+  \index{sum}
+\index{normal distribution} \index{distribution!normal}
+\index{Gaussian distribution} \index{distribution!Gaussian}
+
+But if we add up {\tt n} values from
+almost any distribution, the distribution of the sum converges to
+normal as {\tt n} increases.
+
+More specifically, if the distribution of the values has mean and
+standard deviation $\mu$ and $\sigma$, the distribution of the sum is
+approximately $\normal(n \mu, n \sigma^2)$.
+\index{standard deviation}
+
+This result is the Central Limit Theorem (CLT).  It is one of the
+most useful tools for statistical analysis, but it comes with
+caveats:
+\index{Central Limit Theorem}
+\index{CLT}
+
+\begin{itemize}
+
+\item The values have to be drawn independently.  If they are
+correlated, the CLT doesn't apply (although this is seldom a problem
+in practice).
+\index{independent}
+
+\item The values have to come from the same distribution (although
+  this requirement can be relaxed).
+\index{identical}
+
+\item The values have to be drawn
+  from a distribution with finite mean and variance.  So most Pareto
+  distributions are out.
+\index{mean}
+\index{variance}
+\index{Pareto distribution}
+\index{distribution!Pareto}
+\index{exponential distribution}
+\index{distribution!exponential}
+
+\item The rate of convergence depends
+  on the skewness of the distribution.  Sums from an exponential
+  distribution converge for small {\tt n}.  Sums from a
+  lognormal distribution require larger sizes.
+\index{lognormal distribution}
+\index{distribution!lognormal}
+\index{skewness}
+
+\end{itemize}
+
+The Central Limit Theorem explains the prevalence
+of normal distributions in the natural world.  Many characteristics of
+living things are affected by genetic
+and environmental factors whose effect is additive.  The characteristics
+we measure are the sum of a large number of small effects, so their
+distribution tends to be normal.
+\index{normal distribution}
+\index{distribution!normal}
+\index{Gaussian distribution}
+\index{distribution!Gaussian}
+\index{Central Limit Theorem}
+\index{CLT}
+
+
+\section{Testing the CLT}
+
+To see how the Central Limit Theorem works, and when it doesn't,
+let's try some experiments.  First, we'll try
+an exponential distribution:
+
+\begin{verbatim}
+def MakeExpoSamples(beta=2.0, iters=1000):
+    samples = []
+    for n in [1, 10, 100]:
+        sample = [np.sum(np.random.exponential(beta, n))
+                  for _ in range(iters)]
+        samples.append((n, sample))
+    return samples
+\end{verbatim}
+
+{\tt MakeExpoSamples} generates samples of sums of exponential values
+(I use ``exponential values'' as shorthand for ``values from an
+exponential distribution'').
+{\tt beta} is the parameter of the distribution; {\tt iters}
+is the number of sums to generate.
+
+To explain this function, I'll start from the inside and work my way
+out.  Each time we call {\tt np.random.exponential}, we get a sequence
+of {\tt n} exponential values and compute its sum.  {\tt sample}
+is a list of these sums, with length {\tt iters}.
+\index{NumPy}
+
+It is easy to get {\tt n} and {\tt iters} confused:  {\tt n} is the
+number of terms in each sum;  {\tt iters} is the number of sums we
+compute in order to characterize the distribution of sums.
+
+The return value is a list of {\tt (n, sample)} pairs.  For
+each pair, we make a normal probability plot:
+\index{thinkplot}
+\index{normal probability plot}
+
+\begin{verbatim}
+def NormalPlotSamples(samples, plot=1, ylabel=''):
+    for n, sample in samples:
+        thinkplot.SubPlot(plot)
+        thinkstats2.NormalProbabilityPlot(sample)
+
+        thinkplot.Config(title='n=%d' % n, ylabel=ylabel)
+        plot += 1
+\end{verbatim}
+
+{\tt NormalPlotSamples} takes the list of pairs from {\tt
+  MakeExpoSamples} and generates a row of normal probability plots.
+\index{normal probability plot}
+
+\begin{figure}
+% normal.py
+\centerline{\includegraphics[height=3.5in]{figs/normal1.pdf}}
+\caption{Distributions of sums of exponential values (top row) and
+lognormal values (bottom row).}
+\label{normal1}
+\end{figure}
+
+Figure~\ref{normal1} (top row) shows
+the results.  With {\tt n=1}, the distribution of the sum is still
+exponential, so the normal probability plot is not a straight line.
+But with {\tt n=10} the distribution of the sum is approximately
+normal, and with {\tt n=100} it is all but indistinguishable from
+normal.
+
+Figure~\ref{normal1} (bottom row) shows similar results for a
+lognormal distribution.  Lognormal distributions are generally more
+skewed than exponential distributions, so the distribution of sums
+takes longer to converge.  With {\tt n=10} the normal
+probability plot is nowhere near straight, but with {\tt n=100}
+it is approximately normal.
+\index{lognormal distribution}
+\index{distribution!lognormal}
+\index{skewness}
+
+\begin{figure}
+% normal.py
+\centerline{\includegraphics[height=3.5in]{figs/normal2.pdf}}
+\caption{Distributions of sums of Pareto values (top row) and
+correlated exponential values (bottom row).}
+\label{normal2}
+\end{figure}
+
+Pareto distributions are even more skewed than lognormal.  Depending
+on the parameters, many Pareto distributions do not have finite mean
+and variance.  As a result, the Central Limit Theorem does not apply.
+Figure~\ref{normal2} (top row) shows distributions of sums of
+Pareto values.  Even with {\tt n=100} the normal probability plot
+is far from straight.
+\index{Pareto distribution}
+\index{distribution!Pareto}
+\index{Central Limit Theorem}
+\index{CLT}
+\index{normal probability plot}
+
+I also mentioned that CLT does not apply if the values are correlated.
+To test that, I generate correlated values from an exponential
+distribution.  The algorithm for generating correlated values is
+(1) generate correlated normal values, (2) use the normal CDF
+to transform the values to uniform, and (3) use the inverse
+exponential CDF to transform the uniform values to exponential.
+\index{inverse CDF}
+\index{CDF, inverse}
+\index{correlation}
+\index{random number}
+
+{\tt GenerateCorrelated} returns an iterator of {\tt n} normal values
+with serial correlation {\tt rho}:
+\index{iterator}
+
+\begin{verbatim}
+def GenerateCorrelated(rho, n):
+    x = random.gauss(0, 1)
+    yield x
+
+    sigma = math.sqrt(1 - rho**2)
+    for _ in range(n-1):
+        x = random.gauss(x*rho, sigma)
+        yield x
+\end{verbatim}
+
+The first value is a standard normal value.  Each subsequent value
+depends on its predecessor: if the previous value is {\tt x}, the mean of
+the next value is {\tt x*rho}, with variance {\tt 1-rho**2}.  Note that {\tt
+  random.gauss} takes the standard deviation as the second argument,
+not variance.
+\index{standard deviation}
+\index{standard normal distribution}
+
+{\tt GenerateExpoCorrelated}
+takes the resulting sequence and transforms it to exponential:
+
+\begin{verbatim}
+def GenerateExpoCorrelated(rho, n):
+    normal = list(GenerateCorrelated(rho, n))
+    uniform = scipy.stats.norm.cdf(normal)
+    expo = scipy.stats.expon.ppf(uniform)
+    return expo
+\end{verbatim}
+
+{\tt normal} is a list of correlated normal values.  {\tt uniform}
+is a sequence of uniform values between 0 and 1.  {\tt expo} is
+a correlated sequence of exponential values.
+{\tt ppf} stands for ``percent point function,'' which is another
+name for the inverse CDF.
+\index{inverse CDF}
+\index{CDF, inverse}
+\index{percent point function}
+
+Figure~\ref{normal2} (bottom row) shows distributions of sums of
+correlated exponential values with {\tt rho=0.9}.  The correlation
+slows the rate of convergence; nevertheless, with {\tt n=100} the
+normal probability plot is nearly straight.  So even though CLT
+does not strictly apply when the values are correlated, moderate
+correlations are seldom a problem in practice.
+\index{normal probability plot}
+\index{correlation}
+
+These experiments are meant to show how the Central Limit Theorem
+works, and what happens when it doesn't.  Now let's see how we can
+use it.
+
+
+\section{Applying the CLT}
+\label{usingCLT}
+
+To see why the Central Limit Theorem is useful, let's get back
+to the example in Section~\ref{testdiff}: testing the apparent
+difference in mean pregnancy length for first babies and others.
+As we've seen, the apparent difference is about
+0.078 weeks:
+\index{pregnancy length}
+\index{Central Limit Theorem}
+\index{CLT}
+
+\begin{verbatim}
+>>> live, firsts, others = first.MakeFrames()
+>>> delta = firsts.prglngth.mean() - others.prglngth.mean()
+0.078
+\end{verbatim}
+
+Remember the logic of hypothesis testing: we compute a p-value, which
+is the probability of the observed difference under the null
+hypothesis; if it is small, we conclude that the observed difference
+is unlikely to be due to chance.
+\index{p-value}
+\index{null hypothesis}
+\index{hypothesis testing}
+
+In this example, the null hypothesis is that the distribution of
+pregnancy lengths is the same for first babies and others.  
+So we can compute the sampling distribution of the mean
+like this:
+\index{sampling distribution}
+
+\begin{verbatim}
+    dist1 = SamplingDistMean(live.prglngth, len(firsts))
+    dist2 = SamplingDistMean(live.prglngth, len(others))
+\end{verbatim}
+
+Both sampling distributions are based on the same population, which is
+the pool of all live births.  {\tt SamplingDistMean} takes this
+sequence of values and the sample size, and returns a Normal object
+representing the sampling distribution:
+
+\begin{verbatim}
+def SamplingDistMean(data, n):
+    mean, var = data.mean(), data.var()
+    dist = Normal(mean, var)
+    return dist.Sum(n) / n
+\end{verbatim}
+
+{\tt mean} and {\tt var} are the mean and variance of
+{\tt data}.  We approximate the distribution of the data with
+a normal distribution, {\tt dist}.  
+
+In this example, the data are not normally distributed, so this
+approximation is not very good.  But then we compute {\tt dist.Sum(n)
+  / n}, which is the sampling distribution of the mean of {\tt n}
+values.  Even if the data are not normally distributed, the sampling
+distribution of the mean is, by the Central Limit Theorem.
+\index{Central Limit Theorem}
+\index{CLT}
+
+Next, we compute the sampling distribution of the difference
+in the means.  The {\tt Normal} class knows how to perform
+subtraction using Equation 2:
+\index{Normal}
+
+\begin{verbatim}
+    def __sub__(self, other):
+        return Normal(self.mu - other.mu,
+                      self.sigma2 + other.sigma2)
+\end{verbatim}
+
+So we can compute the sampling distribution of the difference like this:
+
+\begin{verbatim}
+>>> dist = dist1 - dist2
+N(0, 0.0032)
+\end{verbatim}
+
+The mean is 0, which makes sense because we expect two samples from
+the same distribution to have the same mean, on average.  The variance
+of the sampling distribution is 0.0032.
+\index{sampling distribution}
+
+{\tt Normal} provides {\tt Prob}, which evaluates the normal CDF.
+We can use {\tt Prob} to compute the probability of a
+difference as large as {\tt delta} under the null hypothesis:
+\index{null hypothesis}
+
+\begin{verbatim}
+>>> 1 - dist.Prob(delta)
+0.084
+\end{verbatim}
+
+Which means that the p-value for a one-sided test is 0.84.  For
+a two-sided test we would also compute
+\index{p-value}
+\index{one-sided test}
+\index{two-sided test}
+
+\begin{verbatim}
+>>> dist.Prob(-delta)
+0.084
+\end{verbatim}
+
+Which is the same because the normal distribution is symmetric.
+The sum of the tails is 0.168, which is consistent with the estimate
+in Section~\ref{testdiff}, which was 0.17.
+\index{symmetric}
+
+
+
+\section{Correlation test}
+
+In Section~\ref{corrtest} we used a permutation test for the correlation
+between birth weight and mother's age, and found that it is
+statistically significant, with p-value less than 0.001.
+\index{p-value}
+\index{birth weight}
+\index{weight!birth}
+\index{permutation}
+  \index{significant} \index{statistically significant}
+
+Now we can do the same thing analytically.  The method is based
+on this mathematical result: given two variables that are normally distributed
+and uncorrelated, if we generate a sample with size $n$,
+compute Pearson's correlation, $r$, and then compute the transformed
+correlation
+%
+\[ t = r \sqrt{\frac{n-2}{1-r^2}} \]
+%
+the distribution of $t$ is Student's t-distribution with parameter
+$n-2$.  The t-distribution is an analytic distribution; the CDF can
+be computed efficiently using gamma functions.
+\index{Pearson coefficient of correlation}
+\index{correlation}
+
+We can use this result to compute the sampling distribution of
+correlation under the null hypothesis; that is, if we generate
+uncorrelated sequences of normal values, what is the distribution of
+their correlation?  {\tt StudentCdf} takes the sample size, {\tt n}, and
+returns the sampling distribution of correlation:
+\index{null hypothesis}
+\index{sampling distribution}
+
+\begin{verbatim}
+def StudentCdf(n):
+    ts = np.linspace(-3, 3, 101)
+    ps = scipy.stats.t.cdf(ts, df=n-2)
+    rs = ts / np.sqrt(n - 2 + ts**2)
+    return thinkstats2.Cdf(rs, ps)
+\end{verbatim}
+
+{\tt ts} is a NumPy array of values for $t$, the transformed
+correlation.  {\tt ps} contains the corresponding probabilities,
+computed using the CDF of the Student's t-distribution implemented in
+SciPy.  The parameter of the t-distribution, {\tt df}, stands for
+``degrees of freedom.''  I won't explain that term, but you can read
+about it at
+\url{http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)}.
+\index{NumPy}
+\index{SciPy}
+\index{Student's t-distribution}
+\index{distribution!Student's t}
+\index{degrees of freedom}
+
+\begin{figure}
+% normal.py
+\centerline{\includegraphics[height=2.5in]{figs/normal4.pdf}}
+\caption{Sampling distribution of correlations for uncorrelated
+normal variables.}
+\label{normal4}
+\end{figure}
+
+To get from {\tt ts} to the correlation coefficients, {\tt rs},
+we apply the inverse transform,
+%
+\[ r = t / \sqrt{n - 2 + t^2} \]
+%
+The result is the sampling distribution of $r$ under the null hypothesis.
+Figure~\ref{normal4} shows this distribution along with the distribution
+we generated in Section~\ref{corrtest} by resampling.  They are nearly
+identical.  Although the actual distributions are not normal, 
+Pearson's coefficient of correlation is based on sample means
+and variances.  By the Central Limit Theorem, these moment-based
+statistics are normally distributed even if the data are not.
+\index{Central Limit Theorem}
+\index{CLT}
+\index{null hypothesis}
+\index{resampling}
+
+From Figure~\ref{normal4}, we can see that the
+observed correlation, 0.07, is unlikely to occur if the variables
+are actually uncorrelated.
+Using the analytic distribution, we can compute just how unlikely:
+\index{analytic distribution}
+
+\begin{verbatim}
+    t = r * math.sqrt((n-2) / (1-r))
+    p_value = 1 - scipy.stats.t.cdf(t, df=n-2)
+\end{verbatim}
+
+We compute the value of {\tt t} that corresponds to {\tt r=0.07}, and
+then evaluate the t-distribution at {\tt t}.  The result is {\tt
+  6.4e-12}.  This example demonstrates an advantage of the analytic
+method: we can compute very small p-values.  But in practice it
+usually doesn't matter.
+\index{SciPy}
+\index{p-value}
+
+
+\section{Chi-squared test}
+
+In Section~\ref{casino2} we used the chi-squared statistic to
+test whether a die is crooked.  The chi-squared statistic measures
+the total normalized deviation from the expected values in a table:
+%
+\[ \goodchi^2 = \sum_i \frac{(O_i - E_i)^2}{E_i} \]
+%
+One reason the chi-squared statistic is widely used is that
+its sampling distribution under the null hypothesis is analytic;
+by a remarkable coincidence\footnote{Not really.}, it is called
+the chi-squared distribution.  Like the t-distribution, the
+chi-squared CDF can be computed efficiently using gamma functions.
+\index{deviation}
+\index{null hypothesis}
+\index{sampling distribution}
+\index{chi-squared test}
+\index{chi-squared distribution}
+\index{distribution!chi-squared}
+
+\begin{figure}
+% normal.py
+\centerline{\includegraphics[height=2.5in]{figs/normal5.pdf}}
+\caption{Sampling distribution of chi-squared statistics for
+a fair six-sided die.}
+\label{normal5}
+\end{figure}
+
+SciPy provides an implementation of the chi-squared distribution,
+which we use to compute the sampling distribution of the
+chi-squared statistic:
+\index{SciPy}
+
+\begin{verbatim}
+def ChiSquaredCdf(n):
+    xs = np.linspace(0, 25, 101)
+    ps = scipy.stats.chi2.cdf(xs, df=n-1)
+    return thinkstats2.Cdf(xs, ps)
+\end{verbatim}
+
+Figure~\ref{normal5} shows the analytic result along with the
+distribution we got by resampling.  They are very similar,
+especially in the tail, which is the part we usually care most
+about.
+\index{resampling}
+\index{tail}
+
+We can use this distribution to compute the p-value of the
+observed test statistic, {\tt chi2}:
+\index{test statistic}
+\index{p-value}
+
+\begin{verbatim}
+    p_value = 1 - scipy.stats.chi2.cdf(chi2, df=n-1)
+\end{verbatim}
+
+The result is 0.041, which is consistent with the result
+from Section~\ref{casino2}.
+
+The parameter of the chi-squared distribution is ``degrees of
+freedom'' again.  In this case the correct parameter is {\tt n-1},
+where {\tt n} is the size of the table, 6.  Choosing this parameter
+can be tricky; to be honest, I am never confident that I have it
+right until I generate something like Figure~\ref{normal5} to compare
+the analytic results to the resampling results.
+\index{degrees of freedom}
+
+
+\section{Discussion}
+
+This book focuses on computational methods like resampling and
+permutation.  These methods have several advantages over analysis:
+\index{resampling}
+\index{permutation}
+\index{computational methods}
+
+\begin{itemize}
+
+\item They are easier to explain and understand.  For example, one of
+  the most difficult topics in an introductory statistics class is
+  hypothesis testing.  Many students don't really understand what
+  p-values are.  I think the approach I presented in
+  Chapter~\ref{testing}---simulating the null hypothesis and
+  computing test statistics---makes the fundamental idea clearer.
+\index{p-value}
+\index{null hypothesis}
+
+\item They are robust and versatile.  Analytic methods are often based
+  on assumptions that might not hold in practice.  Computational
+  methods require fewer assumptions, and can be adapted and extended
+  more easily.
+\index{robust}
+
+\item They are debuggable.  Analytic methods are often like a black
+  box: you plug in numbers and they spit out results.  But it's easy
+  to make subtle errors, hard to be confident that the results are
+  right, and hard to find the problem if they are not.  Computational
+  methods lend themselves to incremental development and testing,
+  which fosters confidence in the results.
+\index{debugging}
+
+\end{itemize}
+
+But there is one drawback: computational methods can be slow.  Taking
+into account these pros and cons, I recommend the following process:
+
+\begin{enumerate}
+
+\item Use computational methods during exploration.  If you find a
+  satisfactory answer and the run time is acceptable, you can stop.
+\index{exploration}
+
+\item If run time is not acceptable, look for opportunities to
+  optimize.  Using analytic methods is one of several methods of
+  optimization.
+
+\item If replacing a computational method with an analytic method is
+  appropriate, use the computational method as a basis of comparison, 
+  providing mutual validation between the computational and
+  analytic results.
+\index{model}
+
+\end{enumerate}
+
+For the vast majority of problems I have worked on, I didn't have
+to go past Step 1.
+
+
+\section{Exercises}
+
+A solution to these exercises is in \verb"chap14soln.py"
+
+\begin{exercise}
+\label{log_clt}
+In Section~\ref{lognormal}, we saw that the distribution
+of adult weights is approximately lognormal.  One possible
+explanation is that the weight a person
+gains each year is proportional to their current weight.
+In that case, adult weight is the product of a large number
+of multiplicative factors:
+%
+\[ w = w_0 f_1 f_2 ... f_n  \]
+%
+where $w$ is adult weight, $w_0$ is birth weight, and $f_i$
+is the weight gain factor for year $i$.
+\index{birth weight}
+\index{weight!birth}
+\index{lognormal distribution}
+\index{distribution!lognormal}
+\index{adult weight}
+
+The log of a product is the sum of the logs of the
+factors:
+%
+\[ \log w = \log w_0 + \log f_1 + \log f_2 + ... + \log f_n \]
+%
+So by the Central Limit Theorem, the distribution of $\log w$ is
+approximately normal for large $n$, which implies that the
+distribution of $w$ is lognormal.
+\index{Central Limit Theorem}
+\index{CLT}
+
+To model this phenomenon, choose a distribution for $f$ that seems
+reasonable, then generate a sample of adult weights by choosing a
+random value from the distribution of birth weights, choosing a
+sequence of factors from the distribution of $f$, and computing the
+product.  What value of $n$ is needed to converge to a lognormal
+distribution?
+\index{model}
+
+\index{logarithm}
+\index{product}
+
+\end{exercise}
+
+
+
+\begin{exercise}
+In Section~\ref{usingCLT} we used the Central Limit Theorem to find
+the sampling distribution of the difference in means, $\delta$, under
+the null hypothesis that both samples are drawn from the same
+population.
+\index{null hypothesis}
+\index{sampling distribution}
+
+We can also use this distribution to find the standard error of the
+estimate and confidence intervals, but that would only be
+approximately correct.  To be more precise, we should compute the
+sampling distribution of $\delta$ under the alternate hypothesis that
+the samples are drawn from different populations.
+\index{standard error}
+\index{standard deviation}
+\index{confidence interval}
+
+Compute this distribution and use it to calculate the standard error
+and a 90\% confidence interval for the difference in means.
+\end{exercise}
+
+
+\begin{exercise}
+In a recent paper\footnote{``Evidence for the persistent effects of an
+  intervention to mitigate gender-sterotypical task allocation within
+  student engineering teams,'' Proceedings of the IEEE Frontiers in Education
+Conference, 2014.}, Stein et al.~investigate the
+effects of an intervention intended to mitigate gender-stereotypical
+task allocation within student engineering teams.
+
+Before and after the intervention, students responded to a survey that
+asked them to rate their contribution to each aspect of class projects on
+a 7-point scale.
+
+Before the intervention, male students reported higher scores for the
+programming aspect of the project than female students; on average men
+reported a score of 3.57 with standard error 0.28.  Women reported
+1.91, on average, with standard error 0.32.
+\index{standard error}
+
+Compute the sampling distribution of the gender gap (the difference in
+means), and test whether it is statistically significant.  Because you
+are given standard errors for the estimated means, you don't need to
+know the sample size to figure out the sampling distributions.
+  \index{significant} \index{statistically significant}
+\index{sampling distribution}
+
+After the intervention, the gender gap was smaller: the average score
+for men was 3.44 (SE 0.16); the average score for women was 3.18 (SE
+0.16).  Again, compute the sampling distribution of the gender gap and
+test it.
+\index{gender gap}
+
+Finally, estimate the change in gender gap; what is the sampling
+distribution of this change, and is it statistically significant?
+  \index{significant} \index{statistically significant}
+\end{exercise}

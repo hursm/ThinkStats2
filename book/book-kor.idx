@@ -1,0 +1,653 @@
+\indexentry{cleaning}{v}
+\indexentry{distribution}{v}
+\indexentry{correlation}{v}
+\indexentry{linear fit}{v}
+\indexentry{multiple regression}{v}
+\indexentry{control variable}{v}
+\indexentry{estimation}{vi}
+\indexentry{hypothesis testing}{vi}
+\indexentry{visualization}{vi}
+\indexentry{computational methods}{vi}
+\indexentry{debugging}{vi}
+\indexentry{Central Limit Theorem}{vi}
+\indexentry{CLT}{vi}
+\indexentry{p-value}{vi}
+\indexentry{repository}{ix}
+\indexentry{Git}{ix}
+\indexentry{GitHub}{ix}
+\indexentry{fork}{ix}
+\indexentry{clone}{ix}
+\indexentry{Anaconda}{ix}
+\indexentry{pandas}{ix}
+\indexentry{NumPy}{ix}
+\indexentry{SciPy}{x}
+\indexentry{StatsModels}{x}
+\indexentry{matplotlib}{x}
+\indexentry{installation}{x}
+\indexentry{IPython}{x}
+\indexentry{contributors}{xi}
+\indexentry{first babies}{1}
+\indexentry{anecdotal evidence}{1}
+\indexentry{pregnancy length}{2}
+\indexentry{selection bias}{2}
+\indexentry{bias!selection}{2}
+\indexentry{confirmation bias}{2}
+\indexentry{bias!confirmation}{2}
+\indexentry{data collection}{2}
+\indexentry{descriptive statistics}{2}
+\indexentry{exploratory data analysis}{2}
+\indexentry{estimation}{2}
+\indexentry{hypothesis testing}{2}
+\indexentry{National Survey of Family Growth}{3}
+\indexentry{NSFG}{3}
+\indexentry{cross-sectional study}{3}
+\indexentry{study!cross-sectional}{3}
+\indexentry{longitudinal study}{3}
+\indexentry{study!longitudinal}{3}
+\indexentry{cycle}{3}
+\indexentry{population}{3}
+\indexentry{respondent}{3}
+\indexentry{representative}{3}
+\indexentry{oversampling}{3}
+\indexentry{pandas}{5}
+\indexentry{DataFrame}{5}
+\indexentry{pandas}{5}
+\indexentry{Index}{5}
+\indexentry{DataFrame}{5}
+\indexentry{Series}{6}
+\indexentry{NumPy}{6}
+\indexentry{DataFrame}{6}
+\indexentry{pregnancy length}{7}
+\indexentry{birth weight}{7}
+\indexentry{weight!birth}{7}
+\indexentry{weight!sample}{7}
+\indexentry{recode}{7}
+\indexentry{raw data}{7}
+\indexentry{NaN}{8}
+\indexentry{pandas}{8}
+\indexentry{missing values}{8}
+\indexentry{DataFrame}{9}
+\indexentry{DataFrame}{9}
+\indexentry{Series}{9}
+\indexentry{Series}{11}
+\indexentry{boolean}{11}
+\indexentry{NaN}{11}
+\indexentry{DataFrame}{11}
+\indexentry{NumPy}{11}
+\indexentry{Series}{11}
+\indexentry{ethics}{12}
+\indexentry{IPython}{12}
+\indexentry{DataFrame}{13}
+\indexentry{anecdotal evidence}{13}
+\indexentry{population}{14}
+\indexentry{cross-sectional study}{14}
+\indexentry{study!cross-sectional}{14}
+\indexentry{longitudinal study}{14}
+\indexentry{study!longitudinal}{14}
+\indexentry{record}{14}
+\indexentry{respondent}{14}
+\indexentry{sample}{14}
+\indexentry{representative}{14}
+\indexentry{oversampling}{14}
+\indexentry{raw data}{14}
+\indexentry{recode}{14}
+\indexentry{distribution}{15}
+\indexentry{histogram}{15}
+\indexentry{frequency}{15}
+\indexentry{dictionary}{15}
+\indexentry{pandas}{15}
+\indexentry{histogram}{16}
+\indexentry{Hist}{16}
+\indexentry{frequency}{16}
+\indexentry{bracket operator}{16}
+\indexentry{frequency}{16}
+\indexentry{pyplot}{16}
+\indexentry{thinkplot}{17}
+\indexentry{matplotlib}{17}
+\indexentry{Hist}{17}
+\indexentry{histogram}{17}
+\indexentry{DataFrame}{17}
+\indexentry{Series}{17}
+\indexentry{Hist}{17}
+\indexentry{bracket operator}{17}
+\indexentry{boolean}{17}
+\indexentry{pandas}{18}
+\indexentry{Series}{18}
+\indexentry{thinkplot}{18}
+\indexentry{NaN}{18}
+\indexentry{birth weight}{18}
+\indexentry{weight!birth}{18}
+\indexentry{pregnancy length}{18}
+\indexentry{histogram}{18}
+\indexentry{outlier}{18}
+\indexentry{Hist}{18}
+\indexentry{pregnancy length}{19}
+\indexentry{outlier}{19}
+\indexentry{DataFrame}{19}
+\indexentry{Hist}{19}
+\indexentry{pregnancy length}{19}
+\indexentry{thinkplot}{20}
+\indexentry{Hist}{20}
+\indexentry{pregnancy length}{20}
+\indexentry{length!pregnancy}{20}
+\indexentry{central tendency}{21}
+\indexentry{mode}{21}
+\indexentry{spread}{21}
+\indexentry{tail}{21}
+\indexentry{outlier}{21}
+\indexentry{mean}{21}
+\indexentry{average}{21}
+\indexentry{summary statistic}{21}
+\indexentry{central tendency}{21}
+\indexentry{weight!pumpkin}{21}
+\indexentry{pumpkin}{21}
+\indexentry{variance}{22}
+\indexentry{deviation}{22}
+\indexentry{standard deviation}{22}
+\indexentry{deviation}{22}
+\indexentry{sample variance}{22}
+\indexentry{pandas}{22}
+\indexentry{pregnancy length}{22}
+\indexentry{effect size}{22}
+\indexentry{effect size}{22}
+\indexentry{pregnancy length}{22}
+\indexentry{effect size}{23}
+\indexentry{standard deviation!pooled}{23}
+\indexentry{pregnancy length}{23}
+\indexentry{clinically significant}{23}
+\indexentry{significant}{23}
+\indexentry{ethics}{24}
+\indexentry{Adams, Cecil}{24}
+\indexentry{Straight Dope, The}{24}
+\indexentry{ethics}{24}
+\indexentry{mode}{24}
+\indexentry{Hist}{24}
+\indexentry{frequency}{24}
+\indexentry{pregnancy length}{24}
+\indexentry{distribution}{25}
+\indexentry{histogram}{25}
+\indexentry{frequency}{25}
+\indexentry{mode}{25}
+\indexentry{Gaussian distribution}{25}
+\indexentry{normal distribution}{25}
+\indexentry{uniform distribution}{25}
+\indexentry{tail}{25}
+\indexentry{central tendency}{25}
+\indexentry{outlier}{25}
+\indexentry{spread}{25}
+\indexentry{summary statistic}{25}
+\indexentry{variance}{25}
+\indexentry{standard deviation}{25}
+\indexentry{effect size}{25}
+\indexentry{clinically significant}{25}
+\indexentry{probability mass function}{27}
+\indexentry{Pmf}{27}
+\indexentry{frequency}{27}
+\indexentry{probability}{27}
+\indexentry{normalization}{27}
+\indexentry{PMF}{27}
+\indexentry{probability mass function}{27}
+\indexentry{Hist}{27}
+\indexentry{Hist}{28}
+\indexentry{bracket operator}{28}
+\indexentry{Pmf}{28}
+\indexentry{PMF}{29}
+\indexentry{thinkplot}{29}
+\indexentry{bar plot}{29}
+\indexentry{plot!bar}{29}
+\indexentry{line plot}{29}
+\indexentry{plot!line}{29}
+\indexentry{Hist}{29}
+\indexentry{Pmf}{29}
+\indexentry{pyplot}{29}
+\indexentry{pregnancy length}{29}
+\indexentry{length!pregnancy}{29}
+\indexentry{pregnancy length}{29}
+\indexentry{thinkplot}{29}
+\indexentry{Hist}{29}
+\indexentry{exploratory data analysis}{30}
+\indexentry{visualization}{30}
+\indexentry{National Survey of Family Growth}{30}
+\indexentry{NSFG}{30}
+\indexentry{thinkplot}{30}
+\indexentry{class size}{31}
+\indexentry{Pmf}{31}
+\indexentry{observer bias}{31}
+\indexentry{bias!observer}{31}
+\indexentry{thinkplot}{32}
+\indexentry{bias!oversampling}{32}
+\indexentry{oversampling}{32}
+\indexentry{NumPy}{33}
+\indexentry{pandas}{33}
+\indexentry{DataFrame}{33}
+\indexentry{Series}{33}
+\indexentry{DataFrame}{34}
+\indexentry{observer bias}{35}
+\indexentry{bias!observer}{35}
+\indexentry{mean}{35}
+\indexentry{variance}{35}
+\indexentry{PMF}{35}
+\indexentry{Pmf}{35}
+\indexentry{relay race}{36}
+\indexentry{bias!selection}{36}
+\indexentry{selection bias}{36}
+\indexentry{observer bias}{36}
+\indexentry{bias!observer}{36}
+\indexentry{PMF}{36}
+\indexentry{probability mass function}{36}
+\indexentry{frequency}{37}
+\indexentry{probability}{37}
+\indexentry{normalization}{37}
+\indexentry{pandas}{37}
+\indexentry{DataFrame}{37}
+\indexentry{PMF}{39}
+\indexentry{National Survey of Family Growth}{39}
+\indexentry{NSFG}{39}
+\indexentry{birth weight}{39}
+\indexentry{weight!birth}{39}
+\indexentry{binning}{39}
+\indexentry{CDF}{40}
+\indexentry{percentile rank}{40}
+\indexentry{percentile}{41}
+\indexentry{percentile rank}{41}
+\indexentry{CDF}{41}
+\indexentry{cumulative distribution function}{41}
+\indexentry{percentile rank}{41}
+\indexentry{sample}{41}
+\indexentry{step function}{42}
+\indexentry{Cdf}{42}
+\indexentry{bracket operator}{42}
+\indexentry{inverse CDF}{42}
+\indexentry{CDF, inverse}{42}
+\indexentry{NSFG}{42}
+\indexentry{pregnancy length}{42}
+\indexentry{thinkplot}{43}
+\indexentry{CDF, interpreting}{43}
+\indexentry{National Survey of Family Growth}{43}
+\indexentry{NSFG}{43}
+\indexentry{birth weight}{43}
+\indexentry{weight!birth}{43}
+\indexentry{thinkplot}{43}
+\indexentry{distributions, comparing}{43}
+\indexentry{shape}{43}
+\indexentry{summary statistic}{43}
+\indexentry{interquartile range}{43}
+\indexentry{quartile}{43}
+\indexentry{percentile}{43}
+\indexentry{median}{43}
+\indexentry{central tendency}{43}
+\indexentry{spread}{43}
+\indexentry{Cdf}{43}
+\indexentry{percentile rank}{43}
+\indexentry{quantile}{44}
+\indexentry{quintile}{44}
+\indexentry{decile}{44}
+\indexentry{random number}{44}
+\indexentry{percentile rank}{44}
+\indexentry{birth weight}{44}
+\indexentry{weight!birth}{44}
+\indexentry{Cdf}{44}
+\indexentry{replacement}{44}
+\indexentry{thinkplot}{44}
+\indexentry{inverse CDF algorithm}{45}
+\indexentry{random number}{45}
+\indexentry{Cdf}{45}
+\indexentry{percentile rank}{45}
+\indexentry{James Joyce Ramble}{45}
+\indexentry{race time}{45}
+\indexentry{field size}{46}
+\indexentry{age group}{46}
+\indexentry{birth weight}{46}
+\indexentry{weight!birth}{46}
+\indexentry{uniform distribution}{46}
+\indexentry{distribution!uniform}{46}
+\indexentry{random number}{46}
+\indexentry{percentile rank}{47}
+\indexentry{percentile}{47}
+\indexentry{CDF}{47}
+\indexentry{cumulative probability}{47}
+\indexentry{inverse CDF}{47}
+\indexentry{CDF, inverse}{47}
+\indexentry{median}{47}
+\indexentry{interquartile range}{47}
+\indexentry{quantile}{47}
+\indexentry{replacement}{47}
+\indexentry{estimation}{49}
+\indexentry{normal distribution}{49}
+\indexentry{distribution!normal}{49}
+\indexentry{Gaussian distribution}{49}
+\indexentry{distribution!Gaussian}{49}
+\indexentry{mean}{49}
+\indexentry{parameter}{49}
+\indexentry{estimator}{49}
+\indexentry{normal distribution}{49}
+\indexentry{distribution!normal}{49}
+\indexentry{Gaussian distribution}{49}
+\indexentry{distribution!Gaussian}{49}
+\indexentry{measurement error}{49}
+\indexentry{outlier}{50}
+\indexentry{median}{50}
+\indexentry{error}{50}
+\indexentry{MSE}{50}
+\indexentry{mean squared error}{50}
+\indexentry{mean squared error}{50}
+\indexentry{MSE}{50}
+\indexentry{RMSE}{50}
+\indexentry{median}{50}
+\indexentry{estimator}{51}
+\indexentry{prediction}{51}
+\indexentry{cost function}{51}
+\indexentry{MSE}{51}
+\indexentry{MLE}{51}
+\indexentry{maximum likelihood estimator}{51}
+\indexentry{dice}{51}
+\indexentry{variance}{51}
+\indexentry{normal distribution}{51}
+\indexentry{distribution!normal}{51}
+\indexentry{Gaussian distribution}{51}
+\indexentry{distribution!Gaussian}{51}
+\indexentry{sample variance}{52}
+\indexentry{biased estimator}{52}
+\indexentry{estimator!biased}{52}
+\indexentry{unbiased estimator}{52}
+\indexentry{estimator!unbiased}{52}
+\indexentry{degrees of freedom}{52}
+\indexentry{mean error}{53}
+\indexentry{biased estimator}{53}
+\indexentry{estimator!biased}{53}
+\indexentry{gorilla}{53}
+\indexentry{population}{53}
+\indexentry{sample}{53}
+\indexentry{MSE}{53}
+\indexentry{sample mean}{53}
+\indexentry{biased estimator}{53}
+\indexentry{estimator!biased}{53}
+\indexentry{standard deviation}{53}
+\indexentry{sampling error}{53}
+\indexentry{gorilla}{54}
+\indexentry{sample size}{54}
+\indexentry{simulation}{54}
+\indexentry{sampling distribution}{54}
+\indexentry{standard error}{54}
+\indexentry{confidence interval}{55}
+\indexentry{sampling distribution}{55}
+\indexentry{gorilla}{55}
+\indexentry{standard deviation}{55}
+\indexentry{Bayesian statistics}{55}
+\indexentry{sampling distribution}{55}
+\indexentry{gorilla}{55}
+\indexentry{adult weight}{55}
+\indexentry{sampling bias}{55}
+\indexentry{bias!sampling}{55}
+\indexentry{measurement error}{55}
+\indexentry{telephone sampling}{55}
+\indexentry{random number}{55}
+\indexentry{sampling bias}{56}
+\indexentry{self-selection}{56}
+\indexentry{measurement error}{56}
+\indexentry{standard error}{56}
+\indexentry{confidence interval}{56}
+\indexentry{exponential distribution}{56}
+\indexentry{distribution!exponential}{56}
+\indexentry{parameter}{56}
+\indexentry{mean}{56}
+\indexentry{MLE}{56}
+\indexentry{maximum likelihood estimator}{56}
+\indexentry{robust}{57}
+\indexentry{outlier}{57}
+\indexentry{sample median}{57}
+\indexentry{median}{57}
+\indexentry{MSE}{57}
+\indexentry{RMSE}{57}
+\indexentry{biased estimator}{57}
+\indexentry{estimator!biased}{57}
+\indexentry{sample mean}{58}
+\indexentry{sample median}{58}
+\indexentry{estimator!biased}{58}
+\indexentry{standard error}{58}
+\indexentry{confidence interval}{58}
+\indexentry{sampling distribution}{58}
+\indexentry{exponential distribution}{58}
+\indexentry{distribution!exponential}{58}
+\indexentry{hockey}{58}
+\indexentry{soccer}{58}
+\indexentry{estimator!biased}{58}
+\indexentry{biased estimator}{58}
+\indexentry{standard error}{58}
+\indexentry{confidence interval}{58}
+\indexentry{estimation}{58}
+\indexentry{estimation}{58}
+\indexentry{mean squared error}{58}
+\indexentry{MSE}{58}
+\indexentry{mean squared error}{58}
+\indexentry{MSE}{58}
+\indexentry{MLE}{59}
+\indexentry{maximum likelihood estimator}{59}
+\indexentry{biased estimator}{59}
+\indexentry{point estimation}{59}
+\indexentry{sampling bias}{59}
+\indexentry{measurement error}{59}
+\indexentry{sampling distribution}{59}
+\indexentry{standard error}{59}
+\indexentry{confidence interval}{59}
+\indexentry{interval!confidence}{59}
+\indexentry{model}{61}
+\indexentry{regression}{61}
+\indexentry{explanatory variable}{61}
+\indexentry{dependent variable}{61}
+\indexentry{birth weight}{61}
+\indexentry{weight!birth}{61}
+\indexentry{simple regression}{61}
+\indexentry{multiple regression}{61}
+\indexentry{regression model}{61}
+\indexentry{linear regression}{61}
+\indexentry{explanatory variable}{62}
+\indexentry{ordinary least squares}{62}
+\indexentry{parameter}{62}
+\indexentry{Anaconda}{62}
+\indexentry{StatsModels}{62}
+\indexentry{model}{62}
+\indexentry{explanatory variable}{62}
+\indexentry{dependent variable}{62}
+\indexentry{Patsy}{62}
+\indexentry{DataFrame}{62}
+\indexentry{model}{62}
+\indexentry{ordinary least squares}{62}
+\indexentry{RegressionResults}{62}
+\indexentry{Series}{62}
+\indexentry{parameter}{63}
+\indexentry{p-value}{63}
+\indexentry{significant}{63}
+\indexentry{statistically significant}{63}
+\indexentry{age}{63}
+\indexentry{model}{63}
+\indexentry{coefficient of determination}{63}
+\indexentry{r-squared}{63}
+\indexentry{residuals}{63}
+\indexentry{standard deviation}{63}
+\indexentry{birth weight}{63}
+\indexentry{weight!birth}{63}
+\indexentry{explanatory variable}{63}
+\indexentry{dependent variable}{63}
+\indexentry{RMSE}{63}
+\indexentry{predictive power}{63}
+\indexentry{multiple regression}{63}
+\indexentry{spurious relationship}{63}
+\indexentry{weight}{64}
+\indexentry{age}{64}
+\indexentry{birth weight}{64}
+\indexentry{weight!birth}{64}
+\indexentry{multiple regression}{64}
+\indexentry{model}{64}
+\indexentry{explanatory variable}{64}
+\indexentry{birth weight}{65}
+\indexentry{weight!birth}{65}
+\indexentry{categorical variable}{65}
+\indexentry{boolean}{65}
+\indexentry{coefficient of determination}{65}
+\indexentry{r-squared}{65}
+\indexentry{coefficient of determination}{65}
+\indexentry{r-squared}{65}
+\indexentry{p-value}{65}
+\indexentry{model}{65}
+\indexentry{birth weight}{65}
+\indexentry{weight!birth}{65}
+\indexentry{coefficient of determination}{65}
+\indexentry{r-squared}{65}
+\indexentry{nonlinear}{65}
+\indexentry{parabola}{66}
+\indexentry{birth weight}{66}
+\indexentry{weight!birth}{66}
+\indexentry{quadratic model}{66}
+\indexentry{model}{66}
+\indexentry{significant}{66}
+\indexentry{statistically significant}{66}
+\indexentry{explanatory variable}{66}
+\indexentry{dependent variable}{66}
+\indexentry{nonlinear}{66}
+\indexentry{p-value}{66}
+\indexentry{coefficient of determination}{66}
+\indexentry{r-squared}{66}
+\indexentry{explanatory variable}{66}
+\indexentry{age}{66}
+\indexentry{control variable}{66}
+\indexentry{birth weight}{67}
+\indexentry{weight!birth}{67}
+\indexentry{regression model}{67}
+\indexentry{coefficient of determination}{67}
+\indexentry{r-squared}{67}
+\indexentry{betting pool}{67}
+\indexentry{NSFG}{67}
+\indexentry{join}{67}
+\indexentry{SQL}{67}
+\indexentry{DataFrame}{67}
+\indexentry{betting pool}{67}
+\indexentry{race}{68}
+\indexentry{pandas}{68}
+\indexentry{join}{68}
+\indexentry{model}{68}
+\indexentry{coefficient of determination}{68}
+\indexentry{r-squared}{68}
+\indexentry{explanatory variable}{68}
+\indexentry{NaN}{68}
+\indexentry{cleaning}{68}
+\indexentry{prediction}{68}
+\indexentry{birth weight}{69}
+\indexentry{weight!birth}{69}
+\indexentry{predictive power}{69}
+\indexentry{pregnancy length}{69}
+\indexentry{sex}{69}
+\indexentry{explanatory variable}{69}
+\indexentry{race}{69}
+\indexentry{multiple birth}{69}
+\indexentry{birth weight}{69}
+\indexentry{weight!birth}{69}
+\indexentry{income}{69}
+\indexentry{wealth}{69}
+\indexentry{theory}{69}
+\indexentry{data mining}{69}
+\indexentry{model}{69}
+\indexentry{explanatory variable}{69}
+\indexentry{Patsy}{70}
+\indexentry{categorical variable}{70}
+\indexentry{boolean}{70}
+\indexentry{income}{70}
+\indexentry{control variable}{70}
+\indexentry{race}{70}
+\indexentry{weight}{70}
+\indexentry{income}{70}
+\indexentry{p-value}{70}
+\indexentry{model}{70}
+\indexentry{coefficient of determination}{70}
+\indexentry{r-squared}{70}
+\indexentry{significant}{70}
+\indexentry{statistically significant}{70}
+\indexentry{explanatory variable}{71}
+\indexentry{dependent variable}{71}
+\indexentry{categorical variable}{71}
+\indexentry{model}{71}
+\indexentry{logistic regression}{71}
+\indexentry{Poisson regression}{71}
+\indexentry{boolean}{71}
+\indexentry{betting pool}{71}
+\indexentry{sex}{71}
+\indexentry{regression model}{71}
+\indexentry{explanatory variable}{71}
+\indexentry{dependent variable}{71}
+\indexentry{ordinary least squares}{71}
+\indexentry{parameter}{71}
+\indexentry{probability}{71}
+\indexentry{odds}{71}
+\indexentry{regression model}{72}
+\indexentry{parameter}{72}
+\indexentry{logistic regression}{72}
+\indexentry{closed form}{72}
+\indexentry{MLE}{72}
+\indexentry{maximum likelihood estimator}{72}
+\indexentry{log odds}{72}
+\indexentry{likelihood}{73}
+\indexentry{Newton's method}{73}
+\indexentry{iterative solver}{73}
+\indexentry{StatsModels}{73}
+\indexentry{sex ratio}{73}
+\indexentry{logit function}{73}
+\indexentry{dependent variable}{73}
+\indexentry{boolean}{73}
+\indexentry{binary}{73}
+\indexentry{age}{73}
+\indexentry{race}{73}
+\indexentry{NumPy}{74}
+\indexentry{pandas}{74}
+\indexentry{DataFrame}{74}
+\indexentry{explanatory variable}{74}
+\indexentry{dependent variable}{74}
+\indexentry{exogenous variable}{74}
+\indexentry{endogenous variable}{74}
+\indexentry{Patsy}{74}
+\indexentry{p-value}{74}
+\indexentry{age}{74}
+\indexentry{model}{74}
+\indexentry{coefficient of determination}{74}
+\indexentry{r-squared}{74}
+\indexentry{pseudo r-squared}{74}
+\indexentry{categorical variable}{74}
+\indexentry{pseudo r-squared}{74}
+\indexentry{significant}{74}
+\indexentry{statistically significant}{74}
+\indexentry{model}{75}
+\indexentry{accuracy}{75}
+\indexentry{NumPy}{75}
+\indexentry{true positive}{75}
+\indexentry{true negative}{75}
+\indexentry{model}{75}
+\indexentry{DataFrame}{75}
+\indexentry{betting pool}{76}
+\indexentry{date of birth}{76}
+\indexentry{Trivers-Willard hypothesis}{76}
+\indexentry{sex ratio}{76}
+\indexentry{significant}{76}
+\indexentry{statistically significant}{76}
+\indexentry{data mining}{76}
+\indexentry{StatsModels}{76}
+\indexentry{Poisson regression}{76}
+\indexentry{categorical variable}{76}
+\indexentry{marital status}{76}
+\indexentry{regression}{77}
+\indexentry{dependent variable}{77}
+\indexentry{endogenous variable}{77}
+\indexentry{explanatory variable}{77}
+\indexentry{exogenous variable}{77}
+\indexentry{simple regression}{77}
+\indexentry{multiple regression}{77}
+\indexentry{linear regression}{77}
+\indexentry{ordinary least squares}{77}
+\indexentry{spurious relationship}{77}
+\indexentry{control variable}{77}
+\indexentry{proxy variable}{77}
+\indexentry{categorical variable}{77}
+\indexentry{join}{77}
+\indexentry{DataFrame}{77}
+\indexentry{data mining}{77}
+\indexentry{logistic regression}{77}
+\indexentry{Poisson regression}{78}
+\indexentry{odds}{78}

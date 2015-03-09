@@ -1,0 +1,684 @@
+% LaTeX source for ``Think Stats:
+% Exploratory data analysis in Python''
+% Copyright 2014  Allen B. Downey.
+
+% License: Creative Commons 
+% Attribution-NonCommercial-ShareAlike 4.0 International
+% http://creativecommons.org/licenses/by-nc-sa/4.0/
+%
+
+%\documentclass[10pt,b5paper]{book}
+\documentclass[12pt]{book}
+\usepackage[width=5.5in,height=8.5in, hmarginratio=3:2,vmarginratio=1:1]{geometry}
+
+% for some of these packages, you might have to install
+% texlive-latex-extra (in Ubuntu)
+
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{mathpazo}
+
+%\usepackage{pslatex}
+
+\usepackage{url}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{amsthm}
+%\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{setspace}
+\usepackage{hevea}                           
+\usepackage{upquote}
+\usepackage[hangul]{kotex}
+
+
+\title{통계적 사고}
+\author{Allen B. Downey \\
+이광춘}
+
+\newcommand{\thetitle}{통계적 사고}
+\newcommand{\thesubtitle}{파이썬과 R을 이용한 탐색적 자료 분석}
+\newcommand{\theversion}{2.0.25}
+
+% these styles get translated in CSS for the HTML version
+\newstyle{a:link}{color:black;}
+\newstyle{p+p}{margin-top:1em;margin-bottom:1em}
+\newstyle{img}{border:0px}
+
+% change the arrows in the HTML version
+\setlinkstext
+  {\imgsrc[ALT="Previous"]{back.png}}
+  {\imgsrc[ALT="Up"]{up.png}}
+  {\imgsrc[ALT="Next"]{next.png}} 
+
+\makeindex
+
+\newif\ifplastex
+\plastexfalse
+
+\begin{document}
+
+\frontmatter
+
+\newcommand{\Erdos}{Erd\H{o}s}
+\newcommand{\nhat}{\hat{N}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\slope}{\mathrm{slope}}
+\newcommand{\inter}{\mathrm{inter}}
+\newcommand{\xs}{\mathrm{xs}}
+\newcommand{\ys}{\mathrm{ys}}
+\newcommand{\res}{\mathrm{res}}
+\newcommand{\xbar}{\bar{x}}
+\newcommand{\ybar}{\bar{y}}
+\newcommand{\PMF}{\mathrm{PMF}}
+\newcommand{\PDF}{\mathrm{PDF}}
+\newcommand{\CDF}{\mathrm{CDF}}
+\newcommand{\ICDF}{\mathrm{ICDF}}
+\newcommand{\Prob}{\mathrm{P}}
+\newcommand{\Corr}{\mathrm{Corr}}
+\newcommand{\normal}{\mathcal{N}}
+\newcommand{\given}{|}
+%\newcommand{\goodchi}{\protect\raisebox{2pt}{$\chi$}}
+\newcommand{\goodchi}{\chi}
+
+\ifplastex
+    \usepackage{localdef}
+    \maketitle
+
+\newcount\anchorcnt
+\newcommand*{\Anchor}[1]{%
+  \@bsphack%
+    \Hy@GlobalStepCount\anchorcnt%
+    \edef\@currentHref{anchor.\the\anchorcnt}% 
+    \Hy@raisedlink{\hyper@anchorstart{\@currentHref}\hyper@anchorend}% 
+    \M@gettitle{}\label{#1}% 
+    \@esphack%
+}
+
+
+\else
+
+%%% EXERCISE
+
+\newtheoremstyle{exercise}% name of the style to be used
+  {\topsep}% measure of space to leave above the theorem. E.g.: 3pt
+  {\topsep}% measure of space to leave below the theorem. E.g.: 3pt
+  {}% name of font to use in the body of the theorem
+  {}% measure of space to indent
+  {\bfseries}% name of head font
+  {}% punctuation between head and body
+  { }% space after theorem head; " " = normal interword space
+  {}% Manually specify head
+
+\theoremstyle{exercise}
+\newtheorem{exercise}{Exercise}[chapter]
+
+%\newcounter{exercise}[chapter]
+%\newcommand{\nextexercise}{\refstepcounter{exercise}}
+
+%\newenvironment{exercise}{\nextexercise \noindent \textbf{Exercise \thechapter.\theexercise} \begin{itshape} \noindent}{\end{itshape}}
+
+\input{latexonly}
+
+\begin{latexonly}
+
+\renewcommand{\blankpage}{\thispagestyle{empty} \quad \newpage}
+
+%\blankpage
+%\blankpage
+
+% TITLE PAGES FOR LATEX VERSION
+
+%-half title--------------------------------------------------
+\thispagestyle{empty}
+
+\begin{flushright}
+\vspace*{2.0in}
+
+\begin{spacing}{3}
+{\huge \thetitle}\\
+{\Large \thesubtitle }
+\end{spacing}
+
+\vspace{0.25in}
+
+Version \theversion
+
+\vfill
+
+\end{flushright}
+
+%--verso------------------------------------------------------
+
+\blankpage
+\blankpage
+%\clearemptydoublepage
+%\pagebreak
+%\thispagestyle{empty}
+%\vspace*{6in}
+
+%--title page--------------------------------------------------
+\pagebreak
+\thispagestyle{empty}
+
+\begin{flushright}
+\vspace*{2.0in}
+
+\begin{spacing}{3}
+{\huge \thetitle}\\
+{\Large \thesubtitle}
+\end{spacing}
+
+\vspace{0.25in}
+
+Version \theversion
+
+\vspace{1in}
+
+
+{\Large
+번역 및 저자: 이광춘\\
+원저자: Allen B. Downey
+}
+
+
+\vspace{0.5in}
+
+{\Large xwMOOC}
+{\small http://www.xwmooc.net}
+
+%{\Large Green Tea Press}
+%{\small Needham, Massachusetts}
+
+%\includegraphics[width=1in]{figs/logo1.eps}
+\vfill
+
+\end{flushright}
+
+
+%--copyright--------------------------------------------------
+\pagebreak
+\thispagestyle{empty}
+
+{\small
+한국어 저작권 ~2015 이광춘
+Copyright \copyright ~2014 Allen B. Downey.
+
+
+\vspace{0.2in}
+
+\begin{flushleft}
+Green Tea Press       \\
+9 Washburn Ave \\
+Needham MA 02492
+\end{flushleft}
+
+Permission is granted to copy, distribute, and/or modify this document
+under the terms of the Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International License, which
+is available at
+\url{http://creativecommons.org/licenses/by-nc-sa/4.0/}.
+
+The original form of this book is \LaTeX\ source code.  Compiling this
+code has the effect of generating a device-independent representation
+of a textbook, which can be converted to other formats and printed.
+
+The \LaTeX\ source for this book is available from
+\url{http://thinkstats2.com}.
+
+\vspace{0.2in}
+
+} % end small
+
+\end{latexonly}
+
+
+% HTMLONLY
+
+\begin{htmlonly}
+
+% TITLE PAGE FOR HTML VERSION
+
+{\Large \thetitle: \thesubtitle}
+
+{\large Allen B. Downey}
+
+Version \theversion
+
+\vspace{0.25in}
+
+Copyright 2014 Allen B. Downey
+
+\vspace{0.25in}
+
+Permission is granted to copy, distribute, and/or modify this document
+under the terms of the Creative Commons 
+Attribution-NonCommercial-ShareAlike 4.0 International
+Unported License, which is available at
+\url{http://creativecommons.org/licenses/by-nc-sa/4.0/}.
+
+\setcounter{chapter}{-1}
+
+\end{htmlonly}
+
+\fi
+% END OF THE PART WE SKIP FOR PLASTEX
+
+\chapter{서문}
+\label{preface}
+
+탐색적 자료 분석(EDA, Exploratory Data Analysis)에 대한 소개서로 작성되었다.
+
+This book is an
+introduction to the practical tools of exploratory data analysis.
+The organization of the book follows the process I use
+when I start working with a dataset:
+
+\begin{itemize}
+
+\item Importing and cleaning: Whatever format the data is in, it
+  usually takes some time and effort to read the data, clean and
+  transform it, and check that everything made it through the
+  translation process intact.
+\index{cleaning}
+
+\item Single variable explorations: I usually start by examining one
+  variable at a time, finding out what the variables mean, looking
+  at distributions of the values, and choosing appropriate
+  summary statistics.
+\index{distribution}
+
+\item Pair-wise explorations: To identify possible relationships
+  between variables, I look at tables and scatter plots, and compute
+  correlations and linear fits.
+\index{correlation}
+\index{linear fit}
+
+\item Multivariate analysis: If there are apparent relationships
+  between variables, I use multiple regression to add control variables
+  and investigate more complex relationships.
+\index{multiple regression}
+\index{control variable}
+
+\item Estimation and hypothesis testing: When reporting statistical
+  results, it is important to answer three questions: How big is
+  the effect?  How much variability should we expect if we run the same
+  measurement again?  Is it possible that the apparent effect is
+  due to chance?
+\index{estimation}
+\index{hypothesis testing}
+
+\item Visualization: During exploration, visualization is an important 
+  tool for finding possible relationships and effects.  Then if an
+  apparent effect holds up to scrutiny, visualization is an effective
+  way to communicate results.
+\index{visualization}
+
+\end{itemize}
+
+This book takes a computational approach, which has several
+advantages over mathematical approaches:
+\index{computational methods}
+
+\begin{itemize}
+
+\item I present most ideas using Python code, rather than
+  mathematical notation.  In general, Python code is more readable;
+  also, because it is executable, readers can download it, run it,
+  and modify it.
+
+\item Each chapter includes exercises readers can do to develop
+  and solidify their learning.  When you write programs, you
+  express your understanding in code; while you are debugging the
+  program, you are also correcting your understanding.
+\index{debugging}
+
+\item Some exercises involve experiments to test statistical
+  behavior.  For example, you can explore the Central Limit Theorem
+  (CLT) by generating random samples and computing their sums.  The
+  resulting visualizations demonstrate why the CLT works and when
+  it doesn't.
+\index{Central Limit Theorem}
+\index{CLT}
+
+\item Some ideas that are hard to grasp mathematically are easy to
+  understand by simulation.  For example, we approximate p-values by
+  running random simulations, which reinforces the meaning of the
+  p-value.
+\index{p-value}
+
+\item Because the book is based on a general-purpose programming
+  language (Python), readers can import data from almost any source.
+  They are not limited to datasets that have been cleaned and
+  formatted for a particular statistics tool.
+
+\end{itemize}
+
+The book lends itself to a project-based approach.  In my class,
+students work on a semester-long project that requires them to pose a
+statistical question, find a dataset that can address it, and apply
+each of the techniques they learn to their own data.
+
+To demonstrate my approach to statistical analysis, the book
+presents a case study that runs through all of the chapters.  It uses
+data from two sources:
+
+\begin{itemize}
+
+\item The National Survey of Family Growth (NSFG), conducted by the
+  U.S. Centers for Disease Control and Prevention (CDC) to gather
+  ``information on family life, marriage and divorce, pregnancy,
+  infertility, use of contraception, and men's and women's health.''
+  (See \url{http://cdc.gov/nchs/nsfg.htm}.)
+
+\item The Behavioral Risk Factor Surveillance System (BRFSS),
+  conducted by the National Center for Chronic Disease Prevention and
+  Health Promotion to ``track health conditions and risk behaviors in
+  the United States.''  (See \url{http://cdc.gov/BRFSS/}.)
+
+\end{itemize}
+
+Other examples use data from the IRS, the U.S. Census, and
+the Boston Marathon.
+
+This second edition of {\it Think Stats} includes the chapters from
+the first edition, many of them substantially revised, and new
+chapters on regression, time series analysis, survival analysis,
+and analytic methods.  The previous edition did not use pandas,
+SciPy, or StatsModels, so all of that material is new.
+
+
+\section{How I wrote this book}
+
+When people write a new textbook, they usually start by
+reading a stack of old textbooks.  As a result, most books
+contain the same material in pretty much the same order.
+
+I did not do that.  In fact, I used almost no printed material while I
+was writing this book, for several reasons:
+
+\begin{itemize}
+
+\item My goal was to explore a new approach to this material, so I didn't
+want much exposure to existing approaches.
+
+\item Since I am making this book available under a free license, I wanted
+to make sure that no part of it was encumbered by copyright restrictions.
+
+\item Many readers of my books don't have access to libraries of
+printed material, so I tried to make references to resources that are
+freely available on the Internet.
+
+\item Some proponents of old media think that the exclusive
+use of electronic resources is lazy and unreliable.  They might be right
+about the first part, but I think they are wrong about the second, so
+I wanted to test my theory.
+
+% http://www.ala.org/ala/mgrps/rts/nmrt/news/footnotes/may2010/in_defense_of_wikipedia_bonnett.cfm
+
+\end{itemize}
+
+The resource I used more than any other is Wikipedia.  In general, the
+articles I read on statistical topics were very good (although I made
+a few small changes along the way).  I include references to Wikipedia
+pages throughout the book and I encourage you to follow those links;
+in many cases, the Wikipedia page picks up where my description leaves
+off.  The vocabulary and notation in this book are generally
+consistent with Wikipedia, unless I had a good reason to deviate.
+Other resources I found useful were Wolfram MathWorld and 
+the Reddit statistics forum, \url{http://www.reddit.com/r/statistics}.
+
+
+\section{Using the code}
+\label{code}
+
+The code and data used in this book are available from
+\url{https://github.com/AllenDowney/ThinkStats2}.  Git is a version
+control system that allows you to keep track of the files that
+make up a project.  A collection of files under Git's control is
+called a {\bf repository}.  GitHub is a hosting service that provides
+storage for Git repositories and a convenient web interface.
+\index{repository}
+\index{Git}
+\index{GitHub}
+
+The GitHub homepage for my repository provides several ways to
+work with the code:
+
+\begin{itemize}
+
+\item You can create a copy of my repository
+on GitHub by pressing the {\sf Fork} button.  If you don't already
+have a GitHub account, you'll need to create one.  After forking, you'll
+have your own repository on GitHub that you can use to keep track
+of code you write while working on this book.  Then you can
+clone the repo, which means that you make a copy of the files
+on your computer.
+\index{fork}
+
+\item Or you could clone
+my repository.  You don't need a GitHub account to do this, but you
+won't be able to write your changes back to GitHub.
+\index{clone}
+
+\item If you don't want to use Git at all, you can download the files
+in a Zip file using the button in the lower-right corner of the
+GitHub page.
+
+\end{itemize}
+
+All of the code is written to work in both Python 2 and Python 3
+with no translation.
+
+I developed this book using Anaconda from
+Continuum Analytics, which is a free Python distribution that includes
+all the packages you'll need to run the code (and lots more).
+I found Anaconda easy to install.  By default it does a user-level
+installation, not system-level, so you don't need administrative
+privileges.  And it supports both Python 2 and Python 3.  You can
+download Anaconda from \url{http://continuum.io/downloads}.
+\index{Anaconda}
+
+If you don't want to use Anaconda, you will need the following
+packages:
+
+\begin{itemize}
+
+\item pandas for representing and analyzing data,
+  \url{http://pandas.pydata.org/};
+\index{pandas}
+
+\item NumPy for basic numerical computation, \url{http://www.numpy.org/};
+\index{NumPy}
+
+\item SciPy for scientific computation including statistics,
+  \url{http://www.scipy.org/};
+\index{SciPy}
+
+\item StatsModels for regression and other statistical analysis,
+\url{http://statsmodels.sourceforge.net/}; and
+\index{StatsModels}
+
+\item matplotlib for visualization, \url{http://matplotlib.org/}.
+\index{matplotlib}
+
+\end{itemize}
+
+Although these are commonly used packages, they are not included with
+all Python installations, and they can be hard to install in some
+environments.  If you have trouble installing them, I strongly
+recommend using Anaconda or one of the other Python distributions
+that include these packages.
+\index{installation}
+
+After you clone the repository or unzip the zip file, you should have
+a folder called {\tt ThinkStats2/code} with a file called {nsfg.py}.
+If you run {nsfg.py}, it should read a data file, run some tests, and print a
+message like, ``All tests passed.''  If you get import errors, it
+probably means there are packages you need to install.
+
+Most exercises use Python scripts, but some also use the IPython
+notebook.  If you have not used IPython notebook before, I suggest
+you start with the documentation at
+\url{http://ipython.org/ipython-doc/stable/notebook/notebook.html}.
+\index{IPython}
+
+I wrote this book assuming that the reader is familiar with core Python,
+including object-oriented features, but not pandas,
+NumPy, and SciPy.  If you are already familiar with these modules, you
+can skip a few sections.
+
+I assume that the reader knows basic mathematics, including
+logarithms, for example, and summations.  I refer to calculus concepts
+in a few places, but you don't have to do any calculus.
+
+If you have never studied statistics, I think this book is a good place
+to start.  And if you have taken
+a traditional statistics class, I hope this book will help repair the
+damage.
+
+
+
+---
+
+Allen B. Downey is a Professor of Computer Science at 
+the Franklin W. Olin College of Engineering in Needham, MA.
+
+
+
+
+\section*{Contributor List}
+
+If you have a suggestion or correction, please send email to 
+{\tt downey@allendowney.com}.  If I make a change based on your
+feedback, I will add you to the contributor list
+(unless you ask to be omitted).
+\index{contributors}
+
+If you include at least part of the sentence the
+error appears in, that makes it easy for me to search.  Page and
+section numbers are fine, too, but not quite as easy to work with.
+Thanks!
+
+\small
+
+\begin{itemize}
+
+\item Lisa Downey and June Downey read an early draft and made many
+corrections and suggestions.
+
+\item Steven Zhang found several errors.
+
+\item Andy Pethan and Molly Farison helped debug some of the solutions,
+and Molly spotted several typos.
+
+\item Andrew Heine found an error in my error function.
+
+\item Dr. Nikolas Akerblom knows how big a Hyracotherium is.
+
+\item Alex Morrow clarified one of the code examples.
+
+\item Jonathan Street caught an error in the nick of time.
+
+\item G\'{a}bor Lipt\'{a}k found a typo in the book and the relay race solution.
+
+\item Many thanks to Kevin Smith and Tim Arnold for their work on
+plasTeX, which I used to convert this book to DocBook.
+
+\item George Caplan sent several suggestions for improving clarity.
+
+\item Julian Ceipek found an error and a number of typos.
+
+\item Stijn Debrouwere, Leo Marihart III, Jonathan Hammler, and Kent Johnson
+found errors in the first print edition.
+
+\item Dan Kearney found a typo.
+
+\item Jeff Pickhardt found a broken link and a typo.
+
+\item J\"{o}rg Beyer found typos in the book and made many corrections
+in the docstrings of the accompanying code.
+
+\item Tommie Gannert sent a patch file with a number of corrections.
+
+\item Alexander Gryzlov suggested a clarification in an exercise.
+
+\item Martin Veillette reported an error in one of the formulas for
+Pearson's correlation.
+
+\item Christoph Lendenmann submitted several errata.
+
+\item Haitao Ma noticed a typo and and sent me a note.
+
+\item Michael Kearney sent me many excellent suggestions.
+
+\item Alex Birch made a number of helpful suggestions.
+
+\item Lindsey Vanderlyn, Griffin Tschurwald, and Ben Small read an
+  early version of this book and found many errors.
+
+\item John Roth, Carol Willing, and Carol Novitsky performed technical
+reviews of the book.  They found many errors and made many
+helpful suggestions.
+
+\item Rohit Deshpande found a typesetting error.
+
+\item David Palmer sent many helpful suggestions and corrections.
+
+\item Erik Kulyk found many typos.
+
+\item Nir Soffer sent several excellent pull requests for both the
+  book and the supporting code.
+
+\item Joanne Pratt found a number that was off by a factor of 10.
+
+% ENDCONTRIB
+
+\end{itemize}
+
+\normalsize
+
+\clearemptydoublepage
+
+% TABLE OF CONTENTS
+\begin{latexonly}
+
+\tableofcontents
+
+\clearemptydoublepage
+
+\end{latexonly}
+
+% START THE BOOK
+\mainmatter
+
+%\input{00-preface}
+\input{01-intro}
+\input{02-distribution}
+\input{03-pmf}
+\input{04-cdf}
+%\input{05-modeling}
+%\input{06-pdf}
+%\input{07-relationship}
+\input{08-estimation}
+%\input{09-hypothesis}
+%\input{10-least-square}
+\input{11-regression}
+%\input{12-time-series}
+%\input{13-survival}
+%\input{14-analytic-method}
+
+
+\printindex
+
+\clearemptydoublepage
+%\blankpage
+%\blankpage
+%\blankpage
+
+
+\end{document}
+
+

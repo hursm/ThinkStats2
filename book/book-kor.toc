@@ -1,0 +1,66 @@
+\contentsline {chapter}{서문}{v}
+\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}How I wrote this book}{vii}
+\contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}Using the code}{viii}
+\contentsline {chapter}{\numberline {제\nobreakspace {}1\nobreakspace {}장}Exploratory data analysis}{1}
+\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}A statistical approach}{2}
+\contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}The National Survey of Family Growth}{3}
+\contentsline {section}{\numberline {제\nobreakspace {}3\nobreakspace {}절}Importing the data}{4}
+\contentsline {section}{\numberline {제\nobreakspace {}4\nobreakspace {}절}DataFrames}{5}
+\contentsline {section}{\numberline {제\nobreakspace {}5\nobreakspace {}절}Variables}{7}
+\contentsline {section}{\numberline {제\nobreakspace {}6\nobreakspace {}절}Transformation}{8}
+\contentsline {section}{\numberline {제\nobreakspace {}7\nobreakspace {}절}Validation}{9}
+\contentsline {section}{\numberline {제\nobreakspace {}8\nobreakspace {}절}Interpretation}{11}
+\contentsline {section}{\numberline {제\nobreakspace {}9\nobreakspace {}절}Exercises}{12}
+\contentsline {section}{\numberline {제\nobreakspace {}10\nobreakspace {}절}Glossary}{13}
+\contentsline {chapter}{\numberline {제\nobreakspace {}2\nobreakspace {}장}Distributions}{15}
+\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}Histograms}{15}
+\contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}Representing histograms}{16}
+\contentsline {section}{\numberline {제\nobreakspace {}3\nobreakspace {}절}Plotting histograms}{16}
+\contentsline {section}{\numberline {제\nobreakspace {}4\nobreakspace {}절}NSFG variables}{17}
+\contentsline {section}{\numberline {제\nobreakspace {}5\nobreakspace {}절}Outliers}{18}
+\contentsline {section}{\numberline {제\nobreakspace {}6\nobreakspace {}절}First babies}{19}
+\contentsline {section}{\numberline {제\nobreakspace {}7\nobreakspace {}절}Summarizing distributions}{20}
+\contentsline {section}{\numberline {제\nobreakspace {}8\nobreakspace {}절}Variance}{22}
+\contentsline {section}{\numberline {제\nobreakspace {}9\nobreakspace {}절}Effect size}{22}
+\contentsline {section}{\numberline {제\nobreakspace {}10\nobreakspace {}절}Reporting results}{23}
+\contentsline {section}{\numberline {제\nobreakspace {}11\nobreakspace {}절}Exercises}{24}
+\contentsline {section}{\numberline {제\nobreakspace {}12\nobreakspace {}절}Glossary}{25}
+\contentsline {chapter}{\numberline {제\nobreakspace {}3\nobreakspace {}장}Probability mass functions}{27}
+\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}Pmfs}{27}
+\contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}Plotting PMFs}{29}
+\contentsline {section}{\numberline {제\nobreakspace {}3\nobreakspace {}절}Other visualizations}{30}
+\contentsline {section}{\numberline {제\nobreakspace {}4\nobreakspace {}절}The class size paradox}{31}
+\contentsline {section}{\numberline {제\nobreakspace {}5\nobreakspace {}절}DataFrame indexing}{33}
+\contentsline {section}{\numberline {제\nobreakspace {}6\nobreakspace {}절}Exercises}{35}
+\contentsline {section}{\numberline {제\nobreakspace {}7\nobreakspace {}절}Glossary}{36}
+\contentsline {chapter}{\numberline {제\nobreakspace {}4\nobreakspace {}장}Cumulative distribution functions}{39}
+\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}The limits of PMFs}{39}
+\contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}Percentiles}{40}
+\contentsline {section}{\numberline {제\nobreakspace {}3\nobreakspace {}절}CDFs}{41}
+\contentsline {section}{\numberline {제\nobreakspace {}4\nobreakspace {}절}Representing CDFs}{42}
+\contentsline {section}{\numberline {제\nobreakspace {}5\nobreakspace {}절}Comparing CDFs}{43}
+\contentsline {section}{\numberline {제\nobreakspace {}6\nobreakspace {}절}Percentile-based statistics}{43}
+\contentsline {section}{\numberline {제\nobreakspace {}7\nobreakspace {}절}Random numbers}{44}
+\contentsline {section}{\numberline {제\nobreakspace {}8\nobreakspace {}절}Comparing percentile ranks}{45}
+\contentsline {section}{\numberline {제\nobreakspace {}9\nobreakspace {}절}Exercises}{46}
+\contentsline {section}{\numberline {제\nobreakspace {}10\nobreakspace {}절}Glossary}{47}
+\contentsline {chapter}{\numberline {제\nobreakspace {}5\nobreakspace {}장}Estimation}{49}
+\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}The estimation game}{49}
+\contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}Guess the variance}{51}
+\contentsline {section}{\numberline {제\nobreakspace {}3\nobreakspace {}절}Sampling distributions}{53}
+\contentsline {section}{\numberline {제\nobreakspace {}4\nobreakspace {}절}Sampling bias}{55}
+\contentsline {section}{\numberline {제\nobreakspace {}5\nobreakspace {}절}Exponential distributions}{56}
+\contentsline {section}{\numberline {제\nobreakspace {}6\nobreakspace {}절}Exercises}{57}
+\contentsline {section}{\numberline {제\nobreakspace {}7\nobreakspace {}절}Glossary}{58}
+\contentsline {chapter}{\numberline {제\nobreakspace {}6\nobreakspace {}장}Regression}{61}
+\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}StatsModels}{62}
+\contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}Multiple regression}{63}
+\contentsline {section}{\numberline {제\nobreakspace {}3\nobreakspace {}절}Nonlinear relationships}{65}
+\contentsline {section}{\numberline {제\nobreakspace {}4\nobreakspace {}절}Data mining}{66}
+\contentsline {section}{\numberline {제\nobreakspace {}5\nobreakspace {}절}Prediction}{68}
+\contentsline {section}{\numberline {제\nobreakspace {}6\nobreakspace {}절}Logistic regression}{71}
+\contentsline {section}{\numberline {제\nobreakspace {}7\nobreakspace {}절}Estimating parameters}{72}
+\contentsline {section}{\numberline {제\nobreakspace {}8\nobreakspace {}절}Implementation}{73}
+\contentsline {section}{\numberline {제\nobreakspace {}9\nobreakspace {}절}Accuracy}{75}
+\contentsline {section}{\numberline {제\nobreakspace {}10\nobreakspace {}절}Exercises}{76}
+\contentsline {section}{\numberline {제\nobreakspace {}11\nobreakspace {}절}Glossary}{77}

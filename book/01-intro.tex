@@ -1,0 +1,805 @@
+
+\chapter{Exploratory data analysis}
+\label{intro}
+
+The thesis of this book is that data combined with practical
+methods can answer questions and guide decisions under uncertainty.
+
+As an example, I present a case study motivated by a question
+I heard when my wife and I were expecting our first child: do first
+babies tend to arrive late?
+\index{first babies}
+
+If you Google this question, you will find plenty of discussion.  Some
+people claim it's true, others say it's a myth, and some people say
+it's the other way around: first babies come early.
+
+In many of these discussions, people provide data to support their
+claims.  I found many examples like these:
+
+\begin{quote}
+
+``My two friends that have given birth recently to their first babies,
+BOTH went almost 2 weeks overdue before going into labour or being
+induced.''
+
+``My first one came 2 weeks late and now I think the second one is
+going to come out two weeks early!!''
+
+``I don't think that can be true because my sister was my mother's
+first and she was early, as with many of my cousins.''
+
+\end{quote}
+
+Reports like these are called {\bf anecdotal evidence} because they
+are based on data that is unpublished and usually personal.  In casual
+conversation, there is nothing wrong with anecdotes, so I don't mean
+to pick on the people I quoted.
+\index{anecdotal evidence}
+
+But we might want evidence that is more persuasive and
+an answer that is more reliable.  By those standards, anecdotal
+evidence usually fails, because:
+
+\begin{itemize}
+
+\item Small number of observations: If pregnancy length is longer
+  for first babies, the difference is probably small compared to
+  natural variation.  In that case, we might have to compare a large
+  number of pregnancies to be sure that a difference exists.
+\index{pregnancy length}
+
+\item Selection bias: People who join a discussion of this question
+  might be interested because their first babies were late.  In that
+  case the process of selecting data would bias the results.
+\index{selection bias}
+\index{bias!selection}
+
+\item Confirmation bias:  People who believe the claim might be more
+  likely to contribute examples that confirm it.  People who doubt the
+  claim are more likely to cite counterexamples.
+\index{confirmation bias}
+\index{bias!confirmation}
+
+\item Inaccuracy: Anecdotes are often personal stories, and often
+  misremembered, misrepresented, repeated
+  inaccurately, etc.
+
+\end{itemize}
+
+So how can we do better?
+
+
+\section{A statistical approach}
+
+To address the limitations of anecdotes, we will use the tools
+of statistics, which include:
+
+\begin{itemize}
+
+\item Data collection: We will use data from a large national survey
+  that was designed explicitly with the goal of generating
+  statistically valid inferences about the U.S. population.
+\index{data collection}
+
+\item Descriptive statistics: We will generate statistics that
+  summarize the data concisely, and evaluate different ways to
+  visualize data.
+\index{descriptive statistics}
+
+\item Exploratory data analysis: We will look for
+  patterns, differences, and other features that address the questions
+  we are interested in.  At the same time we will check for
+  inconsistencies and identify limitations.
+\index{exploratory data analysis}
+
+\item Estimation: We will use data from a sample to estimate
+  characteristics of the general population.
+\index{estimation}
+
+\item Hypothesis testing: Where we see apparent effects, like a
+  difference between two groups, we will evaluate whether the effect
+  might have happened by chance.
+\index{hypothesis testing}
+
+\end{itemize}
+
+By performing these steps with care to avoid pitfalls, we can
+reach conclusions that are more justifiable and more likely to be
+correct.
+
+
+\section{The National Survey of Family Growth}
+\label{nsfg}
+
+Since 1973 the U.S. Centers for Disease Control and Prevention (CDC)
+have conducted the National Survey of Family Growth (NSFG),
+which is intended to gather ``information on family life, marriage and
+divorce, pregnancy, infertility, use of contraception, and men's and
+women's health. The survey results are used ... to plan health services and
+health education programs, and to do statistical studies of families,
+fertility, and health.''  See
+  \url{http://cdc.gov/nchs/nsfg.htm}.
+\index{National Survey of Family Growth}
+\index{NSFG}
+
+We will use data collected by this survey to investigate whether first
+babies tend to come late, and other questions.  In order to use this
+data effectively, we have to understand the design of the study.
+
+The NSFG is a {\bf cross-sectional} study, which means that it
+captures a snapshot of a group at a point in time.  The most
+common alternative is a {\bf longitudinal} study, which observes a
+group repeatedly over a period of time.
+\index{cross-sectional study}
+\index{study!cross-sectional}
+\index{longitudinal study}
+\index{study!longitudinal}
+
+The NSFG has been conducted seven times; each deployment is called a
+{\bf cycle}.  We will use data from Cycle 6, which was conducted from
+January 2002 to March 2003.  \index{cycle}
+
+The goal of the survey is to draw conclusions about a {\bf
+  population}; the target population of the NSFG is people in the
+United States aged 15-44.  Ideally surveys would collect data from
+every member of the population, but that's seldom possible.  Instead
+we collect data from a subset of the population called a {\bf sample}.
+The people who participate in a survey are called {\bf respondents}.
+\index{population}
+
+In general,
+cross-sectional studies are meant to be {\bf representative}, which
+means that every member of the target population has an equal chance
+of participating.  That ideal is hard to achieve in
+practice, but people who conduct surveys come as close as they can.
+\index{respondent} \index{representative}
+
+The NSFG is not representative; instead it is deliberately {\bf
+  oversampled}.  The designers of the study recruited three
+groups---Hispanics, African-Americans and teenagers---at rates higher
+than their representation in the U.S. population, in order to
+make sure that the number of respondents in each of
+these groups is large enough to draw valid statistical inferences.
+\index{oversampling}
+
+Of course, the drawback of oversampling is that it is not as easy
+to draw conclusions about the general population based on statistics
+from the survey.  We will come back to this point later.
+
+When working with this kind of data, it is important to be familiar
+with the {\bf codebook}, which documents the design of the study, the
+survey questions, and the encoding of the responses.  The codebook and
+user's guide for the NSFG data are available from
+\url{http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm}
+
+
+\section{Importing the data}
+
+The code and data used in this book are available from
+\url{https://github.com/AllenDowney/ThinkStats2}.  For information
+about downloading and working with this code, see Section~\ref{code}.
+
+Once you download the code, you should have a file called {\tt
+  ThinkStats2/code/nsfg.py}.  If you run it, it should read a data
+file, run some tests, and print a message like, ``All tests passed.''
+
+Let's see what it does.  Pregnancy data from Cycle 6 of the NSFG is in
+a file called {\tt 2002FemPreg.dat.gz}; it
+is a gzip-compressed data file in plain text (ASCII), with fixed width
+columns.  Each line in the file is a {\bf record} that
+contains data about one pregnancy.
+
+The format of the file is documented in {\tt 2002FemPreg.dct}, which
+is a Stata dictionary file.  Stata is a statistical software system;
+a ``dictionary'' in this context is a list of variable names, types,
+and indices that identify where in each line to find each variable.
+
+For example, here are a few lines from {\tt 2002FemPreg.dct}:
+%
+\begin{verbatim}
+infile dictionary {
+  _column(1)  str12  caseid    %12s  "RESPONDENT ID NUMBER"
+  _column(13) byte   pregordr   %2f  "PREGNANCY ORDER (NUMBER)"
+}
+\end{verbatim}
+
+This dictionary describes two variables: {\tt caseid} is a 12-character
+string that represents the respondent ID; {\tt pregorder} is a 
+one-byte integer that indicates which pregnancy this record
+describes for this respondent.
+
+The code you downloaded includes {\tt thinkstats2.py}, which is a Python
+module
+that contains many classes and functions used in this book,
+including functions that read the Stata dictionary and
+the NSFG data file.  Here's how they are used in {\tt nsfg.py}:
+
+\begin{verbatim}
+def ReadFemPreg(dct_file='2002FemPreg.dct',
+                dat_file='2002FemPreg.dat.gz'):
+    dct = thinkstats2.ReadStataDct(dct_file)
+    df = dct.ReadFixedWidth(dat_file, compression='gzip')
+    CleanFemPreg(df)
+    return df
+\end{verbatim}
+
+{\tt ReadStataDct} takes the name of the dictionary file
+and returns {\tt dct}, a {\tt FixedWidthVariables} object that contains the
+information from the dictionary file.  {\tt dct} provides {\tt
+  ReadFixedWidth}, which reads the data file.
+
+
+\section{DataFrames}
+\label{dataframe}
+
+The result of {\tt ReadFixedWidth} is a DataFrame, which is the
+fundamental data structure provided by pandas, which is a Python
+data and statistics package we'll use throughout this book.
+A DataFrame contains a
+row for each record, in this case one row per pregnancy, and a column
+for each variable.
+\index{pandas}
+\index{DataFrame}
+
+In addition to the data, a DataFrame also contains the variable
+names and their types, and it provides methods for accessing and modifying
+the data.
+
+If you print {\tt df} you get a truncated view of the rows and
+columns, and the shape of the DataFrame, which is 13593
+rows/records and 244 columns/variables.
+
+\begin{verbatim}
+>>> import nsfg
+>>> df = nsfg.ReadFemPreg()
+>>> df
+...
+[13593 rows x 244 columns]
+\end{verbatim}
+
+The attribute {\tt columns} returns a sequence of column
+names as Unicode strings:
+
+\begin{verbatim}
+>>> df.columns
+Index([u'caseid', u'pregordr', u'howpreg_n', u'howpreg_p', ... ])
+\end{verbatim}
+
+The result is an Index, which is another pandas data structure.  
+We'll learn more about Index later, but for
+now we'll treat it like a list:
+\index{pandas}
+\index{Index}
+
+\begin{verbatim}
+>>> df.columns[1]
+'pregordr'
+\end{verbatim}
+
+To access a column from a DataFrame, you can use the column
+name as a key:
+\index{DataFrame}
+
+\begin{verbatim}
+>>> pregordr = df['pregordr']
+>>> type(pregordr)
+<class 'pandas.core.series.Series'>
+\end{verbatim}
+
+The result is a Series, yet another pandas data structure.
+A Series is like a Python list with some additional features.
+When you print a Series, you get the indices and the
+corresponding values:
+\index{Series}
+
+\begin{verbatim}
+>>> pregordr
+0     1
+1     2
+2     1
+3     2
+...
+13590    3
+13591    4
+13592    5
+Name: pregordr, Length: 13593, dtype: int64
+\end{verbatim}
+
+In this example the indices are integers from 0 to 13592, but in
+general they can be any sortable type.  The elements
+are also integers, but they can be any type.
+
+The last line includes the variable name, Series length, and data type;
+{\tt int64} is one of the types provided by NumPy.  If you run
+this example on a 32-bit machine you might see {\tt int32}.
+\index{NumPy}
+
+You can access the elements of a Series using integer indices
+and slices:
+
+\begin{verbatim}
+>>> pregordr[0]
+1
+>>> pregordr[2:5]
+2    1
+3    2
+4    3
+Name: pregordr, dtype: int64
+\end{verbatim}
+
+The result of the index operator is an {\tt int64}; the
+result of the slice is another Series.
+
+You can also access the columns of a DataFrame using dot notation:
+\index{DataFrame}
+
+\begin{verbatim}
+>>> pregordr = df.pregordr
+\end{verbatim}
+
+This notation only works if the column name is a valid Python
+identifier, so it has to begin with a letter, can't contain spaces, etc.
+
+
+\section{Variables}
+
+We have already seen two variables in the NSFG dataset, {\tt caseid}
+and {\tt pregordr}, and we have seen that there are 244 variables in
+total.  For the explorations in this book, I use the following
+variables:
+
+\begin{itemize}
+
+\item {\tt caseid} is the integer ID of the respondent.
+
+\item {\tt prglngth} is the integer duration of the pregnancy in weeks.
+\index{pregnancy length}
+
+\item {\tt outcome} is an integer code for the outcome of the
+  pregnancy.  The code 1 indicates a live birth.
+
+\item {\tt pregordr} is a pregnancy serial number; for example, the
+  code for a respondent's first pregnancy is 1, for the second
+  pregnancy is 2, and so on.
+
+\item {\tt birthord} is a serial number for live
+  births; the code for a respondent's first child is 1, and so on.
+  For outcomes other than live birth, this field is blank.
+
+\item \verb"birthwgt_lb" and \verb"birthwgt_oz" contain the pounds and
+  ounces parts of the birth weight of the baby.
+\index{birth weight}
+\index{weight!birth}
+
+\item {\tt agepreg} is the mother's age at the end of the pregnancy.
+
+\item {\tt finalwgt} is the statistical weight associated with the
+  respondent.  It is a floating-point value that indicates the number
+  of people in the U.S. population this respondent represents.
+  \index{weight!sample}
+
+\end{itemize}
+
+If you read the codebook carefully, you will see that many of the
+variables are {\bf recodes}, which means that they are not part of the
+{\bf raw data} collected by the survey; they are calculated using
+the raw data.  \index{recode} \index{raw data}
+
+For example, {\tt prglngth} for live births is equal to the raw
+variable {\tt wksgest} (weeks of gestation) if it is available;
+otherwise it is estimated using {\tt mosgest * 4.33} (months of
+gestation times the average number of weeks in a month).
+
+Recodes are often based on logic that checks the consistency and
+accuracy of the data.  In general it is a good idea to use recodes
+when they are available, unless there is a compelling reason to
+process the raw data yourself.
+
+
+\section{Transformation}
+\label{cleaning}
+
+When you import data like this, you often have to check for errors,
+deal with special values, convert data into different formats, and
+perform calculations.  These operations are called {\bf data cleaning}.
+
+{\tt nsfg.py} includes {\tt CleanFemPreg}, a function that cleans
+the variables I am planning to use.
+
+\begin{verbatim}
+def CleanFemPreg(df):
+    df.agepreg /= 100.0
+
+    na_vals = [97, 98, 99]
+    df.birthwgt_lb.replace(na_vals, np.nan, inplace=True)
+    df.birthwgt_oz.replace(na_vals, np.nan, inplace=True)
+
+    df['totalwgt_lb'] = df.birthwgt_lb + df.birthwgt_oz / 16.0    
+\end{verbatim}
+
+{\tt agepreg} contains the mother's age at the end of the
+pregnancy.  In the data file, {\tt agepreg} is encoded as an integer
+number of centiyears.  So the first line divides each element
+of {\tt agepreg} by 100, yielding a floating-point value in
+years.
+
+\verb"birthwgt_lb" and \verb"birthwgt_oz" contain the weight of the
+baby, in pounds and ounces, for pregnancies that end in live birth.
+In addition it uses several special codes:
+
+\begin{verbatim}
+97	NOT ASCERTAINED
+98	REFUSED	 
+99	DON'T KNOW
+\end{verbatim}
+
+Special values encoded as numbers are {\em dangerous} because if they
+are not handled properly, they can generate bogus results, like
+a 99-pound baby.  The {\tt replace} method replaces these values with
+{\tt np.nan}, a special floating-point value that represents ``not a
+number.''  The {\tt inplace} flag tells {\tt replace} to modify the
+existing Series rather than create a new one.
+\index{NaN}
+
+As part of the IEEE floating-point standard, all mathematical
+operations return {\tt nan} if either argument is {\tt nan}:
+
+\begin{verbatim}
+>>> import numpy as np
+>>> np.nan / 100.0
+nan
+\end{verbatim}
+
+So computations with {\tt nan} tend to do the right thing, and most
+pandas functions handle {\tt nan} appropriately.  But dealing with
+missing data will be a recurring issue.
+\index{pandas}
+\index{missing values}
+
+The last line of {\tt CleanFemPreg} creates a new
+column \verb"totalwgt_lb" that combines pounds and ounces into
+a single quantity, in pounds.
+
+One important note: when you add a new column to a DataFrame, you
+must use dictionary syntax, like this
+\index{DataFrame}
+
+\begin{verbatim}
+    # CORRECT
+    df['totalwgt_lb'] = df.birthwgt_lb + df.birthwgt_oz / 16.0 
+\end{verbatim}
+
+Not dot notation, like this:
+
+\begin{verbatim}
+    # WRONG!
+    df.totalwgt_lb = df.birthwgt_lb + df.birthwgt_oz / 16.0 
+\end{verbatim}
+
+The version with dot notation adds an attribute to the DataFrame
+object, but that attribute is not treated as a new column.
+
+
+\section{Validation}
+
+When data is exported from one software environment and imported into
+another, errors might be introduced.  And when you are
+getting familiar with a new dataset, you might interpret data
+incorrectly or introduce other misunderstandings.  If you take
+time to validate the data, you can save time later and avoid errors.
+
+One way to validate data is to compute basic statistics and compare
+them with published results.  For example, the NSFG codebook includes
+tables that summarize each variable.  Here is the table for
+{\tt outcome}, which encodes the outcome of each pregnancy:
+
+\begin{verbatim}
+value	label	 	        Total
+1	LIVE BIRTH              9148
+2	INDUCED ABORTION        1862
+3	STILLBIRTH               120
+4	MISCARRIAGE             1921
+5	ECTOPIC PREGNANCY        190
+6	CURRENT PREGNANCY        352
+\end{verbatim}
+
+The Series class provides a method, \verb"value_counts", that
+counts the number of times each value appears.  If we select the {\tt
+  outcome} Series from the DataFrame, we can use \verb"value_counts"
+to compare with the published data:
+\index{DataFrame}
+\index{Series}
+
+\begin{verbatim}
+>>> df.outcome.value_counts().sort_index()
+1    9148
+2    1862
+3     120
+4    1921
+5     190
+6     352
+\end{verbatim}
+
+The result of \verb"value_counts" is a Series;
+\verb"sort_index" sorts the Series by index, so the
+values appear in order.
+
+Comparing the results with the published table, it looks like the
+values in {\tt outcome} are correct.  Similarly, here is the published
+table for \verb"birthwgt_lb"
+
+\begin{verbatim}
+value	label                  Total
+.	INAPPLICABLE            4449
+0-5	UNDER 6 POUNDS          1125
+6	6 POUNDS                2223
+7	7 POUNDS                3049
+8	8 POUNDS                1889
+9-95	9 POUNDS OR MORE         799
+\end{verbatim}
+
+And here are the value counts:
+
+\begin{verbatim}
+>>> df.birthwgt_lb.value_counts().sort_index()
+0        8
+1       40
+2       53
+3       98
+4      229
+5      697
+6     2223
+7     3049
+8     1889
+9      623
+10     132
+11      26
+12      10
+13       3
+14       3
+15       1
+51       1
+\end{verbatim}
+
+The counts for 6, 7, and 8 pounds check out, and if you add
+up the counts for 0-5 and 9-95, they check out, too.  But
+if you look more closely, you will notice one value that has to be
+an error, a 51 pound baby!
+
+To deal with this error, I added a line to {\tt CleanFemPreg}:
+
+\begin{verbatim}
+df.birthwgt_lb[df.birthwgt_lb > 20] = np.nan
+\end{verbatim}
+
+This statement replaces invalid values with {\tt np.nan}.
+The expression in brackets yields a Series of type {\tt bool}, 
+where True indicates that the condition is true.  When a boolean
+Series is used as an index, it selects only the elements that
+satisfy the condition.
+\index{Series}
+\index{boolean}
+\index{NaN}
+
+
+\section{Interpretation}
+
+To work with data effectively, you have to think on two levels at the
+same time: the level of statistics and the level of context.
+
+As an example, let's look at the sequence of outcomes for a few
+respondents.  Because of the way the data files are organized, we have
+to do some processing to collect the pregnancy data for each respondent.
+Here's a function that does that:
+
+\begin{verbatim}
+def MakePregMap(df):
+    d = defaultdict(list)
+    for index, caseid in df.caseid.iteritems():
+        d[caseid].append(index)
+    return d
+\end{verbatim}
+
+{\tt df} is the DataFrame with pregnancy data.  The {\tt iteritems}
+method enumerates the index (row number)
+and {\tt caseid} for each pregnancy.
+\index{DataFrame}
+
+{\tt d} is a dictionary that maps from each case ID to a list of
+indices.  If you are not familiar with {\tt defaultdict}, it is in
+the Python {\tt collections} module.
+Using {\tt d}, we can look up a respondent and get the
+indices of that respondent's pregnancies.
+
+This example looks up one respondent and prints a list of outcomes
+for her pregnancies:
+
+\begin{verbatim}
+>>> caseid = 10229
+>>> indices = preg_map[caseid]
+>>> df.outcome[indices].values
+[4 4 4 4 4 4 1]
+\end{verbatim}
+
+{\tt indices} is the list of indices for pregnancies corresponding
+to respondent {\tt 10229}.
+
+Using this list as an index into {\tt df.outcome} selects the
+indicated rows and yields a Series.  Instead of printing the
+whole Series, I selected the {\tt values} attribute, which is
+a NumPy array.  
+\index{NumPy}
+\index{Series}
+
+The outcome code {\tt 1} indicates a live birth. Code {\tt 4} indicates
+a miscarriage; that is, a pregnancy that ended spontaneously, usually
+with no known medical cause.
+
+Statistically this respondent is not unusual.  Miscarriages are common
+and there are other respondents who reported as many or more.
+
+But remembering the context, this data tells the story of a woman who
+was pregnant six times, each time ending in miscarriage.  Her seventh
+and most recent pregnancy ended in a live birth.  If we consider this
+data with empathy, it is natural to be moved by the story it tells.
+
+Each record in the NSFG dataset represents a person who provided
+honest answers to many personal and difficult questions.  We can use
+this data to answer statistical questions about family life,
+reproduction, and health.  At the same time, we have an obligation
+to consider the people represented by the data, and to afford them
+respect and gratitude.
+\index{ethics}
+
+
+\section{Exercises}
+
+\begin{exercise}
+In the repository you downloaded, you should find a file named
+\verb"chap01ex.ipynb", which is an IPython notebook.  You can
+launch IPython notebook from the command line like this:
+\index{IPython}
+
+\begin{verbatim}
+$ ipython notebook &
+\end{verbatim}
+
+If IPython is installed, it should launch a server that runs in the
+background and open a browser to view the notebook.  If you are not
+familiar with IPython, I suggest you start at
+\url{http://ipython.org/ipython-doc/stable/notebook/notebook.html}.
+
+You can add a command-line option that makes figures appear ``inline'';
+that is, in the notebook rather than a pop-up window:
+
+\begin{verbatim}
+$ ipython notebook --pylab=inline &
+\end{verbatim}
+
+Open \verb"chap01ex.ipynb".  Some cells are already filled in, and
+you should execute them.  Other cells give you instructions for
+exercises you should try.
+
+A solution to this exercise is in \verb"chap01soln.ipynb"
+\end{exercise}
+
+
+\begin{exercise}
+Create a file named \verb"chap01ex.py" and write code that reads
+the respondent file, {\tt 2002FemResp.dat.gz}.  You might want to
+start with a copy of {\tt nsfg.py} and modify it.
+
+The variable {\tt pregnum} is a recode that indicates how many
+times each respondent has been pregnant.  Print the value counts
+for this variable and compare them to the published results in
+the NSFG codebook.
+
+You can also cross-validate the respondent and pregnancy files by
+comparing {\tt pregnum} for each respondent with the number of
+records in the pregnancy file.
+
+You can use {\tt nsfg.MakePregMap} to make a dictionary that maps
+from each {\tt caseid} to a list of indices into the pregnancy
+DataFrame.
+\index{DataFrame}
+
+A solution to this exercise is in \verb"chap01soln.py"
+\end{exercise}
+
+
+\begin{exercise}
+The best way to learn about statistics is to work on a project you are
+interested in.  Is there a question like, ``Do first babies arrive
+late,'' that you want to investigate?
+
+Think about questions you find personally interesting, or items of
+conventional wisdom, or controversial topics, or questions that have
+political consequences, and see if you can formulate a question that
+lends itself to statistical inquiry.
+
+Look for data to help you address the question.  Governments are good
+sources because data from public research is often freely
+available.  Good places to start include \url{http://www.data.gov/},
+and \url{http://www.science.gov/}, and in the United Kingdom,
+\url{http://data.gov.uk/}.
+
+Two of my favorite data sets are the General Social Survey at
+\url{http://www3.norc.org/gss+website/}, and the European Social
+Survey at \url{http://www.europeansocialsurvey.org/}.
+
+If it seems like someone has already answered your question, look
+closely to see whether the answer is justified.  There might be flaws
+in the data or the analysis that make the conclusion unreliable.  In
+that case you could perform a different analysis of the same data, or
+look for a better source of data.
+
+If you find a published paper that addresses your question, you
+should be able to get the raw data.  Many authors make their data
+available on the web, but for sensitive data you might have to
+write to the authors, provide information about how you plan to use
+the data, or agree to certain terms of use.  Be persistent!
+
+\end{exercise}
+
+
+\section{Glossary}
+
+\begin{itemize}
+
+\item {\bf anecdotal evidence}: Evidence, often personal, that is collected
+  casually rather than by a well-designed study.
+\index{anecdotal evidence}
+
+\item {\bf population}: A group we are interested in studying.
+  ``Population'' often refers to a
+  group of people, but the term is used for other subjects,
+  too.
+\index{population}
+
+\item {\bf cross-sectional study}: A study that collects data about a
+population at a particular point in time.
+\index{cross-sectional study}
+\index{study!cross-sectional}
+
+\item {\bf cycle}: In a repeated cross-sectional study, each repetition
+of the study is called a cycle.
+
+\item {\bf longitudinal study}: A study that follows a population over
+time, collecting data from the same group repeatedly.
+\index{longitudinal study}
+\index{study!longitudinal}
+
+\item {\bf record}: In a dataset, a collection of information about
+a single person or other subject.
+\index{record}
+
+\item {\bf respondent}: A person who responds to a survey.
+\index{respondent}
+
+\item {\bf sample}: The subset of a population used to collect data.
+\index{sample}
+
+\item {\bf representative}: A sample is representative if every member
+of the population has the same chance of being in the sample.
+\index{representative}
+
+\item {\bf oversampling}: The technique of increasing the representation
+of a sub-population in order to avoid errors due to small sample
+sizes.
+\index{oversampling}
+
+\item {\bf raw data}: Values collected and recorded with little or no
+checking, calculation or interpretation.
+\index{raw data}
+
+\item {\bf recode}: A value that is generated by calculation and other
+logic applied to raw data.
+\index{recode}
+
+\item {\bf data cleaning}: Processes that include validating data,
+  identifying errors, translating between data types and
+  representations, etc.
+
+\end{itemize}
+
