@@ -1,8 +1,8 @@
 \contentsline {chapter}{서문}{v}
 \contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}How I wrote this book}{vii}
 \contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}Using the code}{viii}
-\contentsline {chapter}{\numberline {제\nobreakspace {}1\nobreakspace {}장}Exploratory data analysis}{1}
-\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}A statistical approach}{2}
+\contentsline {chapter}{\numberline {제\nobreakspace {}1\nobreakspace {}장}탐색적 자료 분석}{1}
+\contentsline {section}{\numberline {제\nobreakspace {}1\nobreakspace {}절}통계적 접근방법}{2}
 \contentsline {section}{\numberline {제\nobreakspace {}2\nobreakspace {}절}The National Survey of Family Growth}{3}
 \contentsline {section}{\numberline {제\nobreakspace {}3\nobreakspace {}절}Importing the data}{4}
 \contentsline {section}{\numberline {제\nobreakspace {}4\nobreakspace {}절}DataFrames}{5}

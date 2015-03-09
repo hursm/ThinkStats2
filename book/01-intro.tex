@@ -1,76 +1,54 @@
 
-\chapter{Exploratory data analysis}
+\chapter{탐색적 자료 분석}
 \label{intro}
+이 책의 주요 논지는 실용적인 방법과 결합된 데이터가 질문에 대답하고, 불확실성하에서 의사결정을 안내하는 것이다.
 
-The thesis of this book is that data combined with practical
-methods can answer questions and guide decisions under uncertainty.
+한가지 사례로, 집사람과 함께 첫번째 아이를 기대할 때 전해들은 질문에 모디브를 얻어 한가지 사례 연구를 제시한다: 첫째 애기는 늦게 낳는 경향이 있을까요?  
+\index{첫째 아이 (first babies)}
 
-As an example, I present a case study motivated by a question
-I heard when my wife and I were expecting our first child: do first
-babies tend to arrive late?
-\index{first babies}
+만약 이 질문을 구글에 검색하면, 상당한 토론글을 볼 수 있다. 몇몇 사람은 사실이라고하고, 다른 사람은 미신이라고 하고,
+다른 사람은 첫째 얘들이 일찍 나온다고 애둘러 말하곤 한다. 
 
-If you Google this question, you will find plenty of discussion.  Some
-people claim it's true, others say it's a myth, and some people say
-it's the other way around: first babies come early.
+많은 토론글에서, 사람들은 자신의 주장을 뒷받침하기 위해서 데이터를 제공한다. 다음과 같은 많은 사례를 찾아볼 수 있다.
 
-In many of these discussions, people provide data to support their
-claims.  I found many examples like these:
 
 \begin{quote}
 
-``My two friends that have given birth recently to their first babies,
-BOTH went almost 2 weeks overdue before going into labour or being
-induced.''
+``최근에 첫째 아이를 출산한 내 친구 두명은 모두 자연분만 혹은 제왕절개하기 전에 예정일에서 거의 2주나 지났다.''
 
-``My first one came 2 weeks late and now I think the second one is
-going to come out two weeks early!!''
 
-``I don't think that can be true because my sister was my mother's
-first and she was early, as with many of my cousins.''
+``첫째는 2주 늦게 나왔고 이제 생각하기에 둘째는 2주 빨리 나올것 같다.!!''
+
+``제 생각에는 사실이 아니라고 생각하는데 왜냐하면 언니가 엄마의 첫째인데 다른 많은 사촌과 마찬가지로 빨리 나왔기 때문이다.''
 
 \end{quote}
 
-Reports like these are called {\bf anecdotal evidence} because they
-are based on data that is unpublished and usually personal.  In casual
-conversation, there is nothing wrong with anecdotes, so I don't mean
-to pick on the people I quoted.
-\index{anecdotal evidence}
+이와 같은 보고를 {\bf 일화적 증거(anecdotal evidence)}라고 부르는데, 이유는 논문으로 출판되지 않고 대체로 개인적인 데이터에 기반하고 있기 때문이다. 일상적인 대화에서, 일화와 관련해서 잘못된 것은 없다. 그래서 인용한 사람을 콕 집어서 뭐라고 할 의도는 없다.
+\index{일화적 증거(anecdotal evidence)}
 
-But we might want evidence that is more persuasive and
-an answer that is more reliable.  By those standards, anecdotal
-evidence usually fails, because:
+하지만, 좀더 설득적인 증거와, 좀더 신빙성있는 답을 원할지도 모른다. 이런 기준으로 본다면, 일화적 증거는 대체로 성공적이지 못하다. 왜냐하면:
 
 \begin{itemize}
 
-\item Small number of observations: If pregnancy length is longer
-  for first babies, the difference is probably small compared to
-  natural variation.  In that case, we might have to compare a large
-  number of pregnancies to be sure that a difference exists.
-\index{pregnancy length}
+\item 적은 관측치(Small number of observations): 만약 첫째 아기에 대해서 임신 기간이 좀더 길다면, 아마도 차이는 자연적인 변동과 비교하여 적을 것이다. 이 경우에, 차이가 존재한다는 것을 확실히 하기 위해서는 많은 임신 사례를 비교해야할 것이다. 
+\index{임신기간 (pregnancy length)}
 
-\item Selection bias: People who join a discussion of this question
-  might be interested because their first babies were late.  In that
-  case the process of selecting data would bias the results.
-\index{selection bias}
-\index{bias!selection}
+\item 선택 편의(Selection bias): 임신기간에 관한 토론에 참가한 사람들은 첫째 아이가 늦게 태어났기 때문에 관심이 있을 수 있다. 이 경우에 데이터를 선택하는 과정이 결과를 왜곡할 수도 있다.
+\index{선택 편의(selection bias)}
+\index{편의(bias)!선택(selection)}
 
-\item Confirmation bias:  People who believe the claim might be more
-  likely to contribute examples that confirm it.  People who doubt the
-  claim are more likely to cite counterexamples.
-\index{confirmation bias}
-\index{bias!confirmation}
+\item 확증 편의(Confirmation bias): 주장을 믿는 사람들은 주장을 확증해주는 사례에 좀더 기여할 듯 하다. 주장에 의구심을 갖는 사람들은  반례를 좀더 들것 같다. 
+\index{확증 편의 (confirmation bias)}
+\index{편의(bias)!확증(confirmation)}
 
-\item Inaccuracy: Anecdotes are often personal stories, and often
-  misremembered, misrepresented, repeated
-  inaccurately, etc.
+\item 부정확(Inaccuracy): 일화는 종종 개인 이야기로, 기억이 부정확하고, 잘못 표현되며, 부정확하게 반복된다. 
 
 \end{itemize}
 
-So how can we do better?
+그렇다면, 어떻게 더 잘 할 수 있을까요?
 
 
-\section{A statistical approach}
+\section{통계적 접근방법}
 
 To address the limitations of anecdotes, we will use the tools
 of statistics, which include:

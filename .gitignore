@@ -53,7 +53,7 @@ coverage.xml
 docs/_build/
 
 # Latex Files
-.aux
-.dvi
-.idx
-.toc
+*.aux
+*.dvi
+*.idx
+*.toc
