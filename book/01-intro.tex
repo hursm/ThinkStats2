@@ -229,9 +229,9 @@ Index([u'caseid', u'pregordr', u'howpreg_n', u'howpreg_p', ... ])
 <class 'pandas.core.series.Series'>
 \end{verbatim}
 
-결과는 쓰리즈(Series)로 또다른 판다스 자료구조다. 쓰리즈는 몇가지 추가 기능을 가진 파이썬 리스트다. 쓰리즈를 출력하면, 인덱스와 상응하는 값이 출력된다. 
+결과는 시리즈(Series)로 또다른 판다스 자료구조다. 시리즈는 몇가지 추가 기능을 가진 파이썬 리스트다. 시리즈를 출력하면, 인덱스와 상응하는 값이 출력된다. 
 
-\index{쓰리즈 (Series)}
+\index{시리즈 (Series)}
 
 \begin{verbatim}
 >>> pregordr
@@ -248,10 +248,10 @@ Name: pregordr, Length: 13593, dtype: int64
 
 상기 예제에서, 인덱스는 0에서 13592 정수형 자료지만, 일반적으로 정렬가능한 임의의 자료형도 가능하다. 요소값도 정수형이지만, 임의의 자료형도 가능하다.
 
-마지막 행은 변수명, 쓰리즈 길이, 그리고 자료형 정보가 있다; {\tt int64}은 NumPy에서 제공하는 자료형 중의 하나다. 만약 32-비트 컴퓨터에서 상기 예제를 실행한다면, {\tt int32}가 출력된다.
+마지막 행은 변수명, 시리즈 길이, 그리고 자료형 정보가 있다; {\tt int64}은 NumPy에서 제공하는 자료형 중의 하나다. 만약 32-비트 컴퓨터에서 상기 예제를 실행한다면, {\tt int32}가 출력된다.
 \index{넘파이 (NumPy)}
 
-정수 인덱스와 슬라이스(slice)를 사용해서 쓰리즈 요소값(element)에 접근할 수 있다.
+정수 인덱스와 슬라이스(slice)를 사용해서 시리즈 요소값(element)에 접근할 수 있다.
 
 \begin{verbatim}
 >>> pregordr[0]
@@ -263,7 +263,7 @@ Name: pregordr, Length: 13593, dtype: int64
 Name: pregordr, dtype: int64
 \end{verbatim}
 
-인덱스 연산자 실행 결과는 {\tt int64}이고, 슬라이스 연산자 결과는 또 다른 쓰리즈다. 
+인덱스 연산자 실행 결과는 {\tt int64}이고, 슬라이스 연산자 결과는 또 다른 시리즈다. 
 
 점 표기법(dot notation)을 사용해서 데이터프레임 칼럼을 접근할 수도 있다.
 
@@ -285,11 +285,11 @@ NSFG 데이터셋에서 이미 변수 두개, {\tt caseid}와 {\tt pregordr}을 
 \item {\tt prglngth}는 정수형으로 주로 임신 기간을 나타낸다.
 \index{임신 기간 (pregnancy length)}
 
-\item {\tt outcome}은 출산 결과에 대한 정수형 코드값이다. 코드값 1 은 자연출산을 나타낸다.
+\item {\tt outcome}은 출산 결과에 대한 정수형 코드값이다. 코드값 1 은 정상출산을 나타낸다.
 
 \item {\tt pregordr}은 임신 일련번호다; 예를 들어, 응답자의 첫번째 임신 코드값은 1, 두번째 임신 코드값은 2, 등등.
 
-\item {\tt birthord}는 자연출산에 대한 일련번호다; 응답자의 첫번째 아이 코드값은 1 등등. 자연출산이 아닌 경우에는 필드값이 공백이다. 
+\item {\tt birthord}는 정상출산에 대한 일련번호다; 응답자의 첫번째 아이 코드값은 1 등등. 정상출산이 아닌 경우에는 필드값이 공백이다. 
 
 
 \item \verb"birthwgt_lb"와 \verb"birthwgt_oz"은 출산시 아이 체중에 대한 파운드와 온스 정보를 담고 있다.
@@ -309,19 +309,16 @@ NSFG 데이터셋에서 이미 변수 두개, {\tt caseid}와 {\tt pregordr}을 
 \index{재코드 (recode)} 
 \index{원자료 (raw data)}
 
-예를 들어, 자연출산에 대한 {\tt prglngth} 변수는 만약 있다면 {\tt wksgest} (회임기간 주차 정보)와 동일하다; 만약 회임기간 정보가 없다면 {\tt mosgest * 4.33} 공식(회임기간 월차 정보 곱하기 한달 평균 주차 정보)을 사용해서 추정한다. 
+예를 들어, 정상출산에 대한 {\tt prglngth} 변수는 만약 있다면 {\tt wksgest} (회임기간 주차 정보)와 동일하다; 만약 회임기간 정보가 없다면 {\tt mosgest * 4.33} 공식(회임기간 월차 정보 곱하기 한달 평균 주차 정보)을 사용해서 추정한다. 
 
 재코드는 자료 정합성과 일관성을 점검하는 로직에 기반한다. 스스로 원자료를 처리할 납득이갈만한 이유가 없다면, 일반적으로 재코드된 자료가 있다면 그대로 사용하는 것이 좋은 생각이다. 
 
 \section{변환 (Transformation)}
 \label{cleaning}
 
-When you import data like this, you often have to check for errors,
-deal with special values, convert data into different formats, and
-perform calculations.  These operations are called {\bf data cleaning}.
+이와 같이 데이터를 가져올 때, 오류를 점검하고, 특수값을 처리하고, 데이터를 다른 형식으로 변환하고, 계산을 수행해야 한다. 이와 같은 작업을 통상 {\bf 데이터 정제(data cleaning)}라고 부른다.
 
-{\tt nsfg.py} includes {\tt CleanFemPreg}, a function that cleans
-the variables I am planning to use.
+{\tt nsfg.py}는 {\tt CleanFemPreg} 함수가 있어서 사용할 변수를 사전에 정제한다.
 
 \begin{verbatim}
 def CleanFemPreg(df):
@@ -334,15 +331,13 @@ def CleanFemPreg(df):
     df['totalwgt_lb'] = df.birthwgt_lb + df.birthwgt_oz / 16.0    
 \end{verbatim}
 
-{\tt agepreg} contains the mother's age at the end of the
-pregnancy.  In the data file, {\tt agepreg} is encoded as an integer
-number of centiyears.  So the first line divides each element
-of {\tt agepreg} by 100, yielding a floating-point value in
-years.
+{\tt agepreg} 변수는 임신 말기에 산모 나이정보를 담고 있다. 
+데이터 파일에서 {\tt agepreg} 변수는 백분의 정수로 인코딩되어 있다.
+그래서 첫번째은 100으로 {\tt agepreg} 변수를 나눠서 연도로 부동소수점 값을 생성한다.
 
-\verb"birthwgt_lb" and \verb"birthwgt_oz" contain the weight of the
-baby, in pounds and ounces, for pregnancies that end in live birth.
-In addition it uses several special codes:
+\verb"birthwgt_lb"와 \verb"birthwgt_oz" 변수는 정상출산 임신에 대한 
+신생아의 체중으로 파운드와 온스 표현된 정보를 담고 있다. 
+추가로 몇몇 특수값도 있다.
 
 \begin{verbatim}
 97	NOT ASCERTAINED
@@ -350,16 +345,17 @@ In addition it uses several special codes:
 99	DON'T KNOW
 \end{verbatim}
 
-Special values encoded as numbers are {\em dangerous} because if they
-are not handled properly, they can generate bogus results, like
-a 99-pound baby.  The {\tt replace} method replaces these values with
-{\tt np.nan}, a special floating-point value that represents ``not a
-number.''  The {\tt inplace} flag tells {\tt replace} to modify the
-existing Series rather than create a new one.
+숫자 부호로 표현된 특수값은 {\em 위험}한데, 이유는 만약 적절하게 처리되지 않는다면,
+99 파운드 신생아처럼 가공된 결과를 생성할 수 있다. 
+{\tt replace} 메쏘드는 특수값을 {\tt np.nan}으로 바꾼다. {\tt np.nan}는 
+``not a number.''를 나타내는 특수 부동소수점값이다. 
+{\tt inplace} 플래그는 {\tt replace}에 새로운 시리즈를 생성하는 대신에 
+기존 시리즈를 변경하게 한다.
+
 \index{NaN}
 
-As part of the IEEE floating-point standard, all mathematical
-operations return {\tt nan} if either argument is {\tt nan}:
+IEEE 부동소수점 표준의 일부분으로, 만약 인자중 하나가 {\tt nan} 이면,
+모든 수학 연산은 {\tt nan}을 반환한다.
 
 \begin{verbatim}
 >>> import numpy as np
@@ -367,37 +363,35 @@ operations return {\tt nan} if either argument is {\tt nan}:
 nan
 \end{verbatim}
 
-So computations with {\tt nan} tend to do the right thing, and most
-pandas functions handle {\tt nan} appropriately.  But dealing with
-missing data will be a recurring issue.
-\index{pandas}
-\index{missing values}
+그래서, {\tt nan}으로 연산한 것은 올바른 연산을 하고, 대부분의 판다스 함수는
+{\tt nan}을 적절하게 다룬다. 하지만 결측값(missing value)을 다루는 것은 반복되는 이슈가 된다.
 
-The last line of {\tt CleanFemPreg} creates a new
-column \verb"totalwgt_lb" that combines pounds and ounces into
-a single quantity, in pounds.
+\index{판다스 (pandas)}
+\index{결측값 (missing values)}
 
-One important note: when you add a new column to a DataFrame, you
-must use dictionary syntax, like this
-\index{DataFrame}
+{\tt CleanFemPreg} 함수 마지막 줄은 파운드와 온스를 하나의 값, 
+파운드로 조합하는 새로운 칼럼 \verb"totalwgt_lb"을 생성한다.
+
+중요한 사항: 데이터프레임에 새로운 칼럼을 추가할 때, 다음과 같은 딕셔너리 구문을 사용해야 한다.
+
+\index{데이터프레임 (DataFrame)}
 
 \begin{verbatim}
     # CORRECT
     df['totalwgt_lb'] = df.birthwgt_lb + df.birthwgt_oz / 16.0 
 \end{verbatim}
 
-Not dot notation, like this:
+다음과 같은 점표기법은 안된다.
 
 \begin{verbatim}
     # WRONG!
     df.totalwgt_lb = df.birthwgt_lb + df.birthwgt_oz / 16.0 
 \end{verbatim}
 
-The version with dot notation adds an attribute to the DataFrame
-object, but that attribute is not treated as a new column.
+점표기법 버젼은 데이터프레임 객체에 속성을 추가하지만, 
+그 속성이 새로운 칼럼으로 다뤄지는 것은 아니다.
 
-
-\section{Validation}
+\section{타당성 (Validation)}
 
 When data is exported from one software environment and imported into
 another, errors might be introduced.  And when you are
