@@ -391,18 +391,11 @@ nan
 점표기법 버젼은 데이터프레임 객체에 속성을 추가하지만, 
 그 속성이 새로운 칼럼으로 다뤄지는 것은 아니다.
 
-\section{타당성 (Validation)}
+\section{타당성 검사(Validation)}
 
-When data is exported from one software environment and imported into
-another, errors might be introduced.  And when you are
-getting familiar with a new dataset, you might interpret data
-incorrectly or introduce other misunderstandings.  If you take
-time to validate the data, you can save time later and avoid errors.
+데이터를 다른 소프트웨어 환경에서 내보내고 또 다른 소프트웨어 환경으로 가져오기 할 때, 오류가 발생할지도 모른다. 그리고 전혀 새로운 데이터셋에 익숙해질 때, 데이터를 부정확하게 해석하거나 오해가 생겨나기도 한다. 만약 데이터의 타당성을 확보할 시간을 갖게 된다면, 나중에 업무시간을 절약하고 오류를 회필할 수 있다.
 
-One way to validate data is to compute basic statistics and compare
-them with published results.  For example, the NSFG codebook includes
-tables that summarize each variable.  Here is the table for
-{\tt outcome}, which encodes the outcome of each pregnancy:
+데이터 타당성을 확보하는 한 방법은 기초 통계량을 계산하고 공표된 결과값과 비교하는 것이다. 예를 들어, NSFG 코드북에는 각 변수를 요약한 장표가 있다. {\tt outcome}에 대한 테이블이 있는데 각 임신 결과값을 코드화한 것이다.
 
 \begin{verbatim}
 value	label	 	        Total
@@ -414,12 +407,11 @@ value	label	 	        Total
 6	CURRENT PREGNANCY        352
 \end{verbatim}
 
-The Series class provides a method, \verb"value_counts", that
-counts the number of times each value appears.  If we select the {\tt
-  outcome} Series from the DataFrame, we can use \verb"value_counts"
-to compare with the published data:
-\index{DataFrame}
-\index{Series}
+시리즈 클래스는 \verb"value_counts" 라는 메쏘드를 제공하는데 각 값이 출현하는 횟수를 계수한다. 만약 데이터프레임에서 {\tt
+  outcome} 시리즈를 선택한다면, \verb"value_counts"를 사용해서 공표된 값과 비교할 수 있다. 
+
+\index{데이터프레임 (DataFrame)}
+\index{시리즈 (Series)}
 
 \begin{verbatim}
 >>> df.outcome.value_counts().sort_index()
@@ -431,13 +423,9 @@ to compare with the published data:
 6     352
 \end{verbatim}
 
-The result of \verb"value_counts" is a Series;
-\verb"sort_index" sorts the Series by index, so the
-values appear in order.
+\verb"value_counts" 결과는 시리즈이고 \verb"sort_index"가 인덱스별로 시리즈를 정렬한다. 그래서 ㄱ결과값이 순서대로 나타난다.
 
-Comparing the results with the published table, it looks like the
-values in {\tt outcome} are correct.  Similarly, here is the published
-table for \verb"birthwgt_lb"
+결과값을 공표된 장표와 비교하면, {\tt outcome} 값이 올바른 것처럼 보인다. 마찬가지로, \verb"birthwgt_lb"에 대한 공표된 장표가 다음에 있다.
 
 \begin{verbatim}
 value	label                  Total
@@ -449,7 +437,7 @@ value	label                  Total
 9-95	9 POUNDS OR MORE         799
 \end{verbatim}
 
-And here are the value counts:
+그리고, 계수된 값이 다음에 있다.
 
 \begin{verbatim}
 >>> df.birthwgt_lb.value_counts().sort_index()
@@ -472,28 +460,23 @@ And here are the value counts:
 51       1
 \end{verbatim}
 
-The counts for 6, 7, and 8 pounds check out, and if you add
-up the counts for 0-5 and 9-95, they check out, too.  But
-if you look more closely, you will notice one value that has to be
-an error, a 51 pound baby!
+6, 7, 8 에 대한 계수는 확인됐고, 만약 0-5와 9-95 범위 숫자를 더한다면, 계수도 맞는 것으로 확인된다. 하지만, 만약 좀더 자세히 들여다본다면, 오류가 있는 값을 하나 발견할 것이다. 51 파운드 신생아!
 
-To deal with this error, I added a line to {\tt CleanFemPreg}:
+이 오류를 다루기 위해서, {\tt CleanFemPreg} 프로그램에 한줄 코드를 추가한다.
 
 \begin{verbatim}
 df.birthwgt_lb[df.birthwgt_lb > 20] = np.nan
 \end{verbatim}
 
-This statement replaces invalid values with {\tt np.nan}.
-The expression in brackets yields a Series of type {\tt bool}, 
-where True indicates that the condition is true.  When a boolean
-Series is used as an index, it selects only the elements that
-satisfy the condition.
-\index{Series}
-\index{boolean}
+상기 문장은 유효하지 않은 값을 {\tt np.nan}으로 바꾼다. 꺾쇠괄호에 있는 표현식은 {\tt 부울(bool)} 자료형 시리즈를 산출한다. 여기서 True는 조건이 참인 것을 나타낸다. 불리언 시리즈가 인덱스로 사용될 때, 조건을 만족하는 요소값(element)만 선택한다. 
+
+\index{시리즈 (Series)}
+\index{불리언 (boolean)}
 \index{NaN}
 
 
-\section{Interpretation}
+\section{해석 (Interpretation)}
+
 
 To work with data effectively, you have to think on two levels at the
 same time: the level of statistics and the level of context.
