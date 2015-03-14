@@ -1,23 +1,24 @@
-\chapter{Distributions}
+\chapter{분포 (Distribution)}
 \label{descriptive}
 
 
-\section{Histograms}
+\section{히스토그램}
 \label{histograms}
 
-One of the best ways to describe a variable is to report the values
-that appear in the dataset and how many times each value appears.
-This description is called the {\bf distribution} of the variable.
-\index{distribution}
+변수를 기술하는 가장 좋은 방법중의 하나는 데이터셋에 나타나는 값과
+각 값이 얼마나 나타나는지를 보고하는 것이다.
+이러한 기술법을 변수 {\bf 분포(distribution)}라고 부른다.
+\index{분포 (distribution)}
 
-The most common representation of a distribution is a {\bf histogram},
-which is a graph that shows the {\bf frequency} of each value.  In
-this context, ``frequency'' means the number of times the value
-appears.  \index{histogram} \index{frequency}
-\index{dictionary}
+가장 일반적인 분포 표현은 {\bf 히스토그램(histogram)}으로 각 값의 
+{\bf 빈도(frequency)}를 보여주는 그래프다. 이러한 맥락에서 ``빈도''는
+값이 출현하는 횟수를 의미한다. 
+\index{히스토그램 (histogram)} 
+\index{빈도 (frequency)}
+\index{딕셔러리 (dictionary)}
 
-In Python, an efficient way to compute frequencies is with a
-dictionary.  Given a sequence of values, {\tt t}:
+파이썬에서 빈도를 계산하는 효율적인 방법은 딕셔너리를 사용하는 것이다.
+시퀀스 값 {\tt t}가 주어진 상태에서,
 %
 \begin{verbatim}
 hist = {}
@@ -25,31 +26,30 @@ for x in t:
     hist[x] = hist.get(x, 0) + 1
 \end{verbatim}
 
-The result is a dictionary that maps from values to frequencies.
-Alternatively, you could use the {\tt Counter} class defined in the
-{\tt collections} module:
+결과는 값을 빈도로 매칭하는 딕셔너리다. 대안으로 
+{\tt collections} 모듈에 정의된 {\tt Counter} 클래스를 사용할 수 있다.
+
 
 \begin{verbatim}
 from collections import Counter
 counter = Counter(t)
 \end{verbatim}
 
-The result is a {\tt Counter} object, which is a subclass of
-dictionary.
+결과는 {\tt Counter} 객체로 딕셔너리의 하위클래스가 된다.
 
-Another option is to use the pandas method \verb"value_counts", which
-we saw in the previous chapter.  But for this book I created a class,
-Hist, that represents histograms and provides the methods
-that operate on them.
-\index{pandas}
+또다른 선택지는 판다스 \verb"value_counts" 메쏘드를 사용하는 것으로 앞장에서 살펴봤다.
+하지만, 이 책에서 히스토그램을 나타내는 Hist 클래스를 생성하고 Hist 클래스에서 동작하는 메쏘드를 제공한다.
+
+\index{판다스 (pandas)}
 
 
-\section{Representing histograms}
-\index{histogram}
+\section{히스토그램 표현하기}
+\index{히스토그램 (histogram)}
 \index{Hist}
 
-The Hist constructor can take a sequence, dictionary, pandas
-Series, or another Hist.  You can instantiate a Hist object like this:
+Hist 생성자는 시퀀스, 딕셔너리, 판다스 시리즈, 혹은 다른 Hist를 받을 수 있다.
+다음과 같이 Hist 객체 인스턴스를 생성할 수 있다.
+
 %
 \begin{verbatim}
 >>> import thinkstats2
@@ -58,45 +58,49 @@ Series, or another Hist.  You can instantiate a Hist object like this:
 Hist({1: 1, 2: 2, 3: 1, 5: 1})
 \end{verbatim}
 
-Hist objects provide {\tt Freq}, which takes a value and
-returns its frequency: \index{frequency}
+Hist 객체는 {\tt Freq} 메쏘드를 제공하는데 값을 받아 빈도를 반환한다.
+\index{빈도 (frequency)}
+
 %
 \begin{verbatim}
 >>> hist.Freq(2)
 2
 \end{verbatim}
 
-The bracket operator does the same thing: \index{bracket operator}
+꺾쇠 연산자도 동일한 것을 수행한다.
+\index{꺾쇠 연산자 (bracket operator)}
+
 %
 \begin{verbatim}
 >>> hist[2]
 2
 \end{verbatim}
 
-If you look up a value that has never appeared, the frequency is 0.
+만약 찾는 값이 없다면, 빈도는 0이다.
+
 %
 \begin{verbatim}
 >>> hist.Freq(4)
 0
 \end{verbatim}
 
-{\tt Values} returns an unsorted list of the values in the Hist:
+{\tt Values} 메쏘드는 Hist에 정렬되지 않는 리스트 값을 반환한다.
 %
 \begin{verbatim}
 >>> hist.Values()
 [1, 5, 3, 2]
 \end{verbatim}
 
-To loop through the values in order, you can use the built-in function
-{\tt sorted}:
+정렬된 값으로 루프를 돌리려면, 내장함수 {\tt sorted}를 사용할 수 있다.
+
 %
 \begin{verbatim}
 for val in sorted(hist.Values()):
     print(val, hist.Freq(val))
 \end{verbatim}
 
-Or you can use {\tt Items} to iterate through
-value-frequency pairs: \index{frequency}
+{\tt Items} 메쏘드를 사용해서 값-빈도(value-frequency) 짝을 반복처리할 수 있다.
+
 %
 \begin{verbatim}
 for val, freq in hist.Items():
@@ -104,24 +108,27 @@ for val, freq in hist.Items():
 \end{verbatim}
 
 
-\section{Plotting histograms}
+\section{히스토그램 그리기 (Plotting histograms)}
 \index{pyplot}
 
 \begin{figure}
 % first.py
 %\centerline{\includegraphics[height=2.5in]{figs/first_wgt_lb_hist.pdf}}
+%\centerline{\includegraphics[height=2.50in]{figs/_test.eps}}
 \caption{Histogram of the pound part of birth weight.}
 \label{first_wgt_lb_hist}
 \end{figure}
 
-For this book I wrote a module called {\tt thinkplot.py} that provides
-functions for plotting Hists and other objects defined in {\tt
-  thinkstats2.py}.  It is based on {\tt pyplot}, which is part of the
-{\tt matplotlib} package.  See Section~\ref{code} for information
-about installing {\tt matplotlib}.  \index{thinkplot}
+이 책에서 저자는 {\tt thinkplot.py} 모듈을 작성해서 Hists를 그리는 함수와 
+{\tt thinkstats2.py}에 정의된 객체를 제공한다. {\tt pyplot}에 기반하고 있고 
+{\tt matplotlib} 패키지의 일부다. 
+{\tt matplotlib}을 설치하는 방법은 ~\ref{code}을 참조하세요.
+
+\index{thinkplot}
 \index{matplotlib}
 
-To plot {\tt hist} with {\tt thinkplot}, try this:
+{\tt thinkplot}으로 {\tt hist}를 그리기 위해서 다음을 시도해 보세요.
+
 \index{Hist}
 
 \begin{verbatim}
@@ -130,9 +137,8 @@ To plot {\tt hist} with {\tt thinkplot}, try this:
 >>> thinkplot.Show(xlabel='value', ylabel='frequency')
 \end{verbatim}
 
-You can read the documentation for {\tt thinkplot} at
-\url{http://greenteapress.com/thinkstats2/thinkplot.html}.
-
+\url{http://greenteapress.com/thinkstats2/thinkplot.html} 웹사이트에서
+{\tt thinkplot}에 대한 문서를 참조할 수 있다.
 
 \begin{figure}
 % first.py
@@ -142,23 +148,21 @@ You can read the documentation for {\tt thinkplot} at
 \end{figure}
 
 
-\section{NSFG variables}
+\section{NSFG 변수}
 
-Now let's get back to the data from the NSFG.  The code in this
-chapter is in {\tt first.py}.  
-For information about downloading and
-working with this code, see Section~\ref{code}.
+이제 NSFG에 있는 데이터로 다시 돌아가자. 이장에 있는 코드는 {\tt first.py}다. 
+코드를 다운로드하고 작업에 대한 정보는 ~\ref{code} 장을 참조하라.
 
-When you start working with a new dataset, I suggest you explore
-the variables you are planning to use one at a time, and a good
-way to start is by looking at histograms.
-\index{histogram}
+새로운 데이터셋을 가지고 작업을 시작할 때, 한번에 하나씩 사용하려는 변수를 탐색하길 제안한다. 
+시작하는 좋은 방법은 히스토그램을 그려보는 것이다.
 
-In Section~\ref{cleaning} we transformed {\tt agepreg}
-from centiyears to years, and combined \verb"birthwgt_lb" and
-\verb"birthwgt_oz" into a single quantity, \verb"totalwgt_lb".
-In this section I use these variables to demonstrate some
-features of histograms.
+\index{히스토그램 (histogram)}
+
+
+~\ref{cleaning}에서 {\tt agepreg}를 백분년에서 년단위로 변환했고,
+\verb"birthwgt_lb"와 \verb"birthwgt_oz"을 조합해서 \verb"totalwgt_lb" 한 단위량으로 만들었다.
+이번 절에서 히스토그램의 몇가지 기능을 시연하기 위해서 이 변수들을 사용한다.
+
 
 \begin{figure}
 % first.py
@@ -167,23 +171,21 @@ features of histograms.
 \label{first_agepreg_hist}
 \end{figure}
 
-I'll start by reading the data and selecting records for live
-births:
+데이터를 읽고, 정상 출산에 대한 레코드를 선택해서 시작해보자.
+
 
 \begin{verbatim}
     preg = nsfg.ReadFemPreg()
     live = preg[preg.outcome == 1]
 \end{verbatim}
 
-The expression in brackets is a boolean Series that
-selects rows from the DataFrame and returns a new DataFrame.
-Next I generate and plot the histogram of
-\verb"birthwgt_lb" for live births.
-\index{DataFrame}
-\index{Series}
+꺾쇠 표현식은 부울 시리즈(boolean Series)로 데이터프레임에서 행을 선택하고 새로운 데이터프레임을 반환한다. 다음에 정상출산에 대한 \verb"birthwgt_lb" 히스토그램을 생성하고 플롯해서 그려낸다.
+
+\index{데이터프레임 (DataFrame)}
+\index{시리즈 (Series)}
 \index{Hist}
-\index{bracket operator}
-\index{boolean}
+\index{꺾쇠 연산자 (bracket operator)}
+\index{부울 (boolean)}
 
 \begin{verbatim}
     hist = thinkstats2.Hist(live.birthwgt_lb, label='birthwgt_lb')
@@ -191,11 +193,11 @@ Next I generate and plot the histogram of
     thinkplot.Show(xlabel='pounds', ylabel='frequency')
 \end{verbatim}
 
-When the argument passed to Hist is a pandas Series, any
-{\tt nan} values are dropped.  {\tt label} is a string that appears
-in the legend when the Hist is plotted.
-\index{pandas}
-\index{Series}
+Hist에 인자가 판다스 시리즈일 때, {\tt nan} 값은 탈락한다. 
+{\tt label}은 문자열로 Hist가 그려질 때 범례에 나타난다. 
+
+\index{판다스 (pandas)}
+\index{시리즈 (Series)}
 \index{thinkplot}
 \index{NaN}
 
@@ -206,14 +208,14 @@ in the legend when the Hist is plotted.
 \label{first_prglngth_hist}
 \end{figure}
 
-Figure~\ref{first_wgt_lb_hist} shows the result.  The most common
-value, called the {\bf mode}, is 7 pounds.  The distribution is
-approximately bell-shaped, which is the shape of the {\bf normal}
-distribution, also called a {\bf Gaussian} distribution.  But unlike a
-true normal distribution, this distribution is asymmetric; it has
-a {\bf tail} that extends farther to the left than to the right.
+그림~\ref{first_wgt_lb_hist}가 결과를 보여준다.
+가장 많이 관찰되는 값을 {\bf 최빈값(mode)}이라고 하고 이 경우에 7 파운드다. 
+분포는 근사적으로 종모양인 {\bf 정규(normal)} 분포 모양으로 
+{\bf 가우스(Gaussian)} 분포라고도 한다. 하지만, 순수 정규분포와 달리,
+분포가 비대칭이다; 오른쪽보다 왼쪽으로 좀더 확장된 {\bf 꼬리(tail)}가 있다.
 
-Figure~\ref{first_wgt_oz_hist} shows the histogram of
+
+그림~\ref{first_wgt_oz_hist}은  shows the histogram of
 \verb"birthwgt_oz", which is the ounces part of birth weight.  In
 theory we expect this distribution to be {\bf uniform}; that is, all
 values should have the same frequency.  In fact, 0 is more common than
