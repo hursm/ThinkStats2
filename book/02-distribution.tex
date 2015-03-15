@@ -215,46 +215,36 @@ Hist에 인자가 판다스 시리즈일 때, {\tt nan} 값은 탈락한다.
 분포가 비대칭이다; 오른쪽보다 왼쪽으로 좀더 확장된 {\bf 꼬리(tail)}가 있다.
 
 
-그림~\ref{first_wgt_oz_hist}은  shows the histogram of
-\verb"birthwgt_oz", which is the ounces part of birth weight.  In
-theory we expect this distribution to be {\bf uniform}; that is, all
-values should have the same frequency.  In fact, 0 is more common than
-the other values, and 1 and 15 are less common, probably because
-respondents round off birth weights that are close to an integer
-value.
-\index{birth weight}
-\index{weight!birth}
+그림~\ref{first_wgt_oz_hist}은 변수 \verb"birthwgt_oz"의 히스토그램으로 출생 체중의 온스 부분이다. 
+이론적으로 분포가 {\bf 균등(uniform)}하길 기대한다; 즉, 모든 값이 동일한 빈도를 가져야 한다.
+사실 0 이 다른 값과 비교하여 좀더 흔하고, 1과 15는 좀더 흔하지 않은데, 아마도 이유는 응답자가 정수값에 가까운 출생 체중을 반올림한것으로 추측한다.
 
-Figure~\ref{first_agepreg_hist} shows the histogram of \verb"agepreg",
-the mother's age at the end of pregnancy.  The mode is 21 years.  The
-distribution is very roughly bell-shaped, but in this case the tail
-extends farther to the right than left; most mothers are in
-their 20s, fewer in their 30s.
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
 
-Figure~\ref{first_prglngth_hist} shows the histogram of
-\verb"prglngth", the length of the pregnancy in weeks.  By far the
-most common value is 39 weeks.  The left tail is longer than the
-right; early babies are common, but pregnancies seldom go past 43
-weeks, and doctors often intervene if they do.
-\index{pregnancy length}
+그림~\ref{first_agepreg_hist}은 \verb"agepreg"의 히스토그램으로 임신 말기 산모 나이다.
+분포는 대략 종모양이지만, 이 사례의 경우 꼬리가 좀더 왼쪽보다 오른쪽으로 뻗여나갔다. 
+대부분의 산모는 20대이지만 30대도 적은 수지만 존재한다.
+
+ 
+그림~\ref{first_prglngth_hist}은 \verb"prglngth"의 히스토그램으로 주간(week) 단위 임신기간이다.
+가장 흔한 값은 39주다. 외쪽 꼬리가 오른쪽 꼬리보다 길다; 조산 신생아가 일반적이지만,
+임신기간이 43주를 넘어가지는 않고, 만약 의사가 판단하기에 필요하다면 임신기간에 관여하는 것이 일반적이다.
+
+\index{임신 기간 (pregnancy length)}
 
 
-\section{Outliers}
+\section{특이점 (Outliers)}
 
-Looking at histograms, it is easy to identify the most common
-values and the shape of the distribution, but rare values are
-not always visible.
-\index{histogram}
+히스토그램을 보면, 가장 흔한 값과 분포 모양을 식별하기는 쉽다. 하지만, 드문 값이 항상 눈에 잘 뜨이지는 않는다.
+\index{히스토그램 (histogram)}
 
-Before going on, it is a good idea to check for {\bf
-  outliers}, which are extreme values that might be errors in
-measurement and recording, or might be accurate reports of rare
-events.
-\index{outlier}
+계속 진행하기 전에, {\bf 특이점 (outliers)}을 점검하는 것이 좋은 생각이다. 특이점은 이상치라고 불리는 극단값으로 측정과 기록에서 오류일 수도 있고, 드분 사건의 정확한 기록일 수도 있다.
 
-Hist provides methods {\tt Largest} and {\tt Smallest}, which take
-an integer {\tt n} and return the {\tt n} largest or smallest
-values from the histogram:
+\index{특이점 (outlier)}
+
+Hist는 {\tt Largest}, {\tt Smallest} 메쏘드를 제공하는데, 정수 {\tt n}을 받아 히스토그램에서 최대값과 최소값 {\tt n}개를 반환한다.
+
 \index{Hist}
 
 \begin{verbatim}
@@ -262,15 +252,12 @@ values from the histogram:
         print(weeks, freq)
 \end{verbatim}
 
-In the list of pregnancy lengths for live births, the 10 lowest values
-are {\tt [0, 4, 9, 13, 17, 18, 19, 20, 21, 22]}.  Values below 10 weeks
-are certainly errors; the most likely explanation is that the outcome
-was not coded correctly.  Values higher than 30 weeks are probably
-legitimate.  Between 10 and 30 weeks, it is hard to be sure; some
-values are probably errors, but some represent premature babies.
-\index{pregnancy length}
+정상 출산에 대한 임신기간 리스트에서 가장 작은 최소값 10개는 {\tt [0, 4, 9, 13, 17, 18, 19, 20, 21, 22]}이다. 10 주보다 적은 값은 확실한 오류다; 가장 그럴듯한 설명은 아마도 결과를 올바르게 코드화하지 못한 것이다. 30주 이상되는 값은 아마도 적합하다. 10주에서 30주 사이의 값은 확실하다고 하기가 어렵다; 몇몇 값은 아마도 오류지만 몇몇은 미숙아를 나타낸다.
 
-On the other end of the range, the highest values are:
+\index{임신 기간 (pregnancy length)}
+
+범위의 반대편에서 가장 큰 값은 다음과 같다.
+
 %
 \begin{verbatim}
 weeks  count
@@ -283,22 +270,21 @@ weeks  count
 50     2
 \end{verbatim}
 
-Most doctors recommend induced labor if a pregnancy exceeds 42 weeks,
-so some of the longer values are surprising.  In particular, 50 weeks
-seems medically unlikely.
+만약 임신기간이 42주를 넘어가면 대부분의 의사는 유도분만(induced labor)을 추천한다.
+그래서 몇몇 긴 임신기간값은 놀라움을 준다. 특히, 임신 50주는 의학적으로 가능하지 않아 보인다.
 
-The best way to handle outliers depends on ``domain knowledge'';
-that is, information about where the data come from and what they
-mean.  And it depends on what analysis you are planning to perform.
-\index{outlier}
+특이점을 다루는 가장 좋은 방법은 ``특정 분야의 전문 지식(domain knowledge)''에 달려있다; 즉, 데이터 출처와 데이터가 의미하는 바에 대한 정보. 그리고 어떠한 분석방법을 수행할지에 달려있다.
 
-In this example, the motivating question is whether first babies
-tend to be early (or late).  When people ask this question, they are
-usually interested in full-term pregnancies, so for this analysis
-I will focus on pregnancies longer than 27 weeks.
+\index{특이점 (outlier)}
+
+이번 예제에서, 동기 부여 질문은 첫번째 아이가 일찍 (혹은 늦게) 태어나는 경향이 있느냐는 것이다.
+사람들이 이 질문을 할 때, 대체로 전체 임신기간에 관심이 있다. 그래서, 이번 분석에서는 27주 이상이 되는 
+임신에 초점을 맞출 것이다. 
 
 
-\section{First babies}
+\section{첫번째 아이 (First babies)}
+
+
 
 Now we can compare the distribution of pregnancy lengths for first
 babies and others.  I divided the DataFrame of live births using
