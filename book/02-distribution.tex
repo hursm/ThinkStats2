@@ -359,8 +359,8 @@ weeks  count
 \item 모드 (modes): 하나 이상 군집(cluster)이 있는가?
 \index{모드 (mode)}
 
-\item 범위 (spread): 값들에 얼마나 많은 변동이 있는가?
-\index{범위 (spread)}
+\item 퍼짐 (spread): 값들에 얼마나 많은 변동이 있는가?
+\index{퍼짐 (spread)}
 
 \item 꼬리 (tails): 모드(최빈값)에서 멀어질 때, 확률이 얼마나 빨리 떨어지는가?
 \index{꼬리 (tail)}
@@ -413,7 +413,8 @@ weeks  count
 호박 무게를 요약하는 단 하나의 숫자가 없다면, 숫자 두개로 좀더 잘 할 수 있다; 평균(meand)과 
 {\bf 분산 (variance)}.
 
-분산은 분포의 변동과 번위를 기술하려는 요약통계다. 값들의 집합에 대한 분산은 다음과 같다.
+분산은 분포의 변동(variability)과 퍼짐(spread)을 기술하려는 요약통계다. 
+값들의 집합에 대한 분산은 다음과 같다.
 
 %
 \[ S^2 = \frac{1}{n} \sum_i (x_i - \xbar)^2 \]
@@ -448,35 +449,28 @@ $x_i - \xbar$ 항은 ``평균으로부터 편차(deviation from the mean)''라�
 \section{효과 크기 (Effect size)}
 \index{효과 크기 (effect size)}
 
+{\bf 효과 크기(effect size)}는 효과의 크기를 기술하려는 요약 통계다. 예를 들어,
+두 집단간에 차이를 기술하기 위해서 평균값의 차이는 명확한 한가지 선택이 된다.
+\index{효과 크기 (effect size)}
 
+첫째 아이에 대한 평균 임신기간은 38.601; 첫째를 제외한 아이들의 평균 임신기간은 38.523이다. 
+차이는 0.078주가 되고, 시간으로는 13시간이다. 전형적인 임신기간에 대한 일부분으로 보면, 차이는 약 0.2\%가 된다.
+\index{임신 기간 (pregnancy length)}
 
-An {\bf effect size} is a summary statistic intended to describe (wait
-for it) the size of an effect.  For example, to describe the
-difference between two groups, one obvious choice is the difference in
-the means.  \index{effect size}
+만약 추정치가 정확하다고 가정하면, 이와 같은 차이는 실질적인 중요성은 없다.
+사실, 대규모 임신사례를 관찰하지 않고 누구도 이와 같은 차이를 인지할 것 같지는 않다.
+\index{효과 크기 (effect size)}
 
-Mean pregnancy length for first babies is 38.601; for
-other babies it is 38.523.  The difference is 0.078 weeks, which works
-out to 13 hours.  As a fraction of the typical pregnancy length, this
-difference is about 0.2\%.
-\index{pregnancy length}
+효과의 크기를 전달하는 또 다른 방법은 집단간(between groups)의 차이를 집단내(within groups) 변동성과 비교하는 것이다. 코헨(Cohen) $d$가 이러한 의도를 가진 통계량이다; 다음과 같이 정의된다.
 
-If we assume this estimate is accurate, such a difference
-would have no practical consequences.  In fact, without
-observing a large number of pregnancies, it is unlikely that anyone
-would notice this difference at all.
-\index{effect size}
-
-Another way to convey the size of the effect is to compare the
-difference between groups to the variability within groups.
-Cohen's $d$ is a statistic intended to do that; it is defined
 %
 \[ d = \frac{\bar{x_1} - \bar{x_2}}{s}  \]
 %
-where $\bar{x_1}$ and $\bar{x_2}$ are the means of the groups and
-$s$ is the ``pooled standard deviation''.  Here's the Python
-code that computes Cohen's $d$:
-\index{standard deviation!pooled}
+
+$\bar{x_1}$와 $\bar{x_2}$은 집단 평균값이고, $s$는 ``합동 표준편차(pooled standard deviation)''다.
+코헨(Cohen) $d$를 계산하는 파이썬 코드가 다음에 있다.
+
+\index{표준편차 (standard deviation)!합동 (pooled)}
 
 \begin{verbatim}
 def CohenEffectSize(group1, group2):
@@ -491,42 +485,32 @@ def CohenEffectSize(group1, group2):
     return d
 \end{verbatim}
 
-In this example, the difference in means is 0.029 standard deviations,
-which is small.  To put that in perspective, the difference in
-height between men and women is about 1.7 standard deviations (see
-\url{https://en.wikipedia.org/wiki/Effect_size}).
+이 예제애서, 평균값의 차이는 0.029 표준편차로 크지 않다. 이러한 관점에서 본다면,
+남성과 여성의 키 차이는 약 1.7 표준편차다.(\url{https://en.wikipedia.org/wiki/Effect_size} 참조)
 
 
-\section{Reporting results}
+\section{결과 보고하기}
 
-We have seen several ways to describe the difference in pregnancy
-length (if there is one) between first babies and others.  How should
-we report these results?
-\index{pregnancy length}
+첫째 아이와 첫째가 아닌 아이간에 임신 기간(만약 차이가 있다면)에 
+차이를 기술하는 몇가지 방법을 살펴봤다.
+\index{임신 기간 (pregnancy length)}
 
-The answer depends on who is asking the question.  A scientist might
-be interested in any (real) effect, no matter how small.  A doctor
-might only care about effects that are {\bf clinically significant};
-that is, differences that affect treatment decisions.  A pregnant
-woman might be interested in results that are relevant to her, like
-the probability of delivering early or late.
-\index{clinically significant} \index{significant}
+질문은 누가 질문을 하느냐에 달려있다. 과학자는 아무리 작더라도 존재하는 (실제) 차이에 관심이 있을지 모른다. 의사는 단지 {\bf 임상적으로 유의한 (clinically significant)} 효과에만 관심을 둘 수 있다; 즉, 치료결정에 영향을 주는 차이. 임신한 여성은 늦게 혹은 빨리 출산할 확률 같은 본인에게 관련된 결과에만 관심이 있을 수 있다. 
 
-How you report results also depends on your goals.  If you are trying
-to demonstrate the importance of an effect, you might choose summary
-statistics that emphasize differences.  If you are trying to reassure
-a patient, you might choose statistics that put the differences in
-context.
+\index{임상적으로 유의한 (clinically significant)}
+\index{유의한 (significant)}
 
-Of course your decisions should also be guided by professional ethics.
-It's ok to be persuasive; you {\em should} design statistical reports
-and visualizations that tell a story clearly.  But you should also do
-your best to make your reports honest, and to acknowledge uncertainty
-and limitations.
-\index{ethics}
+어떻게 결과를 보고할지도 또한 목적에 달려있다. 만약 효과의 중요성을 시연하려고 한다면,
+차이를 강조하는 요약통계량을 선택할 수도 있다. 만약 환자를 안심시키고자 한다면, 차이를 염두에 둔 통계량을 선택할지도 모른다. 
+
+물론, 본인의 결정은 또한 전문가 윤리에 따라야만 한다. 설득하려고 한다면 괜찮다; 
+스토리를 명확하게 전달하는 시각화 도구와 통계 보고서를 설계{\em 해야만 한다.}
+하지만, 또한 보고서를 정직하게 만들고, 불활실성과 한계를 인정하는데도 최선을 다해야 한다.
+
+\index{윤리 (ethics)}
 
 
-\section{Exercises}
+\section{연습 문제}
 
 \begin{exercise}
 Based on the results in this chapter, suppose you were asked to
@@ -581,66 +565,56 @@ compare to the difference in pregnancy length?
 \end{exercise}
 
 
-\section{Glossary}
+\section{용어사전}
 
 \begin{itemize}
 
-\item distribution: The values that appear in a sample
-and the frequency of each.
-\index{distribution}
+\item 분포 (distribution): 표본에 나타나는 값과 개별 값의 빈도
+\index{분포 (distribution)}
 
-\item histogram: A mapping from values to frequencies, or a graph
-that shows this mapping.
-\index{histogram}
+\item 히스토그램 (histogram): 값에서 빈도로 매핑, 혹은 매핑을 보여주는 그래프.
+\index{히스토그램 (histogram)}
 
-\item frequency: The number of times a value appears in a sample.
-\index{frequency}
+\item 빈도 (frequency): 표본에서 값이 나타나는 횟수.
+\index{빈도 (frequency)}
 
-\item mode: The most frequent value in a sample, or one of the
-most frequent values.
-\index{mode}
+\item 최빈값 (mode): 표본에서 가장 빈도가 높은 값 혹은 가장 빈도가 높은 값중의 하나.
+\index{최빈값 (mode)}
 
-\item normal distribution: An idealization of a bell-shaped distribution;
-also known as a Gaussian distribution. 
-\index{Gaussian distribution}
-\index{normal distribution}
+\item 정규분포 (normal distribution): 이상적인 종모양 분포; 가우스 분포로도 알려져 있다.
+\index{가우스 분포 (Gaussian distribution)}
+\index{정규분포 (normal distribution)}
 
-\item uniform distribution: A distribution in which all values have
-the same frequency.
-\index{uniform distribution}
+\item 균등분포 (uniform distribution): 모든 값이 동일한 본도를 갖는 분포.
+\index{균등분포 (uniform distribution)}
 
-\item tail: The part of a distribution at the high and low extremes.
-\index{tail}
+\item 꼬리 (tail): 가장 높고 가장 낮은 극단에 있는 분포 부분.
+\index{꼬리 (tail)}
 
-\item central tendency: A characteristic of a sample or population;
-intuitively, it is an average or typical value. 
-\index{central tendency}
+\item 중심경향성 (central tendency): 표본 혹은 모집단 특성치; 직관적으로 평균 혹은 전형적인 값.
+\index{중심경향성 (central tendency)}
 
-\item outlier: A value far from the central tendency.
-\index{outlier}
+\item 특이점 (outlier): 중심경향성에서 떨어진 값.
+\index{특이점 (outlier)}
 
-\item spread: A measure of how spread out the values in a distribution
-are.
-\index{spread}
+\item 퍼짐 (spread): 분포에 있는 값들이 얼마나 퍼져있는지에 대한 측정.
+\index{퍼짐 (spread)}
 
-\item summary statistic: A statistic that quantifies some aspect
-of a distribution, like central tendency or spread.
-\index{summary statistic}
+\item 요약통계 (summary statistic): 
+중심경향성 혹은 퍼짐같이 분포의 일부 측면을 정량화하는 통계치.
+\index{요약통계 (summary statistic)}
 
-\item variance: A summary statistic often used to quantify spread.
-\index{variance}
+\item 분산 (variance): 퍼짐을 정량화하는데 종종 사용되는 요약통계.
+\index{분산 (variance)}
 
-\item standard deviation: The square root of variance, also used
-as a measure of spread.
-\index{standard deviation}
+\item 표준편차 (standard deviation): 분산의 제곱근으로 또한 퍼짐을 측정하는데 사용된다.
+\index{표준편차 (standard deviation)}
 
-\item effect size: A summary statistic intended to quantify the size
-of an effect like a difference between groups.
-\index{effect size}
+\item 효과 크기 (effect size): 집단간의 차이처럼 효과 크기를 정량화하는 요약통계.
+\index{효과 크기 (effect size)}
 
-\item clinically significant: A result, like a difference between groups,
-that is relevant in practice.
-\index{clinically significant}
+\item 임상적으로 유의한 (clinically significant): 집단간 차이처럼, 실제로 연관있는 결과. 
+\index{임상적으로 유의한 (clinically significant)}
 
 \end{itemize}
 
