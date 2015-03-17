@@ -4,8 +4,8 @@
 이번 장에서 사용되는 코드는 {\tt probability.py}에 있다.
 코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
-\section{PMF}
-\index{PMF}
+\section{Pmf}
+\index{Pmf}
 
 분포를 표현하는 또다른 방식은 {\bf 확률 질량 함수(probability mass function)} (PMF)로 각 값을 확률로 매핑한다. 
 {\bf 확률(probability)}은 표본 크기 {\tt n}의 일부로서 표현되는 빈도다. 
@@ -17,10 +17,9 @@
 \index{PMF}
 \index{확률 질량 함수 (probability mass function)}
 
+Hist가 주어지면, 각 값에 확률값을 매핑하는 딕셔너리를 만들 수 있다.
+\index{Hist}
 
-
-Given a Hist, we can make a dictionary that maps from each
-value to its probability: \index{Hist}
 %
 \begin{verbatim}
 n = hist.Total()
@@ -29,10 +28,11 @@ for x, freq in hist.Items():
     d[x] = freq / n
 \end{verbatim}
 %
-Or we can use the Pmf class provided by {\tt thinkstats2}.
-Like Hist, the Pmf constructor can take a list, pandas
-Series, dictionary, Hist, or another Pmf object.  Here's an example
-with a simple list:
+
+혹은 {\tt thinkstats2}에서 제공하는 Pmf 클래스를 사용할 수도 있다.
+Hist와 마찬가지로, Pmf 생성자는 판다스, 시리즈, 딕셔너리, Hist, 다른 Pmf 객체를 받을 수 있다.
+다음에 간단한 리스트를 입력값으로 받는 예제가 있다.
+
 %
 \begin{verbatim}
 >>> import thinkstats2
@@ -41,32 +41,30 @@ with a simple list:
 Pmf({1: 0.2, 2: 0.4, 3: 0.2, 5: 0.2})
 \end{verbatim}
 
-The Pmf is normalized so total probability is 1.
+Pmf는 정규화 과정을 거쳐 전체 확률값이 1이 된다.
 
-Pmf and Hist objects are similar in many ways; in fact, they inherit
-many of their methods from a common parent class.  For example, the
-methods {\tt Values} and {\tt Items} work the same way for both.  The
-biggest difference is that a Hist maps from values to integer
-counters; a Pmf maps from values to floating-point probabilities.
+Pmf와 Hist 객체는 많은 점에서 비슷하다; 사실, 공통 부모 클래스에서 많은 메쏘드를 상속받았다.
+예를 들어, {\tt Values}와 {\tt Items} 메쏘드는 두 객체 모두에 동일한 방식으로 동작한다.
+가장 큰 차이점은 Hist가 값을 정수형 계수기(integer counter)로 매핑한다는 것이고; 
+Pmf는 값을 부동소수점 확률값으로 매핑한다는 것이다. 
 \index{Hist}
 
-To look up the probability associated with a value, use {\tt Prob}:
+값과 연관된 확률값을 조회하려면, {\tt Prob}를 사용한다.:
 %
 \begin{verbatim}
 >>> pmf.Prob(2)
 0.4
 \end{verbatim}
 
-The bracket operator is equivalent:
-\index{bracket operator}
+꺾쇠 연산자도 동등한 기능을 한다.
+\index{꺾쇠 연산자 (bracket operator)}
 
 \begin{verbatim}
 >>> pmf[2]
 0.4
 \end{verbatim}
 
-You can modify an existing Pmf by incrementing the probability
-associated with a value:
+기존 Pmf를 값과 연관되어 있는 확률값을 증가시킴으로써 변경할 수 있다.
 %
 \begin{verbatim}
 >>> pmf.Incr(2, 0.2)
@@ -74,7 +72,7 @@ associated with a value:
 0.6
 \end{verbatim}
 
-Or you can multiply a probability by a factor:
+혹은 확률에 일정량을 곱할 수도 있다.
 %
 \begin{verbatim}
 >>> pmf.Mult(2, 0.5)
@@ -82,16 +80,16 @@ Or you can multiply a probability by a factor:
 0.3
 \end{verbatim}
 
-If you modify a Pmf, the result may not be normalized; that is, the
-probabilities may no longer add up to 1.  To check, you can call {\tt
-  Total}, which returns the sum of the probabilities:
+만약 Pmf를 변경하면, 결과는 정규화되지 않을지도 모른다; 즉, 확률값을 다 합하면 1이 되지 않을지도 모른다.
+확률값을 합한 결과를 반환하는데 사용되는 {\tt Total} 메쏘드를 호출해서 확인한다. 
+
 %
 \begin{verbatim}
 >>> pmf.Total()
 0.9
 \end{verbatim}
 
-To renormalize, call {\tt Normalize}:
+다시 정규화하기 위해서, {\tt Normalize}를 호출한다:
 %
 \begin{verbatim}
 >>> pmf.Normalize()
@@ -99,44 +97,37 @@ To renormalize, call {\tt Normalize}:
 1.0
 \end{verbatim}
 
-Pmf objects provide a {\tt Copy} method so you can make
-and modify a copy without affecting the original.
+Pmf 객체는 {\tt Copy} 메쏘드를 제공하는데, 이를 통해서 원본에 영향을 주지않고, 사본을 만들고 변경 작업을 할 수 있다.
 \index{Pmf}
 
-My notation in this section might seem inconsistent, but there is a
-system: I use Pmf for the name of the class, {\tt pmf} for an instance
-of the class, and PMF for the mathematical concept of a
-probability mass function.
+이번 절에 표기법이 일관성을 갖지 않는 것처럼 보일지도 모르지만 체계가 있다;
+Pmf를 클래스 명칭으로, pmf는 클래스의 인스턴스로, PMF는 확률질량함수에 대한 수학적 개념으로 각각을 표기하는데 사용한다.
 
-
-\section{Plotting PMFs}
+\section{PMF 플롯으로 그리기}
 \index{PMF}
 
-{\tt thinkplot} provides two ways to plot Pmfs:
+{\tt thinkplot}은 Pmf 플롯을 그리는 두가지 방식을 제공한다.
 \index{thinkplot}
 
 \begin{itemize}
 
-\item To plot a Pmf as a bar graph, you can use 
-{\tt thinkplot.Hist}.  Bar graphs are most useful if the number
-of values in the Pmf is small.
-\index{bar plot}
-\index{plot!bar}
+\item Pmf를 막대그래프로 그리기 위해서 {\tt thinkplot.Hist}을 사용한다.
+만약 Pmf에 값의 개수가 작다면 막대그래프가 가장 유용한다.
+\index{막대그래프 (bar plot)}
+\index{그래프 (plot)!막대 (bar)}
 
-\item To plot a Pmf as a step function, you can use
-{\tt thinkplot.Pmf}.  This option is most useful if there are
-a large number of values and the Pmf is smooth.  This function
-also works with Hist objects.
-\index{line plot}
-\index{plot!line}
+\item 계단 함수로 Pmf를 그래프 그리기 위해서는, {\tt thinkplot.Pmf}을 사용할 수 있다.
+만약 값이 많고, Pmf가 매끄럽다면(smooth) 탁월한 선택이 된다. 이 함수는 Hist 객체에서도 동작한다.
+\index{선그래프 (line plot)}
+\index{그래프 (plot)!선 (line)}
 \index{Hist}
 \index{Pmf}
 
 \end{itemize}
 
-In addition, {\tt pyplot} provides a function called {\tt hist} that
-takes a sequence of values, computes a histogram, and plots it.
-Since I use Hist objects, I usually don't use {\tt pyplot.hist}.
+추가로, {\tt pyplot}은 {\tt hist} 함수를 제공하는데 값(value) 시퀀스를 받아서
+히스토그램을 계산하고, 그래프로 그린다.
+Hist 객체를 사용하기 때문에, {\tt pyplot.hist}은 사용하지 않는다.
 \index{pyplot}
 
 \begin{figure}
@@ -146,21 +137,17 @@ Since I use Hist objects, I usually don't use {\tt pyplot.hist}.
   bar graphs and step functions.}
 \label{probability_nsfg_pmf}
 \end{figure}
-\index{pregnancy length}
-\index{length!pregnancy}
+\index{임신기간 (pregnancy length)}
+\index{기간 (length)!임신 (pregnancy)}
 
-Figure~\ref{probability_nsfg_pmf} shows PMFs of pregnancy length for
-first babies and others using bar graphs (left) and step functions
-(right).
-\index{pregnancy length}
+그림~\ref{probability_nsfg_pmf}은 막대그래프(왼쪽)와 계단함수(오른쪽)를 사용해서 첫째 아이와 첫째가 아닌 아이에 대한
+임신기간 PMF를 보여준다.
+\index{임신기간 (pregnancy length)}
 
-By plotting the PMF instead of the histogram, we can compare the two
-distributions without being mislead by the difference in sample
-size.  Based on this figure, first babies seem to be less likely than
-others to arrive on time (week 39) and more likely to be a late (weeks
-41 and 42).
+히스토그램 대신에 PMF 플롯을 그려서, 표본차이로 오도되지 않고 두 분포를 비교할 수 있다.
+그림을 해석하면, 첫번째 아이는 다른 아이들보다 정시(39주차)에 출산하지 않고, 늦게(41, 42주차) 출산할 것 같다.
 
-Here's the code that generates Figure~\ref{probability_nsfg_pmf}:
+그림~\ref{probability_nsfg_pmf}을 생성하는 코드가 다음에 있다:
 
 \begin{verbatim}
     thinkplot.PrePlot(2, cols=2)
@@ -177,21 +164,20 @@ Here's the code that generates Figure~\ref{probability_nsfg_pmf}:
                    axis=[27, 46, 0, 0.6])
 \end{verbatim}
 
-{\tt PrePlot} takes optional parameters {\tt rows} and {\tt cols}
-to make a grid of figures, in this case one row of two figures.
-The first figure (on the left) displays the Pmfs using {\tt thinkplot.Hist},
-as we have seen before.
+{\tt PrePlot} 메쏘드는 옵션 매개변수 {\tt rows}와 {\tt cols}을 받아서 
+그림 격자(grid)를 만드는데 이경우 한 행에 그림 두개를 넣는 격자가 된다.
+첫번째 그림(왼쪽)은 {\tt thinkplot.Hist}을 사용해서 앞에서 봤던 Pmf를 화면에 출력한다. 
+
 \index{thinkplot}
 \index{Hist}
 
-The second call to {\tt PrePlot} resets the color generator.  Then
-{\tt SubPlot} switches to the second figure (on the right) and
-displays the Pmfs using {\tt thinkplot.Pmfs}.  I used the {\tt axis} option
-to ensure that the two figures are on the same axes, which is
-generally a good idea if you intend to compare two figures.
+{\tt PrePlot}에 두번째 호출로 색깔 생성자를 초기화한다. 그리고 나서 
+{\tt SubPlot}이 두번째 그림(오른쪽)으로 바꿔서, {\tt thinkplot.Pmfs}을 사용해서 Pmf를 화면에 출력한다.
+{\tt axis}을 사용해서 그림 두개 모두 동일한 축(axis)에 놓여지도록 확실히 한다.
+그림 두개를 비교하려고 한다면, 축을 통일하는 것이 좋다.
 
 
-\section{Other visualizations}
+\section{다른 시각화 방법}
 \label{visualization}
 
 Histograms and PMFs are useful while you are exploring data and
