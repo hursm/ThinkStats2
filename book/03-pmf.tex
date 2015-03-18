@@ -180,18 +180,14 @@ Hist 객체를 사용하기 때문에, {\tt pyplot.hist}은 사용하지 않는�
 \section{다른 시각화 방법}
 \label{visualization}
 
-Histograms and PMFs are useful while you are exploring data and
-trying to identify patterns and relationships.
-Once you have an idea what is going on, a good next step is to
-design a visualization that makes the patterns you have identified
-as clear as possible.
-\index{exploratory data analysis}
-\index{visualization}
+히스토그램과 PMF은 데이터를 탐색하고 패턴과 관계를 식별하는데 유용하게 사용된다. 데이터에서 무슨 정보가 담겨져있고, 어떻게 돌아가는지 아이디어를 얻게 된다면, 다음 단계는 최대한 깔끔하게 식별한 패턴화할 수 있는 시각화 설계하는 것이다. 
 
-In the NSFG data, the biggest differences in the distributions are
-near the mode.  So it makes sense to zoom in on that part of the
-graph, and to transform the data to emphasize differences:
-\index{National Survey of Family Growth}
+\index{탐색적 자료 분석 (exploratory data analysis)}
+\index{시각화 (visualization)}
+
+NSFG데이터에서 분포에서 가장 큰 차이는 모드(최빈치)에 있다. 그래서, 그래프에서 이 부분만을 확대하여 들여다보고, 차이를 강조하도록 자료를 변환하는 것이 의미가 있다.
+
+\index{가족 성장 국가 조사 (National Survey of Family Growth)}
 \index{NSFG}
 
 \begin{verbatim}
@@ -206,12 +202,9 @@ graph, and to transform the data to emphasize differences:
     thinkplot.Bar(weeks, diffs)
 \end{verbatim}
 
-In this code, {\tt weeks} is the range of weeks; {\tt diffs} is the
-difference between the two PMFs in percentage points.
-Figure~\ref{probability_nsfg_diffs} shows the result as a bar chart.
-This figure makes the pattern clearer: first babies are less likely to
-be born in week 39, and somewhat more likely to be born in weeks 41
-and 42.
+상기 코드에서 {\tt weeks}가 임신주 범위다; {\tt diffs}는 퍼센트에서 두 PMF간 차이가 된다.  
+그림~\ref{probability_nsfg_diffs}는 막대그래프로 결과를 보여준다.
+그림이 패턴을 좀더 명확하게 한다: 첫째 아이는 임신 39주차에 덜 태어날 것 같고, 임신 41, 42주차에 더 태어날 것 같다.
 \index{thinkplot}
 
 \begin{figure}
@@ -221,41 +214,28 @@ and 42.
 \label{probability_nsfg_diffs}
 \end{figure}
 
-For now we should hold this conclusion only tentatively.
-We used the same dataset to identify an
-apparent difference and then chose a visualization that makes the
-difference apparent.  We can't be sure this effect is real;
-it might be due to random variation.  We'll address this concern
-later.
+지금까지 결론을 잠정적으로 내렸다. 동일한 데이터셋을 사용해서 명백하게 차이를 식별하고 나서 차이를 명확하게 만드는 시각화 방식을 선택했다. 효과 차이가 실질적인지 확실하다고 할 수는 없다; 확률변동(random variation)일 수도 있다. 나중에 이 문제를 다시 다룰 것이다.
 
 
-\section{The class size paradox}
-\index{class size}
+\section{학급 크기 패러독스 (class size paradox)}
+\index{학급 크기 (class size)}
 
-Before we go on, I want to demonstrate
-one kind of computation you can do with Pmf objects; I call
-this example the ``class size paradox.''
+진도를 더 나가기 전에, Pmf 객체를 가지고 할 수 있는 한가지 계산(computation)을 시연하고자 한다; 다음 예제를 ``학급 크기 패러독스(class size paradox)''라고 명명한다.
 \index{Pmf}
 
-At many American colleges and universities, the student-to-faculty
-ratio is about 10:1.  But students are often surprised to discover
-that their average class size is bigger than 10.  There
-are two reasons for the discrepancy:
+많은 미국 대학에서, 학생대교수 비율은 약 10:1이 된다. 
+하지만 종종 학생들이 평균 학급크기가 10보다 큰 것을 발견하고 놀라곤 한다.
+불일치에 대한 두가지 이유가 있다.
 
 \begin{itemize}
 
-\item Students typically take 4--5 classes per semester, but
-professors often teach 1 or 2.
+\item 학생들이 학기당 일반적으로 4--5 과목을 수강하지만, 교수는 1 혹은 2 교과목만 가르친다. 
 
-\item The number of students who enjoy a small class is small,
-but the number of students in a large class is (ahem!) large.
-
+\item 적은 학급 수업을 즐기는 학생 숫자는 적지만, 큰 학급 수업에 학생수는 많다.
 \end{itemize}
 
-The first effect is obvious, at least once it is pointed out;
-the second is more subtle.  Let's look at an example.  Suppose
-that a college offers 65 classes in a given semester, with the
-following distribution of sizes:
+첫 이유는 명확하지만, 두번째 이유는 다소 모호하다. 사례를 살펴보자. 대학에서 다음과 같은 학급 크기 분포로 한 학기에 65 교과목을 개설한다고 가정하자.
+
 %
 \begin{verbatim}
  size      count
@@ -270,9 +250,7 @@ following distribution of sizes:
 45-49          2
 \end{verbatim}
 
-If you ask the Dean for the average class size, he would
-construct a PMF, compute the mean, and report that the
-average class size is 23.7.  Here's the code:
+만약 학교 총장에게 평균 학급크기를 물어본다면, 총장은 PMF를 생성하고, 평균을 계산하고 나서 학급 평균 크기가 23.7이라고 보고한다. 다음에 코드가 있다.
 
 \begin{verbatim}
     d = { 7: 8, 12: 8, 17: 14, 22: 4, 
@@ -282,17 +260,12 @@ average class size is 23.7.  Here's the code:
     print('mean', pmf.Mean())
 \end{verbatim}
 
-But if you survey a group of students, ask them how many
-students are in their classes, and compute the mean, you would
-think the average class was bigger.  Let's see how
-much bigger.
+하지만, 학생집단을 대상으로 수업에 학생이 있는지 물어보고, 평균을 계산한다면, 평균 학급크기가 더 크다고 생각할 것이다. 얼마나 더 큰지 살펴보자.
 
-First, I compute the
-distribution as observed by students, where the probability
-associated with each class size is ``biased'' by the number
-of students in the class.
-\index{observer bias}
-\index{bias!observer}
+먼저, 학생들이 관측한 분포를 계산하자. 여기서 각 학급 크기와 연관된 확률은 학급에 있는 학생으로 ``편의(bias)''가 있다.
+
+\index{관측자 편의 (observer bias)}
+\index{편의 (bias)!관측자 (observer)}
 
 \begin{verbatim}
 def BiasPmf(pmf, label):
@@ -305,11 +278,9 @@ def BiasPmf(pmf, label):
     return new_pmf
 \end{verbatim}
 
-For each class size, {\tt x}, we multiply the probability by
-{\tt x}, the number of students who observe that class size.
-The result is a new Pmf that represents the biased distribution.
+각 학급 크기 {\tt x}마다, 확률값에 학급 크기를 관측한 학생수 {\tt x}를 곱한다. 결과는 편의분포를 나타내는 새로운 Pmf가 된다.
 
-Now we can plot the actual and observed distributions:
+이제 실제와 관측된 분포 모두를 플롯 그래프로 그릴 수 있다.
 \index{thinkplot}
 
 \begin{verbatim}
@@ -326,20 +297,13 @@ Now we can plot the actual and observed distributions:
 \label{class_size1}
 \end{figure}
 
-Figure~\ref{class_size1} shows the result.  In the biased distribution
-there are fewer small classes and more large ones.
-The mean of the biased distribution is 29.1, almost 25\% higher
-than the actual mean.
+그림~\ref{class_size1}은 결과를 보여준다. 편의된 분포에서 작은 학급은 더 작고, 큰 학급은 더 많다. 편의된 분포 평균은 29.1로 실제 평균값보다 약 25\%더 많다. 
 
-It is also possible to invert this operation.  Suppose you want to
-find the distribution of class sizes at a college, but you can't get
-reliable data from the Dean.  An alternative is to choose a random
-sample of students and ask how many students are in their
-classes.  \index{bias!oversampling} \index{oversampling}
+이 연산을 거꾸로 하는 것도 또한 가능하다. 대학 학급 크기 분포를 알고자 한다고 가정하자. 하지만, 대학 총장으로부터 신뢰성 있는 자료를 얻을 수는 없다. 대안은 무작위 학생 표본을 골라 학급에 학생수가 얼마인지 설문하는 것이다.
+\index{편의 (bias)! 오버샘플링 (oversampling)} 
+\index{오버샘플링 (oversampling)}
 
-The result would be biased for the reasons we've just seen, but you
-can use it to estimate the actual distribution.  Here's the function
-that unbiases a Pmf:
+결과는 앞선 살펴봤던 이유로 편의가 있을지 모르지만, 이것을 사용해서 실제 분포를 추정한다. 다음에 Pmf 불편의(unbiased) 함수가 있다. 
 
 \begin{verbatim}
 def UnbiasPmf(pmf, label):
@@ -352,19 +316,17 @@ def UnbiasPmf(pmf, label):
     return new_pmf
 \end{verbatim}
 
-It's similar to {\tt BiasPmf}; the only difference is that it
-divides each probability by {\tt x} instead of multiplying.
+{\tt BiasPmf} 함수와 비슷하다; 유일한 차이점은 곱하는 대신에 각 확률값을 {\tt x}로 나눈다는 것이다.
 
+\section{데이터프레임 인덱싱 (DataFrame indexing)}
 
-\section{DataFrame indexing}
+\ref{dataframe} 절에서 판다스 데이터프레임을 읽고, 데이터프레임을 사용해서 데이터 열(칼럼)을 선택하고 변경했다. 
+이제 행선택을 살펴보자.
+NumPy 난수 행렬을 생성하고, 이것을 사용해서 데이터프레임으로 초기화한다.
 
-In Section~\ref{dataframe} we read a pandas DataFrame and used it to
-select and modify data columns.  Now let's look at row selection.
-To start, I create a NumPy array of random numbers and use it
-to initialize a DataFrame:
-\index{NumPy}
-\index{pandas}
-\index{DataFrame}
+\index{넘파이 (NumPy)}
+\index{판다스 (pandas)}
+\index{데이터프레임 (DataFrame)}
 
 \begin{verbatim}
 >>> import numpy as np
@@ -379,8 +341,7 @@ to initialize a DataFrame:
 3 -1.369968  0.545897
 \end{verbatim}
 
-By default, the rows and columns are numbered starting at zero, but
-you can provide column names:
+초기 설정값(by default)으로 행과 열 모두 0에서 시작하는 숫자로 번호가 매겨진다. 하지만, 열이름을 지정할 수 있다.
 
 \begin{verbatim}
 >>> columns = ['A', 'B']
@@ -393,8 +354,8 @@ you can provide column names:
 3 -1.369968  0.545897
 \end{verbatim}
 
-You can also provide row names.  The set of row names is called the
-{\bf index}; the row names themselves are called {\bf labels}.
+행이름도 지정할 수 있다. 행이름 집합을 {\bf index}라고 한다; 
+행이름 자체는 {\bf labels}이라고 한다.
 
 \begin{verbatim}
 >>> index = ['a', 'b', 'c', 'd']
@@ -407,9 +368,9 @@ c -0.074350  0.039621
 d -1.369968  0.545897
 \end{verbatim}
 
-As we saw in the previous chapter, simple indexing selects a
-column, returning a Series:
-\index{Series}
+앞장에서 살펴보았듯이, 단순 인덱싱으로 열을 선택하면 시리즈를 반환한다.
+
+\index{시리즈 (Series)}
 
 \begin{verbatim}
 >>> df['A']
@@ -420,8 +381,7 @@ d   -1.369968
 Name: A, dtype: float64
 \end{verbatim}
 
-To select a row by label, you can use the {\tt loc} attribute, which
-returns a Series:
+레이블(label)로 행을 선택하려면 {\tt loc} 속성을 사용하면 되고 시리즈를 반환한다.  
 
 \begin{verbatim}
 >>> df.loc['a']
@@ -430,8 +390,7 @@ B    0.61605
 Name: a, dtype: float64
 \end{verbatim}
 
-If you know the integer position of a row, rather than its label, you
-can use the {\tt iloc} attribute, which also returns a Series.
+레이블(label) 보다 행의 정수 위치정보를 알고 있다면, {\tt iloc}속성을 사용하고, 실행 결과로 시리즈를 반환한다.
 
 \begin{verbatim}
 >>> df.iloc[0]
@@ -440,8 +399,7 @@ B    0.61605
 Name: a, dtype: float64
 \end{verbatim}
 
-{\tt loc} can also take a list of labels; in that case,
-the result is a DataFrame.
+또한 {\tt loc}는 레이블 리스트를 인자로 받고, 결과로 데이터프레임을 반환한다.
 
 \begin{verbatim}
 >>> indices = ['a', 'c']
@@ -451,7 +409,7 @@ a -0.14351  0.616050
 c -0.07435  0.039621
 \end{verbatim}
 
-Finally, you can use a slice to select a range of rows by label:
+마지막으로 레이블(label)로 행 범위를 선택하는데 슬라이스를 사용할 수 있다.
 
 \begin{verbatim}
 >>> df['a':'c']
@@ -461,7 +419,7 @@ b -1.489647  0.300774
 c -0.074350  0.039621
 \end{verbatim}
 
-Or by integer position:
+혹은 정수 위치정보를 사용할 수도 있다.
 
 \begin{verbatim}
 >>> df[0:2]
@@ -470,16 +428,13 @@ a -0.143510  0.616050
 b -1.489647  0.300774
 \end{verbatim}
 
-The result in either case is a DataFrame, but notice that the first
-result includes the end of the slice; the second doesn't.
-\index{DataFrame}
+어느 경우든지 관계없이 결과는 데이터프레임이 된다. 하지만 첫번째 결과는 슬라이스 끝값을 포함하지만, 두번째는 끝값을 포함하지 않는 것을 주목하라.
+\index{데이터프레임 (DataFrame)}
 
-My advice: if your rows have labels that are not simple integers, use
-the labels consistently and avoid using integer positions.
+저자 충고: 만약 행에 단순히 정수값이 아닌 레이블(label)이 있다면, 레이블을 일관되게 사용하고 정수 위치정보 사용을 피하라.
 
 
-
-\section{Exercises}
+\section{연습 문제}
 
 Solutions to these exercises are in \verb"chap03soln.ipynb"
 and \verb"chap03soln.py"
@@ -505,8 +460,8 @@ As a starting place, you can use \verb"chap03ex.ipynb".
 
 
 \begin{exercise}
-\index{mean}
-\index{variance}
+\index{평균 (mean)}
+\index{분산 (variance)}
 \index{PMF}
 
 In Section~\ref{mean} we computed the mean of a sample by adding up
@@ -596,27 +551,26 @@ exercise is in \verb"relay_soln.py".
 \end{exercise}
 
 
-\section{Glossary}
+\section{용어사전}
 
 \begin{itemize}
 
-\item Probability mass function (PMF): a representation of a distribution
-as a function that maps from values to probabilities.
+\item 확률질량함수 (Probability mass function, PMF): 값을 확률로 매핑하는 함수로 분포를 표현.
 \index{PMF}
-\index{probability mass function}
+\index{확률질량함수 (probability mass function)}
 
-\item probability: A frequency expressed as a fraction of the sample
-size.
-\index{frequency}
-\index{probability}
+\item 확률 (probability): 
+표본크기의 일부로 표현되는 빈도수.
+\index{빈도 (frequency)}
+\index{확률 (probability)}
 
-\item normalization: The process of dividing a frequency by a sample
-size to get a probability.
-\index{normalization}
+\item 정규화 (normalization): 
+확률값을 얻기 위해서 표본 크기로 빈도수를 나누는 과정.
+\index{정규화 (normalization)}
 
-\item index: In a pandas DataFrame, the index is a special column
-that contains the row labels.
-\index{pandas}
-\index{DataFrame}
+\item 인덱스 (index): 
+판다스 데이터프레임에서, 인덱스는 행 레이블(label)을 포함하는 특별한 열(칼럼)이다.
+\index{판다스 (pandas)}
+\index{데이터프레임 (DataFrame)}
 
 \end{itemize}
