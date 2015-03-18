@@ -1,25 +1,25 @@
 
-\chapter{Cumulative distribution functions}
+\chapter{누적분포함수}
 \label{cumulative}
 
-The code for this chapter is in {\tt cumulative.py}.
-For information about downloading and
-working with this code, see Section~\ref{code}.
+이번 장에서 사용되는 코드는 {\tt cumulative.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
 
-\section{The limits of PMFs}
+\section{PMF의 한계점}
 \index{PMF}
 
-PMFs work well if the number of values is small.  But as the number of
-values increases, the probability associated with each value gets
-smaller and the effect of random noise increases.
+PMF는 값(value)의 수가 작다면 잘 동작한다. 하지만, 값의 갯수가 증가함에 따라,
+각 값과 연관된 확률값이 더 작아지고 확률잡음(random noise)의 효과는 증가한다.
 
-For example, we might be interested in the distribution of birth
-weights.  In the NSFG data, the variable \verb"totalwgt_lb" records
-weight at birth in pounds.  Figure~\ref{nsfg_birthwgt_pmf} shows
-the PMF of these values for first babies and others.
-\index{National Survey of Family Growth} \index{NSFG} \index{birth weight}
-\index{weight!birth}
+예를 들어, 출산 체중 분포에 관심이 있다고 하자. NSFG 데이터에서 
+\verb"totalwgt_lb" 변수가 파운드로 출생 체중을 기록한다.
+그림~\ref{nsfg_birthwgt_pmf}이 첫번째 아이와 첫째가 아닌 아이에 대한 체중값을 
+PMF로 보여준다.
+\index{가족 성장 국가 조사 (National Survey of Family Growth)} 
+\index{NSFG} 
+\index{출산 체중 (birth weight)}
+\index{체중 (weight)!출산 (birth)}
 
 \begin{figure}
 % cumulative.py
@@ -29,42 +29,32 @@ of PMFs: they are hard to compare visually.}
 \label{nsfg_birthwgt_pmf}
 \end{figure}
 
-Overall, these distributions resemble the bell shape of a normal
-distribution, with many values near the mean and a few values much
-higher and lower.
+전반적으로 분포는 정규분포의 종모양을 닮았다.
+평균 근처에 값이 많고 체중이 더 높거나 더 낮아지면 값이 작아진다.
 
-But parts of this figure are hard to interpret.  There are many spikes
-and valleys, and some apparent differences between the distributions.
-It is hard to tell which of these features are meaningful.  Also, it
-is hard to see overall patterns; for example, which distribution do
-you think has the higher mean?
-\index{binning}
+하지만 그림을 이해하기는 어렵다. 뾰족한 것과 골자기가 많고, 두 집단 분포 사이에
+명백한 차이도 보인다. 여럿중에서 어느 면이 유의미한지 분간하기는 쉽지 않다.
+또한 전반적인 패턴을 보기도 어렵다; 예를 들어, 여러분이 보기에 어느 분포가 평균값이 더 높은가?
+\index{통에 담기(binning)}
 
-These problems can be mitigated by binning the data; that is, dividing
-the range of values into non-overlapping intervals and counting the
-number of values in each bin.  Binning can be useful, but it is tricky
-to get the size of the bins right.  If they are big enough to smooth
-out noise, they might also smooth out useful information.
+데이터를 통(bin)에 담아서 이러한 문제는 완화될 수 있다; 즉, 값 범위를 서로 겹쳐지지 않는 구간으로 
+나누고 각 통(bin)에 값 갯수를 계수한다. 통에 담는 것(binning)은 유용하지만,
+적정한 통크기를 잡는 것은 까다롭다. 잡음을 평활(smooth out)하기 위해서 충분히 큰 통을 잡는 것이 
+또한 유용한 정보도 평활할 수도 있다.
 
-An alternative that avoids these problems is the cumulative
-distribution function (CDF), which is the subject of this chapter.
-But before I can explain CDFs, I have to explain percentiles.
+이러한 문제를 회피하는 대안이 누적분포함수(cumulative
+distribution function, CDF)로 이번 장 학습주제다. 하지만, CDF를 설명하기 전에 백분위수(percentile)를 먼저 설명해야 한다.
 \index{CDF}
 
 
-\section{Percentiles}
-\index{percentile rank}
+\section{백분위수 (Percentiles)}
+\index{백분위 순위 (percentile rank)}
 
-If you have taken a standardized test, you probably got your
-results in the form of a raw score and a {\bf percentile rank}.
-In this context, the percentile rank is the fraction of people who
-scored lower than you (or the same).  So if you are ``in the 90th
-percentile,'' you did as well as or better than 90\% of the people who
-took the exam.
+만약 전국 단위 표준시험을 치르게 되면, 원점수와 {\bf 백분위 순위(percentile rank)} 형태로 시험결과를 받아보게 된다. 이러한 맥락에서 백분위 순위는 시험 당사자보다 적은 점수를 얻는 사람들이 된다.
+그래서 만약 ``백분위수 90번째''라면, 시험을 치른 90\% 사람보다 혹은 동등하다는 의미가 된다.
 
-Here's how you could compute the percentile rank of a value,
-\verb"your_score", relative to the values in the sequence {\tt
-  scores}:
+다음에 {\tt scores} 시퀀스 값에서 상대적으로 \verb"your_score" 값에 대한 백분위 순위를 계산하는 방법이 있다.
+
 %
 \begin{verbatim}
 def PercentileRank(scores, your_score):
@@ -77,14 +67,13 @@ def PercentileRank(scores, your_score):
     return percentile_rank
 \end{verbatim}
 
-As an example, if the
-scores in the sequence were 55, 66, 77, 88 and 99, and you got the 88,
-then your percentile rank would be {\tt 100 * 4 / 5} which is 80.
+예제로 만약 시퀀스 점수가 55, 66, 77, 88, 99이고, 시험 점수로 88점을 받았다면, 
+백분위 순위는 {\tt 100 * 4 / 5}, 80이 된다.
 
-If you are given a value, it is easy to find its percentile rank; going
-the other way is slightly harder.  If you are given a percentile rank
-and you want to find the corresponding value, one option is to
-sort the values and search for the one you want:
+값이 주어진다면, 백분위 순위를 찾기는 쉽다; 반대 방향으로는 다소 더 어렵다.
+만약 백분위 순위가 주어진 상태에서 해당하는 값을 찾고자 한다면, 한 선택지는 값을 정렬하고
+원하는 값을 찾는 것이다.
+
 %
 \begin{verbatim}
 def Percentile(scores, percentile_rank):
@@ -94,14 +83,13 @@ def Percentile(scores, percentile_rank):
             return score
 \end{verbatim}
 
-The result of this calculation is a {\bf percentile}.  For example,
-the 50th percentile is the value with percentile rank 50.  In the
-distribution of exam scores, the 50th percentile is 77.
-\index{percentile}
+계산 결과는 {\bf 백분위수(percentile)}가 된다. 
+예를 들어, 50번째 백분위 수는 백분위 순위가 50 인 값이 된다. 
+시험점수 분포에서 50번째 백분위 수는 77이다.
+\index{백분위수 (percentile)}
 
-This implementation of {\tt Percentile} is not efficient.  A
-better approach is to use the percentile rank to compute the index of
-the corresponding percentile:
+{\tt Percentile} 구현코드가 그다지 효율적이지 않다.
+더 나은 접근법은 백분위 순위를 사용해서 해당하는 백분위수 인덱스를 계산하는 것이다.
 
 \begin{verbatim}
 def Percentile2(scores, percentile_rank):
@@ -110,16 +98,15 @@ def Percentile2(scores, percentile_rank):
     return scores[index]
 \end{verbatim}
 
-The difference between ``percentile'' and ``percentile rank'' can
-be confusing, and people do not always use the terms precisely.
-To summarize, {\tt PercentileRank} takes a value and computes
-its percentile rank in a set of values; {\tt Percentile} takes
-a percentile rank and computes the corresponding value.
-\index{percentile rank}
+``백분위수 (percentile)''와 ``백분위 순위 (percentile rank)'' 차이가 혼동스러울 수 있고
+항상 용어를 정확하게 구별하여 사용하지는 않는다. 요약하면,
+{\tt PercentileRank} 함수는 값을 인자로 받아 값 집합에서 백분위 순위를 계산한다;
+{\tt Percentile} 함수는 백분위 순위를 인자로 받아 해당하는 값을 계산한다. 
+\index{백분위 순위 (percentile rank)}
 
-
-\section{CDFs}
+\section{CDF}
 \index{CDF}
+
 
 Now that we understand percentiles and percentile ranks,
 we are ready to tackle the {\bf cumulative distribution function}
