@@ -107,21 +107,16 @@ def Percentile2(scores, percentile_rank):
 \section{CDF}
 \index{CDF}
 
+이제 백분위수와 백분위 순위를 이해하고 있기 때문에, {\bf 누적분포함수(cumulative distribution function, CDF)}를 다룰 준비가 되었다. CDF는 값을 백분위 순위로 매핑하는 함수다.
+\index{누적분포함수 (cumulative distribution function)}
+\index{백분위 순위 (percentile rank)}
 
-Now that we understand percentiles and percentile ranks,
-we are ready to tackle the {\bf cumulative distribution function}
-(CDF).  The CDF is the function that maps from a value to its
-percentile rank.
-\index{cumulative distribution function}
-\index{percentile rank}
+CDF는 $x$의 함수로 $x$는 분포에 나타나는 임의값이다.  
+특정한 $x$ 값에 대해서 $\CDF(x)$를 평가하기 위해서, 
+$x$와 동일하거나 작은 분포의 분수값을 계산한다.
 
-The CDF is a function of $x$, where $x$ is any value that might appear
-in the distribution.  To evaluate $\CDF(x)$ for a particular value of
-$x$, we compute the fraction of values in the distribution less
-than or equal to $x$.
+시퀀스 {\tt sample}와 값 {\tt x}를 인자로 받는 함수로 어떤 느낌인지 다음에 코드가 있다.
 
-Here's what that looks like as a function that takes a sequence,
-{\tt sample}, and a value, {\tt x}:
 %
 \begin{verbatim}
 def EvalCdf(sample, x):
@@ -134,13 +129,10 @@ def EvalCdf(sample, x):
     return prob
 \end{verbatim}
 
-This function is almost identical to {\tt PercentileRank}, except that
-the result is a probability in the range 0--1 rather than a
-percentile rank in the range 0--100.
-\index{sample}
+함수가 거의 {\tt PercentileRank}과 동일하지만, 백분위 순위가 0--100인 반면에 결과값이 0--1 범위를 갖는 확률이라는 점이 차이가 있다.
+\index{표본 (sample)}
 
-As an example, suppose we collect a sample with the values 
-{\tt [1, 2, 2, 3, 5]}.  Here are some values from its CDF:
+예제로 표본값으로 {\tt [1, 2, 2, 3, 5]}을 수집했다고 가정하자. 다음에 CDF로부터 값이 몇개 있다.
 %
 \[ CDF(0) = 0 \]
 %
@@ -154,10 +146,10 @@ As an example, suppose we collect a sample with the values
 %
 \[ CDF(5) = 1\]
 %
-We can evaluate the CDF for any value of $x$, not just
-values that appear in the sample.
-If $x$ is less than the smallest value in the sample, $\CDF(x)$ is 0.
-If $x$ is greater than the largest value, $\CDF(x)$ is 1.
+
+표본에 있는 값뿐만 아니라 $x$의 임의값에 대해서 CDF를 평가할 수 있다.
+만약 $x$가 표본에 가장 작은 값보다 작다면, $\CDF(x)$는 0.
+만약 $x$가 가장 큰 값보다 크다면, $\CDF(x)$는 1.
 
 \begin{figure}
 % cumulative.py
@@ -166,27 +158,25 @@ If $x$ is greater than the largest value, $\CDF(x)$ is 1.
 \label{example_cdf}
 \end{figure}
 
-Figure~\ref{example_cdf} is a graphical representation of this CDF.
-The CDF of a sample is a step function.
-\index{step function}
+그림~\ref{example_cdf}이 CDF를 그래픽으로 표현한 것이다.
+표본 CDF는 계단 함수다.
+\index{계단 함수 (step function)}
 
 
-\section{Representing CDFs}
+\section{CDF 표현하기 (Representing CDFs)}
 \index{Cdf}
 
-{\tt thinkstats2} provides a class named Cdf that represents
-CDFs.  The fundamental methods Cdf provides are:
+{\tt thinkstats2}은 CDF를 표현하는 Cdf라는 클래스를 제공한다. Cdf 가 제공하는 기본 메쏘드는 다음과 같다.
 
 \begin{itemize}
 
-\item {\tt Prob(x)}: Given a value {\tt x}, computes the probability
-  $p = \CDF(x)$.  The bracket operator is equivalent to {\tt Prob}.
-\index{bracket operator}
+\item {\tt Prob(x)}: {\tt x} 값이 주어졌을 때, $p = \CDF(x)$ 확률값을 계산한다. 꺾쇠 연산자는 {\tt Prob}와 동일하다.
+\index{꺾쇠 연산자 (bracket operator)}
 
-\item {\tt Value(p)}: Given a probability {\tt p}, computes the
-corresponding value, {\tt x}; that is, the {\bf inverse CDF} of {\tt p}.
-\index{inverse CDF}
-\index{CDF, inverse}
+\item {\tt Value(p)}: 확률 {\tt p}가 주어졌을 때, 
+상응하는 값 {\tt x}를 계산한다; 즉, {\tt p}의 {\bf CDF 역함수(inverse CDF)}다.
+\index{CDF 역함수 (inverse CDF)}
+\index{CDF, 역함수(inverse)}
 
 \end{itemize}
 
@@ -197,20 +187,18 @@ corresponding value, {\tt x}; that is, the {\bf inverse CDF} of {\tt p}.
 \label{cumulative_prglngth_cdf}
 \end{figure}
 
-The Cdf constructor can take as an argument a list of values,
-a pandas Series, a Hist, Pmf, or another Cdf.  The following
-code makes a Cdf for the distribution of pregnancy lengths in
-the NSFG:
+Cdf 생성자는 인자로 리스트, 판다스 시리즈, Hist, Pmf, 혹은 또다른 Cdf를 받을 수 있다. NSFG 데이터에서 임신 기간 분포에 대한 Cdf를 생성하는 코드가 다음에 있다. 
+
 \index{NSFG}
-\index{pregnancy length}
+\index{임신 기간 (pregnancy length)}
 
 \begin{verbatim}
     live, firsts, others = first.MakeFrames()
     cdf = thinkstats2.Cdf(live.prglngth, label='prglngth')
 \end{verbatim}
 
-{\tt thinkplot} provides a function named {\tt Cdf} that
-plots Cdfs as lines:
+
+{\tt thinkplot}은 {\tt Cdf}라는 함수를 제공해서 Cdf를 선그래프를 그릴 수 있다.
 \index{thinkplot}
 
 \begin{verbatim}
@@ -218,33 +206,27 @@ plots Cdfs as lines:
     thinkplot.Show(xlabel='weeks', ylabel='CDF')
 \end{verbatim}
 
-Figure~\ref{cumulative_prglngth_cdf} shows the result.  One way to
-read a CDF is to look up percentiles.  For example, it looks like
-about 10\% of pregnancies are shorter than 36 weeks, and about 90\%
-are shorter than 41 weeks.  The CDF also provides a visual
-representation of the shape of the distribution.  Common values appear
-as steep or vertical sections of the CDF; in this example, the mode at
-39 weeks is apparent.  There are few values below 30 weeks, so
-the CDF in this range is flat.
-\index{CDF, interpreting}
-
-It takes some time to get used to CDFs, but once you
-do, I think you will find that they show more information, more
-clearly, than PMFs.
 
 
-\section{Comparing CDFs}
+그림~\ref{cumulative_prglngth_cdf}에 결과가 있다.
+CDF를 읽는 한가지 방법은 백분위수를 찾는 것이다.
+예를 들어, 임신 기간 10\%는 36주차보다 더 짧고, 90\%는 41주차보다 더 짧은 것처럼 보인다. 또는 CDF를 통해서 분포 모양을 시각적으로 표현할 수도 있다. 흔한 값은 CDF에서 급격하거나 수직적 부분으로 나타난다; 이번 예제에서 39주차 모드(최빈값)가 명확히 보인다. 30주차 밑으로 값이 몇개 없어서 이 범위에 있는 CDF는 평평하다.
+\index{CDF, 해석하기 (interpreting)}
+
+CDF에 익숙해지는데 시간이 좀 필요하다. 하지만, 한번 익숙해지면, PMF보다 더 많은 정보를 좀더 명확하게 보여줄 것으로 생각된다.
+
+
+\section{CDF 비교하기}
 \label{birth_weights}
-\index{National Survey of Family Growth}
+\index{가족 성장 국가 조사 (National Survey of Family Growth)}
 \index{NSFG}
-\index{birth weight}
-\index{weight!birth}
+\index{출산 체중 (birth weight)}
+\index{체중 (weight)!출산 (birth)}
 
-CDFs are especially useful for comparing distributions.  For
-example, here is the code that plots the CDF of birth
-weight for first babies and others.
+CDF는 특히 분포를 비교하는데 유용하다.
+예를 들어, 첫째 아이와 첫째 아이가 아닌 아이에 대한 출산 체중 CDF를 플롯으로 그리는 코드가 다음에 있다.
 \index{thinkplot}
-\index{distributions, comparing}
+\index{분포 (distributions), 비교하기 (comparing)}
 
 \begin{verbatim}
     first_cdf = thinkstats2.Cdf(firsts.totalwgt_lb, label='first')
@@ -262,83 +244,63 @@ weight for first babies and others.
 \label{cumulative_birthwgt_cdf}
 \end{figure}
 
-Figure~\ref{cumulative_birthwgt_cdf} shows the result.
-Compared to Figure~\ref{nsfg_birthwgt_pmf},
-this figure makes the shape of the distributions, and the differences
-between them, much clearer.  We can see that first babies are slightly
-lighter throughout the distribution, with a larger discrepancy above 
-the mean.
-\index{shape}
+그림~\ref{cumulative_birthwgt_cdf}에 결과가 있다.
+그림~\ref{nsfg_birthwgt_pmf}와 비교하여, 좀더 명확하게 분포 모양과 분포간의 차이를 그림에서 보여준다.
+첫째 아이 체중이 평균 이상에서 조금더 커다란 불일치성을 보이고, 분포 전반에 걸쳐 다소 가볍다는 것을 볼 수 있다.
 
+\index{모양 (shape)}
 
+\section{백분위수 기반 통계량 (Percentile-based statistics)}
+\index{요약 통계 (summary statistic)}
+\index{사분위수 범위 (interquartile range)}
+\index{분위수 (quartile)}
+\index{백분위수 (percentile)}
+\index{중위수 (median)}
+\index{중심 경향성 (central tendency)}
+\index{퍼짐 (spread)}
 
-
-\section{Percentile-based statistics}
-\index{summary statistic}
-\index{interquartile range}
-\index{quartile}
-\index{percentile}
-\index{median}
-\index{central tendency}
-\index{spread}
-
-Once you have computed a CDF, it is easy to compute percentiles
-and percentile ranks.  The Cdf class provides these two methods:
+CDF를 계산하게 되면, 백분위수와 백분위 순위를 계산하기는 쉽다.
+Cdf 클래스가 두가지 메쏘드를 제공한다.
 \index{Cdf}
-\index{percentile rank}
+\index{백분위 순위 (percentile rank)}
 
 \begin{itemize}
 
-\item {\tt PercentileRank(x)}: Given a value {\tt x}, computes its
-  percentile rank, $100 \cdot \CDF(x)$.
+\item {\tt PercentileRank(x)}: {\tt x}가 주어지면, $100 \cdot \CDF(x)$ 백분위 순위를 계산한다.
 
-\item {\tt Percentile(p)}: Given a percentile rank {\tt rank},
-  computes the corresponding value, {\tt x}.  Equivalent to {\tt
-    Value(p/100)}.
+\item {\tt Percentile(p)}: 백분위 순위 {\tt rank}가 주어지면,
+해당하는 값 {\tt x}를 계산한다. {\tt Value(p/100)}과 동등하다.
 
 \end{itemize}
 
-{\tt Percentile} can be used to compute percentile-based summary
-statistics.  For example, the 50th percentile is the value that
-divides the distribution in half, also known as the {\bf median}.
-Like the mean, the median is a measure of the central tendency
-of a distribution.
+{\tt 백분위수 (Percentile)}는 백분위수 기반 요양 통계량을 계산하는데 사용될 수 있다. 예를 들어 50번째 백분위수는 {\bf 중위수 (median)}로 알려진 분포를 반으로 나누는 값이다. 평균과 마찬가지로 중위수는 분포의 중심경향성을 측정하는 측도다.
 
-Actually, there are several definitions of ``median,'' each with
-different properties.  But {\tt Percentile(50)} is simple and
-efficient to compute.
+사실, 각기 다른 특성을 가진 ``중위수(median)''에 대한 정의가 몇개 있다. 하지만, {\tt Percentile(50)}가 단순하고 계산하기 효율적이다.
 
-Another percentile-based statistic is the {\bf interquartile range} (IQR),
-which is a measure of the spread of a distribution.  The IQR
-is the difference between the 75th and 25th percentiles.
+또 다른 백분위수 기반 통계량이 {\bf 사분위수 범위 (interquartile range, IQR}로 분포의 퍼짐을 측정하는 측도다.
+IQR는 75번째와 25번째 백분위수 간의 차이다.
 
-More generally, percentiles are often used to summarize the shape
-of a distribution.  For example, the distribution of income is
-often reported in ``quintiles''; that is, it is split at the
-20th, 40th, 60th and 80th percentiles.  Other distributions
-are divided into ten ``deciles''.  Statistics like these that represent
-equally-spaced points in a CDF are called {\bf quantiles}.
-For more, see \url{https://en.wikipedia.org/wiki/Quantile}.
-\index{quantile}
-\index{quintile}
-\index{decile}
+좀더 일반적으로, 백분위수는 종종 분포 모양을 요약하는데 쓰여진다.
+예를 들어, 수입 분포는 종종 ``분위수 (quintiles)''로 보고된다; 즉, 20번째, 40번째, 60번째, 80번째 백분위수로 쪼개진다.
+다른 분포는 10개 ``십분위(deciles)''으로 나눠진다.
+이와 같이 CDF에서 동일간격으로 표현되는 통계량을 {\bf 분위수(quantiles)}라고 한다. 좀더 자세한 정보는 다음 웹사이트를 참고 바란다. \url{https://en.wikipedia.org/wiki/Quantile}.
+\index{분위수 (quantile)}
+\index{오분위수 (quintile)}
+\index{십분위수 (decile)}
 
 
-
-\section{Random numbers}
+\section{난수 (Random numbers)}
 \label{random}
-\index{random number}
+\index{난수 (random number)}
 
-Suppose we choose a random sample from the population of live
-births and look up the percentile rank of their birth weights.
-Now suppose we compute the CDF of the percentile ranks.  What do
-you think the distribution will look like?
-\index{percentile rank}
-\index{birth weight}
-\index{weight!birth}
+정상 출산 모집단에서 임의 표본을 추출하고, 출생 체중 백분위 순위를 찾아낸다고 가정하자. 이제 백분위 순위 CDF를 계산한다고 가정하자.
+분포가 어떨 것으로 생각하는가?
 
-Here's how we can compute it.  First, we make the Cdf of
-birth weights:
+\index{백분위 순위 (percentile rank)}
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+
+다음에 어떻게 계산하는지 코드가 있다. 첫째로 출생 체중 Cdf를 생성한다.
 \index{Cdf}
 
 \begin{verbatim}
@@ -346,21 +308,20 @@ birth weights:
     cdf = thinkstats2.Cdf(weights, label='totalwgt_lb')
 \end{verbatim}
 
-Then we generate a sample and compute the percentile rank of
-each value in the sample.
+그리고 나서, 표본을 생성하고, 표본에 있는 각 값에 대한 백분위 순위를 계산한다.
 
 \begin{verbatim}
     sample = np.random.choice(weights, 100, replace=True)
     ranks = [cdf.PercentileRank(x) for x in sample]
 \end{verbatim}
 
-{\tt sample}
-is a random sample of 100 birth weights, chosen with {\bf replacement};
-that is, the same value could be chosen more than once.  {\tt ranks}
-is a list of percentile ranks.
-\index{replacement}
+{\tt sample}은 100개 출생 체중 임의 표본이며 복원 추출하였다;
+즉, 동일한 값이 한번이상 추출될 수 있다. 
+{\tt ranks}는 백분위 순위 리스트다.
+\index{복원 (replacement)}
 
-Finally we make and plot the Cdf of the percentile ranks.
+마지막으로 백분위 순위 Cdf를 만들고 플롯으로 그린다.
+
 \index{thinkplot}
 
 \begin{verbatim}
@@ -376,34 +337,29 @@ Finally we make and plot the Cdf of the percentile ranks.
 \label{cumulative_random}
 \end{figure}
 
-Figure~\ref{cumulative_random} shows the result.  The CDF is
-approximately a straight line, which means that the distribution
-is uniform.
+그림~\ref{cumulative_random}이 결과를 보여준다.
+CDF가 근사적으로 직선이다. 분포가 균등하다라는 의미다. 
 
-That outcome might be non-obvious, but it is a consequence of
-the way the CDF is defined.  What this figure shows is that 10\%
-of the sample is below the 10th percentile, 20\% is below the
-20th percentile, and so on, exactly as we should expect.
+결과가 명확하지 않을 수도 있지만, CDF가 정의된 방식의 결과다.
+그림이 보여주는 정보는 표본의 10\%가 10번째 백분위수 보다 밑에 있고,
+표본의 20\%가 20번째 백분위수 보다 밑에 있고 등등, 정확히 예측했던 것이다.
 
-So, regardless of the shape of the CDF, the distribution of
-percentile ranks is uniform.  This property is useful, because it
-is the basis of a simple and efficient algorithm for generating
-random numbers with a given CDF.  Here's how:
-\index{inverse CDF algorithm}
-\index{random number}
+그래서, CDF 모양에 관계없이, 백분위 순위 분포는 균등하다. 
+이 속성이 유용한데, 이유는 주어진 CDF에서 난수를 생성하는데 있어서 간단하면서도 효율적인 알고리즘 설계하는 기초가 되기 때문이다; 다음에 난수를 생성하는 방법이 있다.
+
+\index{역 CDF 알고리즘 (inverse CDF algorithm)}
+\index{난수 (random number)}
 
 \begin{itemize}
 
-\item Choose a percentile rank uniformly from the range 0--100.
+\item 0--100 범우에서 균등하게 백분위 순위를 고른다.
 
-\item Use {\tt Cdf.Percentile} to find the value in the distribution
-that corresponds to the percentile rank you chose.
+\item {\tt Cdf.Percentile}를 사용해서 선택한 백분위 순위에 상응하는 값을 분포에서 찾는다.
 \index{Cdf}
 
 \end{itemize}
 
-Cdf provides an implementation of this algorithm, called
-{\tt Random}:
+Cdf는 상기 알고리즘을 구현한 것으로 {\tt Random}이 함수명이다.
 
 \begin{verbatim}
 # class Cdf:
@@ -411,9 +367,8 @@ Cdf provides an implementation of this algorithm, called
         return self.Percentile(random.uniform(0, 100))
 \end{verbatim}
 
-Cdf also provides {\tt Sample}, which takes an integer,
-{\tt n}, and returns a list of {\tt n} values chosen at random
-from the Cdf.
+Cdf는 {\tt Sample} 메쏘드를 제공하는데 정수 {\tt n}을
+인자로 받아 Cdf에서 임의로 추출한 {\tt n}개 리스트를 반환한다.
 
 
 \section{Comparing percentile ranks}
