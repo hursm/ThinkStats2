@@ -1,31 +1,30 @@
-\chapter{Modeling distributions}
+\chapter{분포 모형화 (Modeling distributions)}
 \label{modeling}
 
-The distributions we have used so far are called {\bf empirical
-  distributions} because they are based on empirical observations,
-which are necessarily finite samples.
-\index{analytic distribution}
-\index{distribution!analytic}
-\index{empirical distribution}
-\index{distribution!empirical}
+지금까지 사용한 분포는 {\bf 경험적 분포 (empirical distributions)}라고 부른다.
+이유는 필연적으로 유한 표본인 경험적 관측치에 기반하고 있기 때문이다.
 
-The alternative is an {\bf analytic distribution}, which is
-characterized by a CDF that is a mathematical function.
-Analytic distributions can be used to model empirical distributions.
-In this context, a {\bf model} is a simplification that leaves out
-unneeded details.  This chapter presents common analytic distributions
-and uses them to model data from a variety of sources.
-\index{model}
+\index{해석 분포 (analytic distribution)}
+\index{분포 (distribution)!해석 (analytic)}
+\index{경험적 분포 (empirical distribution)}
+\index{분포 (distribution)!경험 (empirical)}
 
-The code for this chapter is in {\tt analytic.py}.  For information
-about downloading and working with this code, see Section~\ref{code}.
+수학 함수인 CDF로 특징 지어지는 {\bf 해석 분포 (analytic distribution)}가 대안이 된다.
+해석 분포가 경험적 분포를 모형화하는데 사용될 수 있다.
+이러한 맥락에서 {\bf 모형(model)}은 불필요한 부분을 덜어낸 단순화가 된다.
+이번 장에서 자주 사용되는 분포를 제시하고 이를 사용하여 다양한 출처를 가진 
+데이터를 모형화한다.
+
+\index{모형 (model)}
+
+이번 장에서 사용되는 코드는 {\tt analytic.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
 
-
-\section{The exponential distribution}
+\section{지수분포 (exponential distribution)}
 \label{exponential}
-\index{exponential distribution}
-\index{distribution!exponential}
+\index{지수분포 (exponential distribution)}
+\index{분포 (distribution)!지수 (exponential)}
 
 \begin{figure}
 % analytic.py
@@ -34,33 +33,28 @@ about downloading and working with this code, see Section~\ref{code}.
 \label{analytic_expo_cdf}
 \end{figure}
 
-I'll start with the {\bf exponential distribution} because it is
-relatively simple.  The CDF of the exponential distribution is
+{\bf 지수 분포 (exponential distribution)}로 시작하는데 이유는 상대적으로 단순하기 때문이다.
+지수분포 CDF는 다음과 같다.
 %
 \[ \CDF(x) = 1 - e^{-\lambda x} \]
 %
-The parameter, $\lambda$, determines the shape of the distribution.
-Figure~\ref{analytic_expo_cdf} shows what this CDF looks like with
-$\lambda = $ 0.5, 1, and 2.
-  \index{parameter}
 
-In the real world, exponential distributions
-come up when we look at a series of events and measure the
-times between events, called {\bf interarrival times}.
-If the events are equally likely to occur at any time, the distribution
-of interarrival times tends to look like an exponential distribution.
-\index{interarrival time}
+모수 $\lambda$가 분포 형상(shape)을 결정한다. 
+그림~\ref{analytic_expo_cdf}에서 $\lambda = $ 0.5, 1, 2 값을 가진
+CDF가 대략 모양이 어떤지 볼 수 있다.
+\index{모수 (parameter)}
 
-As an example, we will look at the interarrival time of births.
-On December 18, 1997, 44 babies were born in a hospital in Brisbane,
-Australia.\footnote{This example is based on information and data from
-  Dunn, ``A Simple Dataset for Demonstrating Common Distributions,''
-  Journal of Statistics Education v.7, n.3 (1999).}  The time of
-birth for all 44 babies was reported in the local paper; the
-complete dataset is in a file called {\tt babyboom.dat}, in the
-{\tt ThinkStats2} repository.
-\index{birth time}
-\index{Australia} \index{Brisbane}
+현실 세계에서 일련의 사건을 보고, 사건 간에 시간({\bf 도착간격 시간, interarrival times})을 측정할 때 지수분포가 등장한다.
+만약 사건이 언제든지 균등하게 발생할 것 같다면 도착간격 시간 분포는 지수분포같은 경향이 있다.
+\index{도착간격 시간 (interarrival time)}
+
+일례로, 출생간 발생시간을 살펴보자. 1997년 12월 18일 호주 브리즈번
+\footnote{예제에 나오는 자료와 정보는 저널 논문에 기반한다. Dunn, ``A Simple Dataset for Demonstrating Common Distributions,'' Journal of Statistics Education v.7, n.3 (1999)}
+에서 44명 신생아가 출생했다. 모든 44명 신생아 출생 시간이 지역신문에 출간되었다;
+전체 데이터셋은 {\tt ThinkStats2} 저장소 {\tt babyboom.dat} 파일에 담겨있다.
+\index{출생 시간 (birth time)}
+\index{호주 (Australia)} 
+\index{브리즈번 (Brisbane)}
 
 \begin{verbatim}
     df = ReadBabyBoom()
@@ -71,11 +65,10 @@ complete dataset is in a file called {\tt babyboom.dat}, in the
     thinkplot.Show(xlabel='minutes', ylabel='CDF')
 \end{verbatim}
 
-{\tt ReadBabyBoom} reads the data file and returns a DataFrame
-with columns {\tt time}, {\tt sex}, \verb"weight_g", and {\tt minutes},
-where {\tt minutes} is time of birth converted to minutes since
-midnight.
-\index{DataFrame}
+{\tt ReadBabyBoom} 함수가 데이터 파일을 읽어들이고 {\tt time}, {\tt sex}, \verb"weight_g", {\tt minutes}
+칼럼으로 구성된 데이터프레임을 반환한다.
+여기서 {\tt minutes}가 자정 이후 출생시간을 분으로 변환한 시간정보를 담고 있다.
+\index{데이터프레임 (DataFrame)}
 \index{thinkplot}
 
 \begin{figure}
@@ -92,33 +85,34 @@ midnight.
 %\label{analytic_interarrival_ccdf}
 %\end{figure}
 
-{\tt diffs} is the difference between consecutive birth times, and
-{\tt cdf} is the distribution of these interarrival times.
-Figure~\ref{analytic_interarrival_cdf} (left) shows the CDF.  It seems
-to have the general shape of an exponential distribution, but how can
-we tell?
+{\tt diffs}는 연속되는 출생시간 사이 차이가 되고 
+{\tt cdf}는 출생간격 시간 분포가 된다.
+그림~\ref{analytic_interarrival_cdf} (왼편)이 CDF를 나타낸다.
+전형적인 지수분포 형상을 지닌 처럼 보이지만, 어떻게 분간할 수 있을까?
 
-One way is to plot the {\bf complementary CDF}, which is $1 - \CDF(x)$,
-on a log-y scale.  For data from an exponential distribution, the
-result is a straight line.  Let's see why that works.
-\index{complementary CDF} \index{CDF!complementary} \index{CCDF}
+한 방법은 {\bf 보완 CDF (complementary CDF)}를 플롯으로 그리는 것이다.
+보완 CDF는 log-y 척도로 $1 - \CDF(x)$이다.
+지수분포 데이터에 대해서는 결과가 직선이다. 왜 그런지 살펴보자.
 
-If you plot the complementary CDF (CCDF) of a dataset that you think is
-exponential, you expect to see a function like:
+\index{보완 CDF (complementary CDF)} 
+\index{CDF!보완 (complementary)} 
+\index{CCDF}
+
+독자가 생각하기에 지수분포를 따르는 데이터셋을 보완 CDF(CCDF) 플롯으로 그리면, 
+다음과 같은 함수가 나올 것으로 기대한다.
 %
 \[ y \approx e^{-\lambda x} \]
 %
-Taking the log of both sides yields:
+양변에 로그를 취하면 다음과 같다.
 %
 \[ \log y \approx -\lambda x\]
 %
-So on a log-y scale the CCDF is a straight line
-with slope $-\lambda$.  Here's how we can generate a plot like that:
-\index{logarithmic scale}
-\index{complementary CDF}
-\index{CDF!complementary}
+그래서, log-y 척도로 CCDF는 기울기 $-\lambda$인 직선이 된다.
+다음에 플롯을 생성하는 방법이 있다.
+\index{로그 척도 (logarithmic scale)}
+\index{보완 CDF (complementary CDF)}
+\index{CDF!보완 (complementary)}
 \index{CCDF}
-
 
 \begin{verbatim}
     thinkplot.Cdf(cdf, complement=True)
@@ -127,29 +121,25 @@ with slope $-\lambda$.  Here's how we can generate a plot like that:
                    yscale='log')
 \end{verbatim}
 
-With the argument {\tt complement=True}, {\tt thinkplot.Cdf} computes
-the complementary CDF before plotting.  And with {\tt yscale='log'},
-{\tt thinkplot.Show} sets the {\tt y} axis to a logarithmic scale.
+{\tt complement=True} 인자가 있어서, {\tt thinkplot.Cdf}이 플롯을 그리기 전에
+보완 CDF를 계산한다. 그리고 {\tt yscale='log'}를 통해서  
+{\tt thinkplot.Show}가 로그 척도로 {\tt y}축을 고정한다.
 \index{thinkplot}
 \index{Cdf}
 
-Figure~\ref{analytic_interarrival_cdf} (right) shows the result.  It is not
-exactly straight, which indicates that the exponential distribution is
-not a perfect model for this data.  Most likely the underlying
-assumption---that a birth is equally likely at any time of day---is
-not exactly true.  Nevertheless, it might be reasonable to model this
-dataset with an exponential distribution.  With that simplification, we can
-summarize the distribution with a single parameter.
-\index{model}
+그림~\ref{analytic_interarrival_cdf} (오른편)에 결과가 있다.
+정확하게 직선이 아니다. 이 데이터에 대해서 완벽한 모델로 지수 분포가 아니라는 것이 표시된다.
+기본 가정---출생이 아무 때고 균등하게 발생---이 정확하게 사실이 아닐 것이다.
+그럼에도 불구하고 지수분포로 이 데이터셋을 모형화하는 것이 합리적일 것이다.
+이와 같은 단순화로 단 하나의 모수로 분포를 요약할 수 있다.
+\index{모형 (model)}
 
-The parameter, $\lambda$, can be interpreted as a rate; that is, the
-number of events that occur, on average, in a unit of time.  In this
-example, 44 babies are born in 24 hours, so the rate is $\lambda =
-0.0306$ births per minute.  The mean of an exponential distribution is
-$1/\lambda$, so the mean time between births is 32.7 minutes.
+모수 $\lambda$가 율(rate)로 해석될 수 있다; 즉, 평균적으로 단위 시간에 
+발생하는 사건 수. 예제에서 44명의 신생아가 24시간내에 태어난다.
+그래서 율값이 분당 $\lambda = 0.0306$이 된다.
+지수분포 평균은 $1/\lambda$ 으로 신생아 간에 출생 평균 시간은 32.7분이 된다.
 
-
-\section{The normal distribution}
+\section{정규 분포 (normal distribution)}
 \label{normal}
 
 The {\bf normal distribution}, also called Gaussian, is commonly
