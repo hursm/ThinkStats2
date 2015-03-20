@@ -371,22 +371,23 @@ Cdf는 {\tt Sample} 메쏘드를 제공하는데 정수 {\tt n}을
 인자로 받아 Cdf에서 임의로 추출한 {\tt n}개 리스트를 반환한다.
 
 
-\section{Comparing percentile ranks}
+\section{백분위 순위 비교하기}
 
-Percentile ranks are useful for comparing measurements across
-different groups.  For example, people who compete in foot races are
-usually grouped by age and gender.  To compare people in different
-age groups, you can convert race times to percentile ranks.
-\index{percentile rank}
+백분위 순위는 다른 집단에 대해서 측정값을 비교하는데 유용하다.
+예를 들어, 달리기 경주에서 참가자는 대체로 나이와 성별로 무리를 만든다.
+다른 연령 집단에 있는 사람을 비교하는데 경주시간을 백분위 순위로 변환할 수 있다.
 
-A few years ago I ran the James Joyce Ramble 10K in
-Dedham MA; I finished in 42:44, which was 97th in a field of 1633.  I beat or
-tied 1537 runners out of 1633, so my percentile rank in the field is
-94\%.  \index{James Joyce Ramble} \index{race time}
+\index{백분위 순위 (percentile rank)}
 
-More generally, given position and field size, we can compute
-percentile rank:
-\index{field size}
+몇년전에 매사추세츠(Massachusetts)주에서 제임스 조이스(James Joyce) 10킬로 마라톤을 뛰었다;
+42분 44초로 주파해서 1633명중에서 97번째로 완주했다. 참가자 1633명 중 1537명 참가자보다 빨리 도착해서 
+저자의 최종 백분위 순위는 94\%다.  
+\index{제임스 조이스 마라톤 (James Joyce Ramble} 
+\index{경주 시간 (race time)}
+
+
+좀더 일반적으로, 위치와 필드 크기 정보가 주어진다면, 백분위 순위를 계산할 수 있다.
+\index{필드 크기 (field size)}
 
 \begin{verbatim}
 def PositionToPercentile(position, field_size):
@@ -395,17 +396,15 @@ def PositionToPercentile(position, field_size):
     return percentile
 \end{verbatim}
 
-In my age group, denoted M4049 for ``male between 40 and 49 years of
-age'', I came in 26th out of 256.  So my percentile rank in my age
-group was 90\%.
-\index{age group}
+``40에서 49세 남성'', M4049로 표기된 저자가 속한 연령집단, 256명 중에서 26번째로 완주했다.
+그래서, 저자가 속한 연령집단에서 백분위 순위는 90\%가 된다.
+\index{연령 집단 (age group)}
 
-If I am still running in 10 years (and I hope I am), I will be in
-the M5059 division.  Assuming that my percentile rank in my division
-is the same, how much slower should I expect to be?
+10년정도 더 마라톤을 뛴다면 (그리고 계속해서 뛰고 싶다.), M5059 그룹에 있을 것이다.
+저자가 속한 집단에서 동일한 백분위수를 유지한다고 가정한다면, 완주하는데 얼마나 더 시간이 필요할까?
 
-I can answer that question by converting my percentile rank in M4049
-to a position in M5059.  Here's the code:
+M4049 집단에 있는 저자의 백분위 순위를 M5059 집단에 위치로 전환하면 상기 질문에 대답할 수 있다.
+다음에 프로그램 코드가 있다.
 
 \begin{verbatim}
 def PercentileToPosition(percentile, field_size):
@@ -414,10 +413,9 @@ def PercentileToPosition(percentile, field_size):
     return position
 \end{verbatim}
 
-There were 171 people in M5059, so I would have to come in between
-17th and 18th place to have the same percentile rank.  The finishing
-time of the 17th runner in M5059 was 46:05, so that's the time I will
-have to beat to maintain my percentile rank.
+M5059 집단에 171 명이 있어서 동일한 백분위 순위를 유지하려면 17번째와 18번째 사이에서 완주해야 한다.
+M5059에서 17번째 마라토너가 46:05로 완주해서, 40대 동일한 백분위 순위를 유지하는데 
+46:05 시간이 완주 목표시간이 된다.
 
 
 \section{Exercises}
@@ -452,44 +450,44 @@ PMF and CDF.  Is the distribution uniform?
 \end{exercise}
 
 
-\section{Glossary}
+\section{용어사전}
 
 \begin{itemize}
 
-\item percentile rank: The percentage of values in a distribution that are
-less than or equal to a given value.
-\index{percentile rank}
+\item 백분위 순위 (percentile rank): 
+분포에서 주어진 값과 동일하거나 적은 값의 퍼센티지.
+\index{백분위 순위 (percentile rank)}
 
-\item percentile: The value associated with a given percentile rank.
-\index{percentile}
+\item 백분위수 (percentile): 주어진 백분위 순위와 연관된 값.
+\index{백분위수 (percentile)}
 
-\item cumulative distribution function (CDF): A function that maps
-  from values to their cumulative probabilities.  $\CDF(x)$ is the
-  fraction of the sample less than or equal to $x$.  \index{CDF}
-\index{cumulative probability}
+\item 누적분포함수 (cumulative distribution function, CDF): 
+값에서 누적확률값으로 매핑하는 함수. $\CDF(x)$는 $x$와 동일하거나 작은 표본비율이다. 
+\index{CDF}
+\index{누적 확률 (cumulative probability)}
 
-\item inverse CDF: A function that maps from a cumulative probability,
-  $p$, to the corresponding value.
-\index{inverse CDF}
-\index{CDF, inverse}
+\item 역 CDF (inverse CDF):
+누적 확률($p$)에서 해당값으로 매핑하는 함수.
+\index{역 CDF (inverse CDF)}
+\index{CDF, 역 (inverse)}
 
-\item median: The 50th percentile, often used as a measure of central
-  tendency.  \index{median}
+\item 중위수 (median): 
+종종 중심경향성 측도로 사용되는 50번째 백분위수.
+\index{중위수 (median)}
 
-\item interquartile range: The difference between
-the 75th and 25th percentiles, used as a measure of spread.
-\index{interquartile range}
+\item 사분위 범위 (interquartile range): 
+퍼짐의 측도로 사용되는 75번째와 25번째 백분위수 간 차이.
+\index{사분위 범위 (interquartile range)}
 
-\item quantile: A sequence of values that correspond to equally spaced
-percentile ranks; for example, the quartiles of a distribution are
-the 25th, 50th and 75th percentiles.
-\index{quantile}
+\item 분위수 (quantile): 
+동일 간격 백분위 순위에 상응하는 스퀀스 값; 예를 들어, 
+분포 사분위수는 25번째, 50번째, 75번째 백분위수가 된다.
+\index{분위수 (quantile)}
 
-\item replacement: A property of a sampling process. ``With replacement''
-means that the same value can be chosen more than once; ``without
-replacement'' means that once a value is chosen, it is removed from
-the population.
-\index{replacement}
+\item 복원 (replacement): 
+표본추출 과정의 속성. ``복원추출 (With replacement)''는 동일한 값이 한번이상 추출될 수 있다는 의미다;
+``비복원추출 (Without replacement)''는 값이 한번 추출될면, 모집단에서 제거된다는 의미가 된다.
+\index{복원 (replacement)}
 
 \end{itemize}
 
