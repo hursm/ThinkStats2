@@ -319,17 +319,14 @@ def MakeNormalPlot(weights):
 \index{thinkplot}
 \index{표준편차 (standard deviation)}
 
+{\tt FitLine}이 시퀀스 {\tt xs}, 절편, 기울기를 인자로 받는다;
+반환하는 {\tt xs}와 {\tt ys}는 {\tt xs} 값에서 계산되어 인자로 받은 모수를 가진 직선이다.
 
+{\tt NormalProbability}은 {\tt xs}와 {\tt ys}를 반환하는데 
+표준정규분포에서 나온 값과 {\tt weights}에서 나온 값을 담고 있다.
+만약 체중 분포가 정규분포를 따른다면, 데이터도 모델과 매칭되어야 한다.
 
-{\tt FitLine} takes a sequence of {\tt xs}, an intercept, and a
-slope; it returns {\tt xs} and {\tt ys} that represent a line
-with the given parameters, evaluated at the values in {\tt xs}.
-
-{\tt NormalProbability} returns {\tt xs} and {\tt ys} that
-contain values from the standard normal distribution and values
-from {\tt weights}.  If the distribution of weights is normal,
-the data should match the model.
-\index{model}
+\index{모형 (model)}
 
 \begin{figure}
 % analytic.py
@@ -338,46 +335,38 @@ the data should match the model.
 \label{analytic_birthwgt_normal}
 \end{figure}
 
-Figure~\ref{analytic_birthwgt_normal} shows the results for
-all live births, and also for full term births (pregnancy length greater
-than 36 weeks).  Both curves match the model near the mean and
-deviate in the tails.  The heaviest babies are heavier than what
-the model expects, and the lightest babies are lighter.
-\index{pregnancy length}
+그림~\ref{analytic_birthwgt_normal}이 전체 정상 출생과 더불어 만삭(임신기간이 36주 이상)에 대한 결과를 보여준다.
+두 곡선 모두 평균 근처에서 모형과 매칭되고 꼬리에서 차이가 난다.
+가장 무거운 아이가 모형이 예측한 것보다 더 무겁고, 가장 가벼운 아이는 더 가볍다.
 
-When we select only full term births, we remove some of the lightest
-weights, which reduces the discrepancy in the lower tail of the
-distribution.
+\index{임신 기간}
 
-This plot suggests that the normal model describes the distribution
-well within a few standard deviations from the mean, but not in the
-tails.  Whether it is good enough for practical purposes depends
-on the purposes.
-\index{model}
-\index{birth weight}
-\index{weight!birth}
-\index{standard deviation}
+단지 만삭 아이만 선택해서, 가장 가벼운 몇몇 아이를 제거하면 분포 아래쪽 꼬리에 있는 불일치를 줄일 수 있다.
+
+정규분포 모형이 평균에서부터 몇 표준편차 내에서 분포를 잘 기술하지만, 꼬리 부근에서는 아니라고 플롯 그래프를 통해서 알 수 있다.
+실제 목적에 얼마나 부합되는지는 목적에 달려있다.
+\index{모형 (model)}
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{표준편차 (standard deviation)}
 
 
-\section{The lognormal distribution}
+\section{로그 정규분포 (lognormal distribution)}
 \label{brfss}
 \label{lognormal}
 
-If the logarithms of a set of values have a normal distribution, the
-values have a {\bf lognormal distribution}.  The CDF of the lognormal
-distribution is the same as the CDF of the normal distribution,
-with $\log x$ substituted for $x$.
+만약 값을 로그 취한 집합이 정규분포라면, 이 값은 {\bf 로그 정규분포 (lognormal distribution)}다. 로그 정규분포 CDF는 $x$를 $\log x$로 치환한 정규분포 CDF와 동일하다.
 %
 \[ CDF_{lognormal}(x) = CDF_{normal}(\log x)\]
 %
-The parameters of the lognormal distribution are usually denoted
-$\mu$ and $\sigma$.  But remember that these parameters are {\em not}
-the mean and standard deviation; the mean of a lognormal distribution
-is $\exp(\mu +\sigma^2/2)$ and the standard deviation is
-ugly (see \url{http://wikipedia.org/wiki/Log-normal_distribution}).
-\index{parameter} \index{weight!adult} \index{adult weight}
-\index{lognormal distribution}
-\index{distribution!lognormal}
+로그 정규분포 모수는 일반적으로 $\mu$와 $\sigma$로 표기한다.
+하지만, 기억할 것은 모수가 평균과 표준편차는 {\em 아니다};
+로그 정규분포 평균은 $\exp(\mu +\sigma^2/2)$이고, 표준편차는 조금 복잡한다.(\url{http://wikipedia.org/wiki/Log-normal_distribution}를 참조한다)
+\index{모수 (parameter)} 
+\index{체중 (weight)!성인 (adult)} 
+\index{성인 체중 (adult weight)}
+\index{로그 정규분포 (lognormal distribution)}
+\index{분포 (distribution)!로그 정규 (lognormal)}
 \index{CDF}
 
 \begin{figure}
@@ -389,41 +378,24 @@ ugly (see \url{http://wikipedia.org/wiki/Log-normal_distribution}).
 %\label{brfss_weight}
 \end{figure}
 
-If a sample is approximately lognormal and you plot its CDF on a
-log-x scale, it will have the characteristic shape of a normal
-distribution.  To test how well the sample fits a lognormal model, you
-can make a normal probability plot using the log of the values
-in the sample.
-\index{normal probability plot}
-\index{model}
+만약 표본이 근사적으로 로그 정규분포이고 log-x 척도로 CDF 플롯을 그린다면, 정규분포 특성의 형상을 갖는다.
+표본이 로그 정규분포 모형과 얼마나 잘 적합하는지 테스트하기 위해서, 
+표본값에 로그를 취해서 정규확률그림을 생성할 수 있다.
 
-As an example, let's look at the distribution of adult weights, which
-is approximately lognormal.\footnote{I was tipped off to this
-  possibility by a comment (without citation) at
-  \url{http://mathworld.wolfram.com/LogNormalDistribution.html}.
-  Subsequently I found a paper that proposes the log transform and
-  suggests a cause: Penman and Johnson, ``The Changing Shape of the
-  Body Mass Index Distribution Curve in the Population,'' Preventing
-  Chronic Disease, 2006 July; 3(3): A74.  Online at
-  \url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1636707}.}
+\index{정규확률그림 (normal probability plot)}
+\index{모형 (model)}
 
-The National Center for Chronic Disease
-Prevention and Health Promotion conducts an annual survey as part of
-the Behavioral Risk Factor Surveillance System
-(BRFSS).\footnote{Centers for Disease Control and Prevention
-  (CDC). Behavioral Risk Factor Surveillance System Survey
-  Data. Atlanta, Georgia: U.S. Department of Health and Human
-  Services, Centers for Disease Control and Prevention, 2008.}  In
-2008, they interviewed 414,509 respondents and asked about their
-demographics, health, and health risks.
-Among the data they collected are the weights in kilograms of
-398,484 respondents.
-\index{Behavioral Risk Factor Surveillance System}
+예제로 성인 체중 분포를 살펴보는데 근사적으로 로그 정규분포다.\footnote{\url{http://mathworld.wolfram.com/LogNormalDistribution.html} 사이트에서 주석(인용없이)으로 이 가능성에 대해서 제보를 받았다.
+나중에 로그 변환과 원인을 제안하는 논문을 발견했다: Penman and Johnson, ``The Changing Shape of the Body Mass Index Distribution Curve in the Population,'' Preventing Chronic Disease, 2006 July; 3(3): A74.  Online at \url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1636707}.}
+
+
+만성 질환 예방 및 건강 증진을 위한 국립 센터 (National Center for Chronic Disease Prevention and Health Promotion)에서는 
+행동 위험 요인 감시 시스템(Behavioral Risk Factor Surveillance System, BRFSS)\footnote{질병통제 예방센터(Centers for Disease Control and Prevention, CDC). 행동 위험 요인 감시 시스템 조사 자료(Behavioral Risk Factor Surveillance System Survey Data). Atlanta, Georgia: 미국 보건 복지부 (U.S. Department of Health and Human Services), 질병통제 예방센터 (Centers for Disease Control and Prevention), 2008.}의 일부문으로 매년 조사를 실시한다.
+2008년 414,509 응답자를 대상으로 인터뷰했고 인구통계, 건강, 건강 위험에 관해서 설문했다. 수집한 데이터 중에 398,484 응답자 킬로그램으로 표시된 체중정보가 있다.
+\index{행동 위험 요인 감시 시스템 (Behavioral Risk Factor Surveillance System)}
 \index{BRFSS}
 
-The repository for this book contains {\tt CDBRFS08.ASC.gz},
-a fixed-width ASCII file that contains data from the BRFSS,
-and {\tt brfss.py}, which reads the file and analyzes the data.
+이 책을 위한 저장소에 BRFSS에 관한 데이터를 담고 있는 고정폭 아스키(ASCII)파일, {\tt CDBRFS08.ASC.gz}와 더불어 파일을 읽고 데이터를 분석하는 {\tt brfss.py}파일도 함께 있다.
 
 \begin{figure}
 % brfss.py
@@ -434,28 +406,34 @@ and {\tt brfss.py}, which reads the file and analyzes the data.
 \label{brfss_weight_normal}
 \end{figure}
 
-Figure~\ref{brfss_weight} (left) shows the distribution of adult
-weights on a linear scale with a normal model.
-Figure~\ref{brfss_weight} (right) shows the same distribution on a log
-scale with a lognormal model.  The lognormal model is a better fit,
-but this representation of the data does not make the difference
-particularly dramatic.  \index{respondent} \index{model}
+그림~\ref{brfss_weight} (왼편)이 정규분포 모형에 선형 척도로 성인 체중 분포를 나타낸다.
+그림~\ref{brfss_weight} (오른편)이 로그 정규분포 모형으로 로그 척도로 동일한 분포를 나타낸다.
+로그 정규 모형이 더 나은 적합이지만 데이터를 이와 같이 표현하는 것이 차이점을 특별히 인상적으로 만들지는 못한다.
+\index{응답자 (respondent)} 
+\index{모형 (model)}
 
-Figure~\ref{brfss_weight_normal} shows normal probability plots for
-adult weights, $w$, and for their logarithms, $\log_{10} w$.  Now it
-is apparent that the data deviate substantially from the normal model.
-On the other hand, the lognormal model is a good match for the data.
-\index{normal distribution} \index{distribution!normal}
-\index{Gaussian distribution} \index{distribution!Gaussian}
-\index{lognormal distribution} \index{distribution!lognormal}
-\index{standard deviation} \index{adult weight} \index{weight!adult}
-\index{model} \index{normal probability plot}
+그림~\ref{brfss_weight_normal}이 성인 체중 $w$에 대한 정규확률그림과 
+로그 변환한 체중 $\log_{10} w$에 대한 정규확률그림을 보여준다.
+이제 데이터가 정규분포 모형에서 상당히 벗아난 것이 명확하다.
+다른 한편으로 로그 정규모형은 데이터에 대한 좋은 매칭을 보여준다.
+
+\index{정규분포 (normal distribution)} 
+\index{분포 (distribution)!정규 (normal0}
+\index{가우스 분포 (Gaussian distribution)} 
+\index{분포 (distribution)!가우스 (Gaussian)}
+\index{로그 정규분포 (lognormal distribution)} 
+\index{분포 (distribution)!로그 정규 (lognormal)}
+\index{표준편차 (standard deviation)} 
+\index{성인 체중 (adult weight)} 
+\index{체중 (weight)!성인 (adult)}
+\index{모형 (model)} 
+\index{정규확률그림 (normal probability plot)}
 
 
-\section{The Pareto distribution}
-\index{Pareto distribution}
-\index{distribution!Pareto}
-\index{Pareto, Vilfredo}
+\section{파레토 분포 (Pareto distribution)}
+\index{파레토 분포 (Pareto distribution)}
+\index{분포 (distribution)!파레토 (Pareto)}
+\index{파레토, 빌프레도 (Pareto, Vilfredo)}
 
 The {\bf Pareto distribution} is named after the economist Vilfredo Pareto,
 who used it to describe the distribution of wealth (see
