@@ -142,21 +142,21 @@ CDF가 대략 모양이 어떤지 볼 수 있다.
 \section{정규 분포 (normal distribution)}
 \label{normal}
 
-The {\bf normal distribution}, also called Gaussian, is commonly
-used because it describes many phenomena, at least approximately.
-It turns out that there is a good reason for its ubiquity, which we
-will get to in Section~\ref{CLT}.
+가우스 분포(Gaussian distribution)라고도 불리는 
+{\bf 정규 분포 (normal distribution)}가 흔히 사용되는데 이유는 많은 현상을 기술하고 
+최소한 근사적으로도 기술할 수 있기 때문이다.
+\ref{CLT} 절에서 다루게 되는데 이와 같은 보편성에는 이유가 있다.
 \index{CDF}
-\index{parameter}
-\index{mean}
-\index{standard deviation}
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+\index{모수 (parameter)}
+\index{평균 (mean)}
+\index{표준편차 (standard deviation)}
+\index{정규 분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
 
 %
-%\[ \CDF(z) = \frac{1}{\sqrt{2 \pi}} \int_{-\infty}^z e^{-t^2/2} dt \]
+\[ \CDF(z) = \frac{1}{\sqrt{2 \pi}} \int_{-\infty}^z e^{-t^2/2} dt \]
 %
 
 \begin{figure}
@@ -166,16 +166,16 @@ will get to in Section~\ref{CLT}.
 \label{analytic_gaussian_cdf}
 \end{figure}
 
-The normal distribution is characterized by two parameters: the mean,
-$\mu$, and standard deviation $\sigma$.  The normal distribution with
-$\mu=0$ and $\sigma=1$ is called the {\bf standard normal
-  distribution}.  Its CDF is defined by an integral that does not have
-a closed form solution, but there are algorithms that evaluate it
-efficiently.  One of them is provided by SciPy: {\tt scipy.stats.norm}
-is an object that represents a normal distribution; it provides a
-method, {\tt cdf}, that evaluates the standard normal CDF:
+정규 분포는 모수 두개로 특성화된다: 평균 $\mu$, 표준편차 $\sigma$.
+모수 $\mu=0$과 $\sigma=1$을 갖는 정규분포를 {\bf 표준 정규 분포 (standard normal
+ distribution)}라고 한다.
+정규분포 CDF는 닫힌 형식 해법(closed form solution)을 갖지 않는 적분으로 정의된다.
+하지만, 효율적으로 계산하는 알고리즘이 있다.
+알고리즘 중 하나가 SciPy을 통해 제공된다: {\tt scipy.stats.norm}이
+정규분포를 표현하는 객체다. 표준 정규분포 CDF를 계산하는 {\tt cdf} 메쏘드를 제공한다.
+
 \index{SciPy}
-\index{closed form}
+\index{닫힌 형식 (closed form)}
 
 \begin{verbatim}
 >>> import scipy.stats
@@ -183,36 +183,35 @@ method, {\tt cdf}, that evaluates the standard normal CDF:
 0.5
 \end{verbatim}
 
-This result is correct: the median of the standard normal distribution
-is 0 (the same as the mean), and half of the values fall below the
-median, so $\CDF(0)$ is 0.5.
+결과값은 맞다: 표준 정규분포 중위수는 0 (평균과 같다)이고, 값의 절반이 중위수 아래 위치한다.
+그래서 $\CDF(0)$은 0.5 이다.
 
-{\tt norm.cdf} takes optional parameters: {\tt loc}, which
-specifies the mean, and {\tt scale}, which specifies the
-standard deviation.
+{\tt norm.cdf}은 옵션 모수를 받는다: {\tt loc}가
+평균을 특정하고, {\tt scale}는 표준편차를 특정한다.
 
-{\tt thinkstats2} makes this function a little easier to use
-by providing {\tt EvalNormalCdf}, which takes parameters {\tt mu}
-and {\tt sigma} and evaluates the CDF at {\tt x}:
-\index{normal distribution}
+
+{\tt thinkstats2}는 상기 함수를 좀더 사용하기 쉽게 한다.
+{\tt EvalNormalCdf} 메쏘드는 {\tt mu}과 {\tt sigma}을 인자로 받아 
+{\tt x}에 CDF를 계산한다.
+
+\index{정규 분포 (normal distribution)}
 
 \begin{verbatim}
 def EvalNormalCdf(x, mu=0, sigma=1):
     return scipy.stats.norm.cdf(x, loc=mu, scale=sigma)
 \end{verbatim}
 
-Figure~\ref{analytic_gaussian_cdf} shows CDFs for normal
-distributions with a range of parameters.  The sigmoid shape of these
-curves is a recognizable characteristic of a normal distribution.
+그림~\ref{analytic_gaussian_cdf}에 정규분포에 다양한 모수를 넣어 그린 CDF가 있다.
+곡선의 S자(sigmoid) 형상이 정규분포를 식별할 수 있게 하는 특성이다.
 
-In the previous chapter we looked at the distribution of birth
-weights in the NSFG.  Figure~\ref{analytic_birthwgt_model} shows the
-empirical CDF of weights for all live births and the CDF of
-a normal distribution with the same mean and variance.
-\index{National Survey of Family Growth}
+앞장에서 NSFG 출생 체중 분포를 살펴봤다.
+모든 정상 출산 체중에 대한 경험적 CDF와 동일한 평균과 분산으로 정규분포 CDF를 중첩하여 
+플롯으로 그린 것이 그림~\ref{analytic_birthwgt_model}이다.
+
+\index{가족 성장 국가 조사 (National Survey of Family Growth)}
 \index{NSFG}
-\index{birth weight}
-\index{weight!birth}
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
 
 \begin{figure}
 % analytic.py
@@ -221,60 +220,58 @@ a normal distribution with the same mean and variance.
 \label{analytic_birthwgt_model}
 \end{figure}
 
-The normal distribution is a good model for this dataset, so
-if we summarize the distribution with the parameters
-$\mu = 7.28$ and $\sigma = 1.24$, the resulting error
-(difference between the model and the data) is small.
-\index{model}
-\index{percentile}
+정규분포가 이 데이터셋에 대해서 좋은 모형이 된다.
+그래서 만약 모수 $\mu = 7.28$과 $\sigma = 1.24$으로 
+분포를 요약한다면, 결과 오차(모형과 데이터 간 차이)가 작다.
 
-Below the 10th percentile there is a discrepancy between the data
-and the model; there are more light babies than we would expect in
-a normal distribution.  If we are specifically interested in preterm
-babies, it would be important to get this part of the distribution
-right, so it might not be appropriate to use the normal
-model.
+\index{모형 (model)}
+\index{백분위수 (percentile)}
+
+백분위수 10번째 아래에서 데이터와 모형 사이에 불일치가 있다.
+정규분포에서 예측되는 것보다 더 많이 체중이 적은 아이가 있다.
+만약 조산아에 특별히 관심이 있다면, 분포에서 이 부분을 잘 적합하는 것이 중요하다.
+그래서 정규분포를 사용하는 것이 적절하지 않을 수도 있다.
 
 
-\section{Normal probability plot}
+\section{정규확률그림 (Normal probability plot)}
 
-For the exponential distribution, and a few others, there are
-simple transformations we can use to test whether an analytic
-distribution is a good model for a dataset.
-\index{exponential distribution}
-\index{distribution!exponential}
-\index{model}
+지수분포와 몇가지 분포에서 대해서 해석분포(analytic distribution)가 특정 데이터셋에 대해서
+적합한 모형인가를 테스트하는데 사용할 수 있는 간단한 변환이 있다.
 
-For the normal distribution there is no such transformation, but there
-is an alternative called a {\bf normal probability plot}.  There
-are two ways to generate a normal probability plot: the hard way
-and the easy way.  If you are interested in the hard way, you can
-read about it at \url{https://en.wikipedia.org/wiki/Normal_probability_plot}.
-Here's the easy way:
-\index{normal probability plot}
-\index{plot!normal probability}
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+\index{지수분포 (exponential distribution)}
+\index{분포 (distribution)!지수 (exponential)}
+\index{모형 (model)}
+
+정규분포에 대해서 그러한 변환은 없다. 하지만, 
+{\bf 정규확률그림 (normal probability plot)}으로 불리는 대안이 있다.
+정규확률그림을 생성하는 방식이 두개 있다.: 어려운 방식과 쉬운 방식.
+어려운 방식에 관심이 있다면 \url{https://en.wikipedia.org/wiki/Normal_probability_plot}에서 
+자세한 정보를 얻을 수 있다.
+다음에 쉬운 방식이 있다.
+\index{정규확률그림 (normal probability plot)}
+\index{그림 (plot)! 정규확률 (normal probability)}
+\index{정규분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
 
 \begin{enumerate}
 
-\item Sort the values in the sample.
+\item 표본에 있는 값을 정렬한다.
 
-\item From a standard normal distribution ($\mu=0$ and $\sigma=1$),
-generate a random sample with the same size as the sample, and sort it.
-\index{random number}
+\item 표준정규분포($\mu=0$, $\sigma=1$)에서 표본과 동일한 크기를 갖는 난수을 생성하고
+정렬한다.
+\index{난수 (random number)}
 
-\item Plot the sorted values from the sample versus the random values.
+\item 표본에서 나온 정렬된 값과 난수를 플롯으로 그린다.
 
 \end{enumerate}
 
-If the distribution of the sample is approximately normal, the result
-is a straight line with intercept {\tt mu} and slope {\tt sigma}.
-{\tt thinkstats2} provides {\tt NormalProbability}, which takes a
-sample and returns two NumPy arrays:
-\index{NumPy}
+만약 표본 분포가 근사적으로 정규분포라면, 결과는 
+절편 {\tt mu}, 기울기 {\tt sigma}를 갖는 직선이다.
+{\tt thinkstats2}에 {\tt NormalProbability}이 있다.
+표본을 인자로 받아서 넘파이(NumPy) 배열 두개를 반환한다.
+\index{넘파이 (NumPy)}
 
 \begin{verbatim}
 xs, ys = thinkstats2.NormalProbability(sample)
@@ -287,21 +284,20 @@ xs, ys = thinkstats2.NormalProbability(sample)
 \label{analytic_normal_prob_example}
 \end{figure}
 
-{\tt ys} contains the sorted values from {\tt sample}; {\tt xs}
-contains the random values from the standard normal distribution.
+{\tt ys}는 {\tt sample}에서 정렬된 값이 담겨있다; 
+{\tt xs}에는 표준정규분포에서 생성된 난수가 담겨있다.
 
-To test {\tt NormalProbability} I generated some fake samples that
-were actually drawn from normal distributions with various parameters.
-Figure~\ref{analytic_normal_prob_example} shows the results.
-The lines are approximately straight, with values in the tails
-deviating more than values near the mean.
+{\tt NormalProbability}을 테스트하기 위해서 다양한 모수를 가진 
+정규분포에서 모조 샘플을 생성했다.
+그림~\ref{analytic_normal_prob_example}에 결과가 있다.
+선들이 근사적으로 직선으로, 평균에 있는 값보다 벗어난 값을 꼬리에 갖는다.
 
-Now let's try it with real data.  Here's code to generate
-a normal probability plot for the birth weight data from the
-previous section.  It plots a gray line that represents the model
-and a blue line that represents the data.
-\index{birth weight}
-\index{weight!birth}
+이제 실제 데이터에 적합을 시도해 보자.
+앞절로부터 출생 체중 데이터에 대해 정규확률그림을 생성하는 코드가 다음에 있다.
+모형을 표현하는 회색선과 실제 데이터를 표현하는 파란선을 플롯으로 그린다.
+
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
 
 \begin{verbatim}
 def MakeNormalPlot(weights):
@@ -316,12 +312,14 @@ def MakeNormalPlot(weights):
     thinkplot.Plot(xs, ys, label='birth weights')
 \end{verbatim}
 
-{\tt weights} is a pandas Series of birth weights;
-{\tt mean} and {\tt std} are the mean and standard deviation.
-\index{pandas}
-\index{Series}
+{\tt weights}는 출생 체중 판다스 시리즈다; {\tt mean}과 {\tt std}은
+각각 평균과 표준편차다.
+\index{판다스 (pandas)}
+\index{시리즈 (Series)}
 \index{thinkplot}
-\index{standard deviation}
+\index{표준편차 (standard deviation)}
+
+
 
 {\tt FitLine} takes a sequence of {\tt xs}, an intercept, and a
 slope; it returns {\tt xs} and {\tt ys} that represent a line
