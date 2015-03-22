@@ -435,23 +435,21 @@ def MakeNormalPlot(weights):
 \index{분포 (distribution)!파레토 (Pareto)}
 \index{파레토, 빌프레도 (Pareto, Vilfredo)}
 
-The {\bf Pareto distribution} is named after the economist Vilfredo Pareto,
-who used it to describe the distribution of wealth (see
-\url{http://wikipedia.org/wiki/Pareto_distribution}).  Since then, it
-has been used to describe phenomena in the natural and social sciences
-including sizes of cities and towns, sand particles and meteorites,
-forest fires and earthquakes.  \index{CDF}
+{\bf 파레토 분포 (Pareto distribution)}는 경제학자 빌프레도 파레토(Vilfredo Pareto) 이름에서 나왔는데, 이것을 사용해서 부(
+\url{http://wikipedia.org/wiki/Pareto_distribution} 참조)의 분포를 기술했다.
+그후, 도시와 마을 크기, 모래 입자와 운석, 산불과 지진을 포함한 자연과학과 사회과학 현상을 기술하는데 사용되었다.
 
-The CDF of the Pareto distribution is:
+\index{CDF}
+
+파레토 분석 CDF는 다음과 같다.
 %
 \[ CDF(x) = 1 - \left( \frac{x}{x_m} \right) ^{-\alpha} \]
 %
-The parameters $x_{m}$ and $\alpha$ determine the location and shape
-of the distribution. $x_{m}$ is the minimum possible value.
-Figure~\ref{analytic_pareto_cdf} shows CDFs of Pareto
-distributions with $x_{m} = 0.5$ and different values
-of $\alpha$.
-\index{parameter}
+모수 $x_{m}$와 $\alpha$이 분포 위치와 형상을 결정한다.
+$x_{m}$이 가능한 최소값이다. 
+그림~\ref{analytic_pareto_cdf}에 $x_{m} = 0.5$와 
+다양한 $\alpha$ 값으로 표현한 파레토 분포 CDF가 있다.
+\index{모수 (parameter)}
 
 \begin{figure}
 % analytic.py
@@ -460,28 +458,26 @@ of $\alpha$.
 \label{analytic_pareto_cdf}
 \end{figure}
 
-There is a simple visual test that indicates whether an empirical
-distribution fits a Pareto distribution: on a log-log scale, the CCDF
-looks like a straight line.  Let's see why that works.
+경험적 분포가 파레토 분포에 적합성을 나타내는 간단한 시각 테스트가 있다: log-log 척도에서 CCDF는 직선으로 보인다. 왜 그런지 살펴보자.
 
-If you plot the CCDF of a sample from a Pareto distribution on a
-linear scale, you expect to see a function like:
+만약 선형척도에서 파레토 분포에서 나온 표본 CCDF를 플롯으로 그린다면, 다음과 같은 함수가 기대된다.
 %
 \[ y \approx \left( \frac{x}{x_m} \right) ^{-\alpha} \]
 %
-Taking the log of both sides yields:
+양변에 로그를 취하면 다음과 같다.
 %
 \[ \log y \approx -\alpha (\log x - \log x_{m})\]
 %
-So if you plot $\log y$ versus $\log x$, it should look like a straight
-line with slope $-\alpha$ and intercept
-$\alpha \log x_{m}$.
+그래서 만약 $\log x$에 $\log y$를 플롯으로 그리면, 
+기울기 $-\alpha$과 절편 $\alpha \log x_{m}$을 가진 직선처럼 보여야만 한다.
 
-As an example, let's look at the sizes of cities and towns.
-The U.S.~Census Bureau publishes the
-population of every incorporated city and town in the United States.
-\index{Pareto distribution} \index{distribution!Pareto}
-\index{U.S.~Census Bureau} \index{population} \index{city size}
+예제로, 도시와 마을 크기를 살펴보자.
+미국 인구 조사국 (U.S.~Census Bureau)에서 미국에 있는 모든 도시와 마을 인구정보를 게시한다.
+\index{파레토 분포 (Pareto distribution)} 
+\index{분포 (distribution)!파레토 (Pareto)}
+\index{미국 인구 조사국 (U.S.~Census Bureau)} 
+\index{인구 (population)} 
+\index{도시 크기 (city size)}
 
 \begin{figure}
 % populations.py
@@ -490,32 +486,20 @@ population of every incorporated city and town in the United States.
 \label{populations_pareto}
 \end{figure}
 
-I downloaded their data from
-\url{http://www.census.gov/popest/data/cities/totals/2012/SUB-EST2012-3.html};
-it is in the repository for this book in a file named
-\verb"PEP_2012_PEPANNRES_with_ann.csv".  The repository also
-contains {\tt populations.py}, which reads the file and plots
-the distribution of populations.
+웹사이트 \url{http://www.census.gov/popest/data/cities/totals/2012/SUB-EST2012-3.html}에서 데이터를 다운로드했다; 책 저장소에 \verb"PEP_2012_PEPANNRES_with_ann.csv" 파일 이름으로 되어있다.
+저장소에 {\tt populations.py} 파이썬 프로그램이 있어 파일을 읽고 인구 분포를 플롯으로 그린다.
 
-Figure~\ref{populations_pareto} shows the CCDF of populations on a
-log-log scale.  The largest 1\% of cities and towns, below $10^{-2}$,
-fall along a straight line.  So we could
-conclude, as some researchers have, that the tail of this distribution
-fits a Pareto model.
-\index{model}
+그림~\ref{populations_pareto}에 log-log 척도로 인구 CCDF가 있다.
+$10^{-2}$ 아래 가장 큰 1\% 도시와 마을이 직선을 따라 아래를 향한다. 몇몇 연구자와 마찬가지로 분포 꼬리가 파레토 모형에 적합하다고 결론을 내릴 수 있다.
+\index{모형 (model)}
 
-On the other hand, a lognormal distribution also models the data well.
-Figure~\ref{populations_normal} shows the CDF of populations and a
-lognormal model (left), and a normal probability plot (right).  Both
-plots show good agreement between the data and the model.
-\index{normal probability plot}
+다른 한편으로 로그 정규분포도 또한 데이터를 잘 모형화한다. 
+그림~\ref{populations_normal}에 인구 CDF의 로그 정규분포 모형(왼쪽), 정규확률그림(오른쪽)이 있다. 두 플롯 그림 모두 데이터와 모형 사이 좋은 적합을 보여준다.
+\index{정규확률그림 (normal probability plot)}
 
-Neither model is perfect.
-The Pareto model only applies to the largest 1\% of cities, but it
-is a better fit for that part of the distribution.  The lognormal
-model is a better fit for the other 99\%.
-Which model is appropriate depends on which part of the distribution
-is relevant.
+모형 어느 것도 완벽하지 않다. 파레토 모형은 단지 가장 큰 1\% 도시에만 적용되지만 분포의 그 특정 부분에 더 적합이 잘 된다. 
+로그 정규 모형은 99\% 다른 부분에 더 적합이 잘 된다.
+어느 모형이 적절한가는 분포 어느 부분에 관련이 있는지에 달려 있다.
 
 \begin{figure}
 % populations.py
@@ -526,33 +510,29 @@ normal probability plot of log-transformed populations (right).}
 \end{figure}
 
 
-\section{Generating random numbers}
-\index{exponential distribution}
-\index{distribution!exponential}
-\index{random number}
+\section{난수 생성하기 (Generating random numbers)}
+\index{지수 분포 (exponential distribution)}
+\index{분포 (distribution)!지수 (exponential)}
+\index{난수 (random number)}
 \index{CDF}
-\index{inverse CDF algorithm}
-\index{uniform distribution}
-\index{distribution!uniform}
+\index{역 CDF 알고리즘 (inverse CDF algorithm)}
+\index{균등 분포 (uniform distribution)}
+\index{분포 (distribution)!균등 (uniform)}
 
-Analytic CDFs can be used to generate random numbers with a given
-distribution function, $p = \CDF(x)$.  If there is an efficient way to
-compute the inverse CDF, we can generate random values
-with the appropriate distribution by choosing $p$ from a uniform
-distribution between 0 and 1, then choosing
-$x = ICDF(p)$.
-\index{inverse CDF}
-\index{CDF, inverse}
+해석 CDF(analytic CDF)를 사용해서 주어진 분포함수 $p = \CDF(x)$로 난수를 생성한다. 역 CDF를 계산하는 효율적인 방식이 있다면, 
+0과 1 사이 균등분포에서 $p$를 선택하고 나서 $x = ICDF(p)$를 선택함으로써 적절한 분포 난수를 생성할 수 있다.
+\index{역 CDF (inverse CDF)}
+\index{CDF, 역 (CDF, inverse)}
 
-For example, the CDF of the exponential distribution is
+예를 들어 지수분포 CDF는 다음과 같다.
 %
 \[ p = 1 - e^{-\lambda x} \]
 %
-Solving for $x$ yields:
+$x$에 대해 풀게되면 다음이 된다.
 %
 \[ x = -\log (1 - p) / \lambda \]
 %
-So in Python we can write
+그래서 파이썬 코드로 다음과 같이 작성할 수 있다.
 %
 \begin{verbatim}
 def expovariate(lam):
@@ -561,15 +541,14 @@ def expovariate(lam):
     return x
 \end{verbatim}
 
-{\tt expovariate} takes {\tt lam} and returns a random value chosen
-from the exponential distribution with parameter {\tt lam}.
+함수 {\tt expovariate}는 {\tt lam}을 인자로 받아
+모수 {\tt lam}인 지수분포에서 생성된 난수를 반환한다.
 
-Two notes about this implementation:
-I called the parameter \verb"lam" because \verb"lambda" is a Python
-keyword.  Also, since $\log 0$ is undefined, we have to
-be a little careful.  The implementation of {\tt random.random}
-can return 0 but not 1, so $1 - p$ can be 1 but not 0, so
-{\tt log(1-p)} is always defined.  \index{random module}
+파이썬 코드 구현에 두가지 주의점이 있다: 
+\verb"lambda"가 파이썬 예약어(keyword)여서 모수를 \verb"lam"으로 했다. 또한 $\log 0$가 정의되어 있지 않기 때문에, 약간 더 주의해야 한다.
+{\tt random.random} 구현코드는 0을 반환할 수 있지만 1은 할 수 없다.
+그래서, $1 - p$은 1이 될 수는 있지만 0은 될 수 없어서 {\tt log(1-p)}은 항상 정의된다. 
+\index{랜덤 모듈 (random module)}
 
 
 \section{Why model?}
