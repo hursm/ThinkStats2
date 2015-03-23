@@ -1,77 +1,64 @@
 
-\chapter{Probability density functions}
+\chapter{확률밀도함수}
 \label{density}
 \index{PDF}
-\index{probability density function}
-\index{exponential distribution}
-\index{distribution!exponential}
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+\index{확률밀도함수 (probability density function)}
+\index{지수분포 (exponential distribution)}
+\index{분포 (distribution)!지수 (exponential)}
+\index{정규분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
 \index{CDF}
-\index{derivative}
-
-The code for this chapter is in {\tt density.py}.  For information
-about downloading and working with this code, see Section~\ref{code}.
+\index{미분 (derivative)}
 
 
-\section{PDFs}
+이번 장에서 사용되는 코드는 {\tt density.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
-The derivative of a CDF is called a {\bf probability density function},
-or PDF.  For example, the PDF of an exponential distribution is
+\section{PDF}
+
+CDF 미분을 {\bf 확률밀도함수 (probability density function)}, PDF라고 한다.
+예를 들어, 지수분포 PDF는 다음과 같다.
+
 %
 \[ \PDF_{expo}(x) = \lambda e^{-\lambda x}   \]
 %
-The PDF of a normal distribution is
+정규분포 PDF는 다음과 같다.
 %
 \[ \PDF_{normal}(x) = \frac{1}{\sigma \sqrt{2 \pi}} 
                  \exp \left[ -\frac{1}{2} 
                  \left( \frac{x - \mu}{\sigma} \right)^2 \right]  \]
 %
-Evaluating a PDF for a particular value of $x$ is usually not useful.
-The result is not a probability; it is a probability {\em density}.
-\index{density}
-\index{mass}
 
-In physics, density is mass per unit of
-volume; in order to get a mass, you have to multiply by volume or,
-if the density is not constant, you have to integrate over volume.
+$x$ 특정한 값에 대한 PDF를 계산하는 것이 대체로 유용하지는 않다. 결과가 확률이 아니기 때문이다; 확률 {\em 밀도 (density)}다.
+\index{밀도 (density)}
+\index{질량 (mass)}
 
-Similarly, {\bf probability density} measures probability per unit of $x$.
-In order to get a probability mass, you have to integrate over $x$.
+물리학에서 밀도는 단위 체적당 질량이다; 질량을 계산하려면, 체적을 곱하거나 혹은 만약 밀도가 상수가 아니라면 체적에 대해 적분해야 한다.
 
-{\tt thinkstats2} provides a class called Pdf that represents
-a probability density function.  Every Pdf object provides the
-following methods:
+마찬가지로, {\bf 확률 밀도 (probability density)}는 단위 $x$당 확률을 측정한다. 확률 질량을 계산하려면, $x$에 대해서 적분해야 한다. 
+
+{\tt thinkstats2}는 Pdf라는 클래스로 확률밀도함수를 나타낸다.
+모든 Pdf 객체는 다음 메쏘드를 제공한다:
 
 \begin{itemize}
 
-\item {\tt Density}, which takes a value, {\tt x}, and returns the
-  density of the distribution at {\tt x}.
+\item {\tt Density}, {\tt x}를 인자로 받아 {\tt x}에서 분포 밀도를 반환한다.
 
-\item {\tt Render}, which evaluates the density at a discrete set of
-  values and returns a pair of sequences: the sorted values, {\tt xs},
-  and their probability densities, {\tt ds}.
+\item {\tt Render}는 이산 집합값 대해 밀도를 평가하고 시퀀스 짝을 반환한다: 정렬된 {\tt xs}과 상응하는 확률 밀도{\tt ds}.
 
-\item {\tt MakePmf}, which evaluates {\tt Density}
-  at a discrete set of values and returns a normalized Pmf that
-  approximates the Pdf.
+\item {\tt MakePmf}, 이산 집합값에 대해 {\tt Density}를 평가하고 Pdf에 그사하는 정규화된 Pmf를 반환한다.
 \index{Pmf}
 
-\item {\tt GetLinspace}, which returns the default set of points used 
-  by {\tt Render} and {\tt MakePmf}.
+\item {\tt GetLinspace}, {\tt Render}와 {\tt MakePmf}에서 사용되는 기본설정 집합 점(point)을 반환한다.
 
 \end{itemize}  
 
-Pdf is an abstract parent class, which means you should not
-instantiate it; that is, you cannot create a Pdf object.  Instead, you
-should define a child class that inherits from Pdf and provides
-definitions of {\tt Density} and {\tt GetLinspace}.  Pdf provides
-{\tt Render} and {\tt MakePmf}.
+Pdf는 추상화된 부모 클래스로 의미하는 것은 인스턴스화하면 안된다; 즉, Pdf 객체를 생성할 수 없다. 대신에 Pdf를 상속받아 {\tt Density}과 {\tt GetLinspace} 정의하는 자식 클래스를 정의해야 한다. 
+Pdf는 {\tt Render}과 {\tt MakePmf}을 제공한다.
 
-For example, {\tt thinkstats2} provides a class named {\tt
-  NormalPdf} that evaluates the normal density function.
+예를 들어, {\tt thinkstats2}는 정규밀도함수를 평가하는 {\tt NormalPdf}라는 이름의 클래스를 제공한다.
 
 \begin{verbatim}
 class NormalPdf(Pdf):
@@ -89,18 +76,13 @@ class NormalPdf(Pdf):
         return np.linspace(low, high, 101)
 \end{verbatim}
 
-The NormalPdf object contains the parameters {\tt mu} and
-{\tt sigma}.  {\tt Density} uses
-{\tt scipy.stats.norm}, which is an object that represents a normal
-distribution and provides {\tt cdf} and {\tt pdf}, among other
-methods (see Section~\ref{normal}).
+NormalPdf 객체는 모수 {\tt mu}과 {\tt sigma}을 담고 있다.
+{\tt Density}는 {\tt scipy.stats.norm}을 사용하는데 정규분포를 표현한고, 
+다른 메쏘드와 더불어 {\tt cdf}와 {\tt pdf}를 제공한다.(~\ref{normal}절 참조).
 \index{SciPy}
 
-The following example creates a NormalPdf with the mean and variance
-of adult female heights, in cm, from the BRFSS (see
-Section~\ref{brfss}).  Then it computes the density of the
-distribution at a location one standard deviation from the mean.
-\index{standard deviation}
+다음 예제는 BRFSS에 있는 성인여성신장(cm 단위) 평균과 분산으로 NormalPdf를 생성한다(~\ref{brfss}절 참조). 그리고 나서, 평균에서 1 표준편차 지점에 분포 밀도를 계산한다.
+\index{표준 편차 (standard deviation)}
 
 \begin{verbatim}
 >>> mean, var = 163, 52.8
@@ -110,55 +92,50 @@ distribution at a location one standard deviation from the mean.
 0.0333001
 \end{verbatim}
 
-The result is about 0.03, in units of probability mass per cm.
-Again, a probability density doesn't mean much by itself.  But if
-we plot the Pdf, we can see the shape of the distribution:
+결과는 cm 당 확률질량 단위로 약 0.03이다.
+한번더, 확률밀도는 그 자체로 의미는 없다. 하지만, Pdf를 플롯으로 그린다면, 분포 형상을 볼 수 있다.
 
 \begin{verbatim}
 >>> thinkplot.Pdf(pdf, label='normal')
 >>> thinkplot.Show()
 \end{verbatim}
 
-{\tt thinkplot.Pdf} plots the Pdf as a smooth function,
-as contrasted with {\tt thinkplot.Pmf}, which renders a Pmf as a
-step function.  Figure~\ref{pdf_example} shows the result, as well
-as a PDF estimated from a sample, which we'll compute in the next
-section.
+{\tt thinkplot.Pdf}은 평활 함수(smooth function)로 Pdf 플롯을 그린다. 
+계단함수로 Pmf을 그리는 {\tt thinkplot.Pmf}와 대조된다.
+그림~\ref{pdf_example}에 결과가 있다. 다음 절에서 살펴볼 표본에서 추정한 PDF로 함께 플롯되어 그려져 있다.
 \index{thinkplot}
 
-You can use {\tt MakePmf} to approximate the Pdf:
+Pdf를 근사하는데 {\tt MakePmf}를 사용할 수도 있다.
 
 \begin{verbatim}
 >>> pmf = pdf.MakePmf()
 \end{verbatim}
 
-By default, the resulting Pmf contains 101 points equally spaced from
-{\tt mu - 3*sigma} to {\tt mu + 3*sigma}.  Optionally, {\tt MakePmf}
-and {\tt Render} can take keyword arguments {\tt low}, {\tt high},
-and {\tt n}.
+기본설정으로, {\tt mu - 3*sigma}에서 {\tt mu + 3*sigma} 사이에 동일 간격을 지닌 101 점이 Pmf에 있다.
+선택사양으로 {\tt MakePmf}와 {\tt Render}는 키워드 인자로 {\tt low}, {\tt high}, {\tt n}을 갖는다.
 
 \begin{figure}
 % pdf_example.py
-\centerline{\includegraphics[height=2.2in]{figs/pdf_example.pdf}}
+%\centerline{\includegraphics[height=2.2in]{figs/pdf_example.pdf}}
 \caption{A normal PDF that models adult female height in the U.S.,
 and the kernel density estimate of a sample with $n=500$.}
 \label{pdf_example}
 \end{figure}
 
 
-\section{Kernel density estimation} 
+\section{핵밀도추정 (Kernel density estimation)} 
 
-{\bf Kernel density estimation} (KDE) is an algorithm that takes
-a sample and finds an appropriately smooth PDF that fits 
-the data.  You can read details at
-\url{http://en.wikipedia.org/wiki/Kernel_density_estimation}.
+{\bf 핵밀도추정 (Kernel density estimation,KDE)}은
+표본을 받아 데이터에 적합하는 적절한 평활 PDF를 찾는 알고리즘이다.
+\url{http://en.wikipedia.org/wiki/Kernel_density_estimation}  웹사이트에서 좀더 자세한 정보를 얻을 수 있다.
+
 \index{KDE}
-\index{kernel density estimation}
+\index{핵밀도추정 (kernel density estimation)}
 
-{\tt scipy} provides an implementation of KDE and {\tt thinkstats2}
-provides a class called {\tt EstimatedPdf} that uses it:
-\index{SciPy}
-\index{NumPy}
+{\tt scipy}에 KDE 구현된 것이 있고, 
+{\tt thinkstats2}는 이를 사용해서 {\tt EstimatedPdf}라는 클래스를 제공한다.
+\index{사이파이 (SciPy)}
+\index{넘파이 (NumPy)}
 
 \begin{verbatim}
 class EstimatedPdf(Pdf):
@@ -170,19 +147,16 @@ class EstimatedPdf(Pdf):
         return self.kde.evaluate(xs)
 \end{verbatim}
 
-\verb"__init__" takes a sample
-and computes a kernel density estimate.  The result is a
-\verb"gaussian_kde" object that provides an {\tt evaluate}
-method.
+\verb"__init__"이 표본을 인자로 받아 핵밀도추정값을 계산한다.
+결과는 \verb"gaussian_kde" 객체고 {\tt evaluate} 메쏘드를 제공한다.
 
-{\tt Density} takes a value or sequence, calls
-\verb"gaussian_kde.evaluate", and returns the resulting density.  The
-word ``Gaussian'' appears in the name because it uses a filter based
-on a Gaussian distribution to smooth the KDE.  \index{density}
+{\tt Density}가 값 혹은 시퀀스를 인자로 받아 
+\verb"gaussian_kde.evaluate"을 호출하고 결과 밀도를 반환한다.
+단어 ``가우스 (Gaussian)''가 나오는데 이유는 KDE를 평활하는데 가우스 분포에 기반한 필터를 사용하기 때문이다.
+\index{밀도 (density)}
 
-Here's an example that generates a sample from a normal
-distribution and then makes an EstimatedPdf to fit it:
-\index{NumPy}
+다음에 정규분포에서 표본을 생성하고 표본에 적합하기 위해서 EstimatedPdf를 만드는 예제가 있다.
+\index{넘파이 (NumPy)}
 \index{EstimatedPdf}
 
 \begin{verbatim}
@@ -191,42 +165,36 @@ distribution and then makes an EstimatedPdf to fit it:
 >>> thinkplot.Pdf(sample_pdf, label='sample KDE')
 \end{verbatim}
 
-\verb"sample" is a list of 500 random heights.
-\verb"sample_pdf" is a Pdf object that contains the estimated
-KDE of the sample.  {\tt pmf} is a Pmf object that approximates the Pdf by
-evaluating the density at a sequence of equally spaced values.
+\verb"sample"은 무작위 신장 500개 리스트다. 
+\verb"sample_pdf"는 Pdf 객체로 추정된 KDE 표본정보를 담고 있다.
+동일 간격 값의 시퀀스에서 밀도를 평가함으로써 {\tt pmf}는 Pmf 객체로 Pdf를 근사한다.
+
+그림~\ref{pdf_example}에 정규밀도함수와 무작위 신장 500개 표본에 기반한 KDE가 있다. 추정값이 원분포에 좋은 매칭이다.
+
+KDE로 밀도함수를 추정하는 것은 몇가지 목적으로 유용한다. 
+
 \index{thinkplot}
 \index{Pmf}
 
-Figure~\ref{pdf_example} shows the normal density function and a KDE
-based on a sample of 500 random heights.  The estimate is a good
-match for the original distribution.
-
-Estimating a density function with KDE is useful for several purposes:
-
 \begin{itemize}
 
-\item {\it Visualization:} During the exploration phase of a project, CDFs
-  are usually the best visualization of a distribution.  After you
-  look at a CDF, you can decide whether an estimated PDF is an
-  appropriate model of the distribution.  If so, it can be a better
-  choice for presenting the distribution to an audience that is
-  unfamiliar with CDFs.
-\index{visualization}
-\index{model}
+\item {\it 시각화 (Visualization):} 
+  프로젝트 탐색단계에서, CDF가 대체로 분포를 가장 잘 시각화한다.
+  CDF를 살펴본 후에, 추정 PDF가 분포에 대한 적절한 모형인지 결정할 수 있다.
+  만약 그렇다면, CDF에 익숙하지 않은 관계에게 분포를 제시하는데 더 좋은 선택지가 될 수 있다.
+\index{시각화 (visualization)}
+\index{모형 (model)}
 
-\item {\it Interpolation:} An estimated PDF is a way to get from a sample
-  to a model of the population.  If you have reason to believe that
-  the population distribution is smooth, you can use KDE to interpolate
-  the density for values that don't appear in the sample.
-\index{interpolation}
+\item {\it 보간 (Interpolation):} 
+  추정 PDF는 표본에서 모집단 모형으로 가는 한 방법이다.
+  만약 모집단 분포가 매끄럽다고 믿을 이유가 있다면, KDE를 사용해서 표본에 없는 값에 대해 밀도를 보간한다.
+\index{보간 (interpolation)}
 
-\item {\it Simulation:} Simulations are often based on the distribution
-  of a sample.  If the sample size is small, it
-  might be appropriate to smooth the sample distribution using KDE,
-  which allows the simulation to explore more possible outcomes,
-  rather than replicating the observed data.
-\index{simulation}
+\item {\it 모의실험 (Simulation):} 
+  모의실험은 종종 표본 분포에 기반한다. 
+  만약 표본크기가 작다면, KDE를 사용해서 표본분포를 평활하는 것이 적절하다.
+  관측점을 중복하기 보다 KDE가 모의실험을 통해서 좀더 가능한 결과값을 탐색하도록 한다.
+\index{모의실험 (simulation)}
 
 \end{itemize}
 
@@ -615,7 +583,7 @@ to the effect of outliers.
 \index{outlier}
 
 \begin{figure}
-\centerline{\includegraphics[height=2.2in]{figs/density_totalwgt_kde.pdf}}
+%\centerline{\includegraphics[height=2.2in]{figs/density_totalwgt_kde.pdf}}
 \caption{Estimated PDF of birthweight data from the NSFG.}
 \label{density_totalwgt_kde}
 \end{figure}
@@ -643,7 +611,7 @@ Pearson's median skewness is -0.23.
 \index{NaN}
 
 \begin{figure}
-\centerline{\includegraphics[height=2.2in]{figs/density_wtkg2_kde.pdf}}
+%\centerline{\includegraphics[height=2.2in]{figs/density_wtkg2_kde.pdf}}
 \caption{Estimated PDF of adult weight data from the BRFSS.}
 \label{density_wtkg2_kde}
 \end{figure}
