@@ -199,8 +199,8 @@ KDE로 밀도함수를 추정하는 것은 몇가지 목적으로 유용한다.
 \end{itemize}
 
 
-\section{The distribution framework}
-\index{distribution framework}
+\section{분포 프레임워크 (distribution framework)}
+\index{분포 프레임워크 (distribution framework)}
 
 \begin{figure}
 \centerline{\includegraphics[height=2.2in]{figs/distribution_functions.pdf}}
@@ -209,51 +209,49 @@ functions.}
 \label{dist_framework}
 \end{figure}
 
-At this point we have seen PMFs, CDFs and PDFs; let's take a minute
-to review.  Figure~\ref{dist_framework} shows how these functions relate
-to each other.
+현재까지 PMF, CDF, PDF를 살펴봤다; 잠시 복습 시간을 가져본다.
+그림~\ref{dist_framework}에 함수가 어떻게 서로 연관되는지 나타나 있다.
 \index{Pmf}
 \index{Cdf}
 \index{Pdf}
 
-We started with PMFs, which represent the probabilities for a discrete
-set of values.  To get from a PMF to a CDF, you add up the probability
-masses to get cumulative probabilities.  
-To get from a CDF back to a PMF, you compute differences in cumulative
-probabilities.  We'll see the implementation of these operations
-in the next few sections.
-\index{cumulative probability}
+PMF로 시작했는데, PMF는 이산 집합 값에 대한 확률을 나타낸다.
+PMF에서 CDF를 얻기 위해서는, 확률 질량을 더해서 누적 확률을 얻는다.
+CDF에서 PMF로 돌아가기 위해서는, 누적 확률 차이를 계산한다.
+다음 몇 절에 걸쳐 이와 같은 연산을 어떻게 구현했는지 살펴볼 것이다.
+\index{누적 확률 (cumulative probability)}
 
-A PDF is the derivative of a continuous CDF; or, equivalently,
-a CDF is the integral of a PDF.  Remember that a PDF maps from
-values to probability densities; to get a probability, you have to
-integrate.
-\index{discrete distribution}
-\index{continuous distribution}
-\index{smoothing}
+PDF는 연속형 CDF 미분이다; 혹은, 동등하게 CDF는 PDF의 적분이다.
+PDF는 값을 확률 밀도로 매핑한다는 것을 기억하라; 확률값을 얻기 위해서,
+적분해야 한다.
 
-To get from a discrete to a continuous distribution, you can perform
-various kinds of smoothing.  One form of smoothing is to assume that
-the data come from an analytic continuous distribution
-(like exponential or normal) and to estimate the parameters of that
-distribution.  Another option is kernel density estimation.
-\index{exponential distribution}
-\index{distribution!exponential}
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+\index{이산 분포 (discrete distribution)}
+\index{연속 분포 (continuous distribution)}
+\index{평활 (smoothing)}
 
-The opposite of smoothing is {\bf discretizing}, or quantizing.  If you
-evaluate a PDF at discrete points, you can generate a PMF that is an
-approximation of the PDF.  You can get a better approximation using
-numerical integration.  \index{discretize}
-\index{quantize}
-\index{binning}
+이산형에서 연속 분포를 얻기 위해서, 다양한 평활(smoothing) 작업을 수행할 수 있다.
+평활의 한 형태는 데이터가 (지수 혹은 정규 분포처럼) 
+해석 연속 분포(analytic continuous distribution)에서 왔다고 가정하는 것이다.
+또 다른 선택 옵션은 핵밀도추정(kernel density estimation)이다.
 
-To distinguish between continuous and discrete CDFs, it might be
-better for a discrete CDF to be a ``cumulative mass function,'' but as
-far as I can tell no one uses that term.  \index{CDF}
+\index{지수 분포 (exponential distribution)}
+\index{분포 (distribution)!지수 (exponential)}
+\index{정규 분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
+
+평활의 반대가 {\bf 이산화 (discretizing)}, 혹은 양자화(quantizing)다.
+만약 이산 점에서 PDF를 평가한다면, PDF에 근사하는 PMF를 생성할 수 있다.
+수치적분(numerical integration)을 사용해서 좀더 잘 근사할 수도 있다.
+\index{이산화 (discretize)}
+\index{양자화 (quantize)}
+\index{구간화 (binning)}
+
+연속CDF와 이산CDF를 구별하기 위해서, 이산CDF는 
+``누적 질량 함수 (cumulative mass function)''가 되는 것이 좋을지도 모른다.
+하지만, 저자가 알고 있는 바로는, 누구도 그 용어를 사용하지 않는다.
+\index{CDF}
 
 
 
@@ -443,35 +441,35 @@ values in the Cdf, but the probabilities should be treated as
 immutable.
 
 
-\section{Moments}
-\index{moment}
+\section{적률 (Moments)}
+\index{적률 (moment)}
 
-Any time you take a sample and reduce it to a single number, that
-number is a statistic.  The statistics we have seen so far include
-mean, variance, median, and interquartile range.
+어느 때고 표본을 얻고 하나의 숫자로 줄일 수 있다. 그 숫자가 통계량(statistic)이다.
+지금까지 살펴본 통계량은 평균, 분산, 중위수, 그리고 사분위수다.
 
-A {\bf raw moment} is a kind of statistic.  If you have a sample of
-values, $x_i$, the $k$th raw moment is:
+{\bf 원적률 (raw moment)}은 일종의 통계량이다. 만약 $x_i$ 표본 값이 있다면,
+$k$번째 원적률은 다음과 같다.
+
 %
 \[ m'_k = \frac{1}{n} \sum_i x_i^k \]
 %
-Or if you prefer Python notation:
+혹은, 파이썬 표기법으로 표현하면, 다음과 같다.
 
 \begin{verbatim}
 def RawMoment(xs, k):
     return sum(x**k for x in xs) / len(xs)
 \end{verbatim}
 
-When $k=1$ the result is the sample mean, $\xbar$.  The other
-raw moments don't mean much by themselves, but they are used
-in some computations.
+$k=1$일 때, 결과는 표본 평균 $\xbar$가 된다.
+다른 원적률은 그 자체로 의미가 있지 않다. 하지만, 다른 계산에 사용된다.
 
-The {\bf central moments} are more useful.  The
-$k$th central moment is:
+{\bf 중심적률(central moments)}이 더 유용하다. 
+$k$번째 중심적률은 다음과 같다.
 %
 \[ m_k = \frac{1}{n} \sum_i (x_i - \xbar)^k \]
 %
-Or in Python:
+
+혹은 파이썬으로 표현하면 다음과 같다.
 
 \begin{verbatim}
 def CentralMoment(xs, k):
@@ -479,25 +477,21 @@ def CentralMoment(xs, k):
     return sum((x - mean)**k for x in xs) / len(xs)
 \end{verbatim}
 
-When $k=2$ the result is the second central moment, which you might
-recognize as variance.  The definition of variance gives a hint about
-why these statistics are called moments.  If we attach a weight along a
-ruler at each location, $x_i$, and then spin the ruler around
-the mean, the moment of inertia of the spinning weights is the variance
-of the values.  If you are not familiar with moment of inertia, see
-\url{http://en.wikipedia.org/wiki/Moment_of_inertia}.  \index{moment
-  of inertia}
+$k=2$일 때, 결과는 두번째 중심 적률로 분산으로 인지하고 있을 것이다.
+분산의 정의가 왜 이러한 통계량이 적률로 불리는지 힌트를 준다.
+각 위치 $x_i$에 자를 따라 추를 달고 평균 주위에서 자를 돌리면, 
+회전추의 관성 적률은 값의 분산이다. 만약 관성 적률에 익숙하지 않다면,
+\url{http://en.wikipedia.org/wiki/Moment_of_inertia} 웹사이트를 참조한다.  
+\index{관성 적률(moment of inertia)}
 
-When you report moment-based statistics, it is important to think
-about the units.  For example, if the values $x_i$ are in cm, the
-first raw moment is also in cm.  But the second moment is in
-cm$^2$, the third moment is in cm$^3$, and so on.
+적률에 기반한 통계를 보고할 때, 단위(unit)에 관한 생각이 중요하다.
+예를 들어, 값 $x_i$가 cm 이라면, 첫 원적률은 또한 cm이다.
+하지만, 두번째 적률은 cm$^2$이고, 세번째 적률은 cm$^3$... 등등이 된다.
 
-Because of these units, moments are hard to interpret by themselves.
-That's why, for the second moment, it is common to report standard
-deviation, which is the square root of variance, so it is in the same
-units as $x_i$.
-\index{standard deviation}
+이러한 단위 때문에, 적률은 그 자체로 해석하기 어렵다.
+두번째 적률에 대해서 분산에 제곱근을 취한 표준편차를 쓰는 것이 이러한 이유다. 
+그러면 $x_i$와 단위가 같아진다.
+\index{표준 편차 (standard deviation)}
 
 
 \section{Skewness}
