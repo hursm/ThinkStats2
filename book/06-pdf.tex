@@ -494,25 +494,27 @@ $k=2$일 때, 결과는 두번째 중심 적률로 분산으로 인지하고 있
 \index{표준 편차 (standard deviation)}
 
 
-\section{Skewness}
-\index{skewness}
+\section{왜도 (Skewness)}
+\index{왜도 (skewness)}
 
-{\bf Skewness} is a property that describes the shape of a distribution.
-If the distribution is symmetric around its central tendency, it is
-unskewed.  If the values extend farther to the right, it is ``right
-skewed'' and if the values extend left, it is ``left skewed.''
-\index{central tendency}
+{\bf 왜도 (Skewness)}는 분포 형태를 기술하는 속성이다. 
+만약 분포가 중심 경향성 주변에서 대칭이라면, 기울어지지 않았다.
+만약 값들이 오른쪽으로 좀더 뻗어져 있다면, ``오른쪽으로 기울어져 (right
+skewed)'' 있고, 만약 값들이 왼쪽으로 치우쳐 있다면, ``왼쪽으로 기울어져 (left
+skewed''있다.
 
-This use of ``skewed'' does not have the usual connotation of
-``biased.''  Skewness only describes the shape of the distribution;
-it says nothing about whether the sampling process might have been
-biased.
-\index{bias}
-\index{sample skewness}
+\index{중심 경향성 (central tendency)}
 
-Several statistics are commonly used to quantify the skewness of a
-distribution.  Given a sequence of values, $x_i$, the {\bf sample
-  skewness}, $g_1$, can be computed like this:
+``기울어짐 (skewed)''을 사용하는 것다는 것이 ``편의(biased)''를 함축하지는 않는다.
+단지 왜도는 분포 형태만을 기술한다; 표본 추출과정에 편의가 있는지에 관해 
+어떤 것도 나타내지 않는다.
+
+\index{편의 (bias)}
+\index{표본 왜도 (sample skewness)}
+
+흔히 몇몇 통계량이 분포 왜도를 계량화하는데 사용된다.
+주어진 값 시퀀스가 $x_i$가 주어졌을 때, 
+{\bf 표본 왜도 (sample skewness)} $g_1$은 다음과 같이 계산된다.
 
 \begin{verbatim}
 def StandardizedMoment(xs, k):
@@ -524,38 +526,33 @@ def Skewness(xs):
     return StandardizedMoment(xs, 3)
 \end{verbatim}
 
-$g_1$ is the third {\bf standardized moment}, which means that it has
-been normalized so it has no units.
-\index{standardized moment}
+$g_1$은 제3 표준 적률로 정규화되었다는 것으로 단위가 없다.
+\index{표준 적률 (standardized moment)}
 
-Negative skewness indicates that a distribution 
-skews left; positive skewness indicates
-that a distribution skews right.  The magnitude of $g_1$ indicates
-the strength of the skewness, but by itself it is not easy to
-interpret.
+음수 왜도는 분포가 왼쪽으로 기울어짐; 양수 왜도는 분포가 오른쪽으로 기울어짐을 
+나타낸다. $g_1$의 규모는 왜도 강도를 나타내지만, 그 자체로 해석하기는 쉽지 않다.
 
-In practice, computing sample skewness is usually not
-a good idea.  If there are any outliers, they
-have a disproportionate effect on $g_1$.
-\index{outlier}
+실무에서, 표본 왜도를 계산하는 것이 대게 좋은 생각이 되지는 못하다.
+만약 어떤 특이점(outlier)이 있다면, $g_1$에 대해서 균형이 맞지 않는 효과를 미친다.
+\index{특이점 (outlier)}
 
-Another way to evaluate the asymmetry of a distribution is to look
-at the relationship between the mean and median.
-Extreme values have more effect on the mean than the median, so
-in a distribution that skews left, the mean is less than the median.
-In a distribution that skews right, the mean is greater.
-\index{symmetric}
-\index{Pearson median skewness}
+분포 비대칭을 평가하는 또 다른 방법은 평균과 중위수 사이 관계를 살펴보는 것이다.
+극단값(extreme value)이 중위수보다 평균에 미치는 효과가 더 크다. 그래서 왼쪽으로 기울어진
+분포에서 평균은 중위수보다도 더 작다. 오른쪽으로 기울어진 분포에서 평균은 더 크다.
 
-{\bf Pearson's median skewness coefficient} is a measure
-of skewness based on the difference between the
-sample mean and median:
+\index{대칭 (symmetric)}
+\index{피어슨 중위수 왜도 (Pearson median skewness)}
+
+
+
+{\bf 피어슨 중위수 왜도 계수 (Pearson's median skewness coefficient)}는
+ 표본 평균과 중위수 차이에 기반한 왜도 측도다.
 %
 \[ g_p = 3 (\xbar - m) / S \]
 %
-Where $\xbar$ is the sample mean, $m$ is the median, and
-$S$ is the standard deviation.  Or in Python:
-\index{standard deviation}
+$\xbar$는 표본 평균, $m$은 중위수, $S$는 표준편차다.
+혹은 파이썬에서 코드로 작성한 함수는 다음과 같다.
+\index{표준편차 (standard deviation)}
 
 \begin{verbatim}
 def Median(xs):
@@ -571,10 +568,10 @@ def PearsonMedianSkewness(xs):
     return gp
 \end{verbatim}
 
-This statistic is {\bf robust}, which means that it is less vulnerable
-to the effect of outliers.
-\index{robust}
-\index{outlier}
+이 통계량은 {\bf 강건(robust)}해서 의미하는 바는 특이점 때문에 쉽게 휘둘리지 않는다는 것이다.
+
+\index{강건성 (robust)}
+\index{특이점 (outlier)}
 
 \begin{figure}
 %\centerline{\includegraphics[height=2.2in]{figs/density_totalwgt_kde.pdf}}
@@ -582,8 +579,8 @@ to the effect of outliers.
 \label{density_totalwgt_kde}
 \end{figure}
 
-As an example, let's look at the skewness of birth weights in the
-NSFG pregnancy data.  Here's the code to estimate and plot the PDF:
+예제로 NSFG 임신 데이터에 있는 출생 체중 왜도를 살펴보자.
+다음에 PDF를 추정하고 플롯으로 그리는 코드가 있다.
 \index{thinkplot}
 
 \begin{verbatim}
@@ -593,14 +590,12 @@ NSFG pregnancy data.  Here's the code to estimate and plot the PDF:
     thinkplot.Pdf(pdf, label='birth weight')
 \end{verbatim}
 
-Figure~\ref{density_totalwgt_kde} shows the result.  The left tail appears
-longer than the right, so we suspect the distribution is skewed left.
-The mean, 7.27 lbs, is a bit less than
-the median, 7.38 lbs, so that is consistent with left skew.
-And both skewness coefficients are negative:
-sample skewness is -0.59;
-Pearson's median skewness is -0.23.
-\index{skewness}
+그림~\ref{density_totalwgt_kde}에 결과가 있다.
+왼쪽 꼬리가 오른쪽 꼬리보다 더 길어 보인다. 
+그래서 분포가 왼쪽으로 기울어진 것으로 추측해 볼 수 있다.
+평균은 7.27 lbs 으로 중위수 7.38 lbs 보다 다소 작아서 왼쪽으로 기울어진 것과
+일관성이 있다. 그리고 두 왜도 계수가 모두 음수다: 표본 왜도는  -0.59; 피어슨 중위수 왜도는 -0.23.
+\index{왜도 (skewness)}
 \index{dropna}
 \index{NaN}
 
@@ -610,8 +605,8 @@ Pearson's median skewness is -0.23.
 \label{density_wtkg2_kde}
 \end{figure}
 
-Now let's compare this distribution to the distribution of adult
-weight in the BRFSS.  Again, here's the code:
+이제 출생 체중 분포에 대해 BRFSS에 있는 성인 체중 분포와 비교해 보자.
+다음에 파이썬 코드가 있다.
 \index{thinkplot}
 
 \begin{verbatim}
@@ -621,29 +616,27 @@ weight in the BRFSS.  Again, here's the code:
     thinkplot.Pdf(pdf, label='adult weight')
 \end{verbatim}
 
-Figure~\ref{density_wtkg2_kde} shows the result.  The distribution
-appears skewed to the right.  Sure enough, the mean, 79.0, is bigger
-than the median, 77.3.  The sample skewness is 1.1 and Pearson's
-median skewness is 0.26.
+그림~\ref{density_wtkg2_kde}에 결과가 있다.
+분포가 오른쪽으로 기울어진 것으로 보인다.
+말할 것도 없이, 평균이 79.0으로 중위수 77.3 보다 더 크다.
+표본 왜도가 1.1이고 피어슨 중위수 왜도는 0.26이다.
 \index{dropna}
 \index{NaN}
 
-The sign of the skewness coefficient indicates whether the distribution
-skews left or right, but other than that, they are hard to interpret.
-Sample skewness is less robust; that is, it is more
-susceptible to outliers.  As a result it is less reliable
-when applied to skewed distributions, exactly when it would be most
-relevant.
-\index{outlier}
-\index{robust}
+왜도 계수 부호는 분포가 왼쪽 혹은 오른쪽으로 기울어진 것을 나타내지만,
+그것을 제외하고 해석하기는 어렵다.
+표본 왜도는 덜 강건하다; 즉, 특이점에 더 좌우된다.
+결과로서 덜 믿음이 가는데, 기울어진 분포에 적용될 때, 정확하게 가장 관련될 때 그렇다. 
 
-Pearson's median skewness is based on a computed mean and variance,
-so it is also susceptible to outliers, but since it does not depend
-on a third moment, it is somewhat more robust.
-\index{Pearson median skewness}
+\index{특이점 (outlier)}
+\index{강건성 (robust)}
+
+피어슨 중위수 왜도는 계산된 평균과 분산에 기반한다.
+그래서 특이점에 휘둘리기 쉽지만 제3 적률에 의존하지 않기 때문에 좀더 강건하다.
+\index{피어스 중위수 왜도 (Pearson median skewness)}
 
 
-\section{Exercises}
+\section{연습문제}
 
 A solution to this exercise is in \verb"chap06soln.py".
 
@@ -701,55 +694,56 @@ upper bound?
 \end{exercise}
 
 
-\section{Glossary}
+\section{용어 사전}
 
 \begin{itemize}
 
-\item Probability density function (PDF): The derivative of a continuous CDF,
-a function that maps a value to its probability density.
+\item 확률밀도함수 (Probability density function, PDF): 
+연속 CDF 미분으로 값을 확률 밀도에 매핑하는 함수.
 \index{PDF}
-\index{probability density function}
+\index{확률밀도함수 (probability density function)}
 
-\item Probability density: A quantity that can be integrated over a
-  range of values to yield a probability.  If the values are in units
-  of cm, for example, probability density is in units of probability
-  per cm.
-\index{probability density}
+\item 확률밀도 (Probability density): 
+  확률을 만들기 위해서 범위 값에 대해 적분할 수 있는 양.
+  예를 들어, 만약 값 단위가 cm이라면, 확률밀도는 cm 당 확률 단위가 된다. 
+\index{확률 밀도 (probability density)}
 
-\item Kernel density estimation (KDE): An algorithm that estimates a PDF
-based on a sample.
-\index{kernel density estimation}
+\item 핵밀도추정 (Kernel density estimation, KDE): 
+  표본에 기반해서 PDF를 추정하는 알고리즘.
+\index{핵밀도추정 (kernel density estimation)}
 \index{KDE}
 
-\item discretize: To approximate a continuous function or distribution
-with a discrete function.  The opposite of smoothing.
-\index{discretize}
+\item 이산화 (discretize): 
+  연속함수 혹은 이산 함수를 가진 분포를 근사함. 평활(smoothing)의 반대.
+\index{이산화 (discretize)}
 
-\item raw moment: A statistic based on the sum of data raised to a power.
-\index{raw moment}
+\item 원적률 (raw moment): 
+  거듭 제곱되는 데이터 합계에 기반한 통계량
+\index{원적률 (raw moment)}
 
-\item central moment: A statistic based on deviation from the mean,
-raised to a power.
-\index{central moment}
+\item 중심적률 (central moment): 
+  평균에서 편차 거듭제곱에 기반한 통계량.
+\index{중심적률 (central moment)}
 
-\item standardized moment: A ratio of moments that has no units.
-\index{standardized moment}
+\item 표준적률 (standardized moment): 
+  단위가 없는 적률 비율.
+\index{표준적률 (standardized moment)}
 
-\item skewness: A measure of how asymmetric a distribution is.
-\index{skewness}
+\item 왜도 (skewness): 
+  분포가 얼마나 비대칭인지 나타내는 측도.
+\index{왜도 (skewness)}
 
-\item sample skewness: A moment-based statistic intended to quantify
-the skewness of a distribution.
-\index{sample skewness}
+\item 표본 왜도 (sample skewness): 
+  분포 왜도를 정량화하는데 사용되는 적률기반 통계량.
+\index{표본 왜도 (sample skewness)}
 
-\item Pearson's median skewness coefficient: A statistic intended to
-  quantify the skewness of a distribution based on the median, mean,
-  and standard deviation.
-  \index{Pearson median skewness}
+\item 피어슨 중위수 왜도 계수 (Pearson's median skewness coefficient): 
+  중위수, 평균, 표준편차에 기반한 분포 왜도를 정량화하는데 사용되는 통계량.
+  \index{피어슨 중위수 왜도 (Pearson median skewness)}
 
-\item robust: A statistic is robust if it is relatively immune to the
-  effect of outliers.
-\index{robust}
+\item 강건성 (robust): 
+  특이점에 상대적으로 면역되어 휘둘리지 않는다면 통계량은 강건하다.
+\index{강건성 (robust)}
 
 \end{itemize}
 
