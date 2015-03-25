@@ -253,36 +253,33 @@ PDF는 값을 확률 밀도로 매핑한다는 것을 기억하라; 확률값을
 하지만, 저자가 알고 있는 바로는, 누구도 그 용어를 사용하지 않는다.
 \index{CDF}
 
+\section{Hist 구현}
 
-
-\section{Hist implementation}
-
-At this point you should know how to use the basic types provided
-by {\tt thinkstats2}: Hist, Pmf, Cdf, and Pdf.  The next few sections
-provide details about how they are implemented.  This material
-might help you use these classes more effectively, but it is not
-strictly necessary.
+{\tt thinkstats2}에서 제공되는 기본 기능 사용법을 알아야 한다: Hist, Pmf, Cdf, and Pdf.
+다음 절에는 구현된 방식에 대한 상세한 정보가 나와있다.
+학습 교재가 좀더 효율적으로 이들 클래스를 사용하는지 도움을 줄 수 있지만,
+엄격히 말해서 반듯이 필요하지는 않다.
 \index{Hist}
 
-Hist and Pmf inherit from a parent class called \verb"_DictWrapper".
-The leading underscore indicates that this class is ``internal;'' that
-is, it should not be used by code in other modules.  The name
-indicates what it is: a dictionary wrapper.  Its primary attribute is
-{\tt d}, the dictionary that maps from values to their frequencies.
+Hist와 Pmf는 \verb"_DictWrapper"라는 부모 클래스를 상속받는다.
+클래스 앞 밑줄은 클래스가 ``내부(internal)''라는 것을 나타낸다; 즉,
+다른 모듈에 코드로 사용되면 않된다. 명칭이 무엇인지 나타낸다: 
+딕셔너리 랩퍼(dictionary wrapper). 
+주요 속성은 {\tt d}로, 값을 빈도로 매핑하는 딕셔너리다.
+
 \index{DictWrapper}
-\index{internal class}
-\index{wrapper}
+\index{내부 클래스 (internal class)}
+\index{랩퍼 (wrapper)}
 
-The values can be any hashable type.  The frequencies should be integers,
-but can be any numeric type.
-\index{hashable}
+값은 임의 해쉬형(hashable type)이 될 수 있다.
+빈도는 정수형이어야 하지만, 임의 숫자형도 될 수 있다.
+\index{해쉬 (hashable)}
 
-\verb"_DictWrapper" contains methods appropriate for both
-Hist and Pmf, including \verb"__init__", {\tt Values},
-{\tt Items} and {\tt Render}.  It also provides modifier
-methods {\tt Set}, {\tt Incr}, {\tt Mult}, and {\tt Remove}.  These
-methods are all implemented with dictionary operations.  For example:
-\index{dictionary}
+\verb"_DictWrapper"는 Hist와 Pmf에 대한 적절한 메쏘드를 담고 있는데,
+\verb"__init__", {\tt Values}, {\tt Items}, {\tt Render}가 포함된다.
+{\tt Set}, {\tt Incr}, {\tt Mult}, {\tt Remove} 변경 메쏘드도 제공한다.
+모든 메쏘드는 딕셔너리 연산으로 구현되었다. 예를 들어,
+\index{딕셔너리 (dictionary)}
 
 \begin{verbatim}
 # class _DictWrapper
@@ -297,25 +294,21 @@ methods are all implemented with dictionary operations.  For example:
         del self.d[x]
 \end{verbatim}
 
-Hist also provides {\tt Freq}, which looks up the frequency
-of a given value.
-\index{frequency}
+Hist는 또한 {\tt Freq}을 제공하는데 주어진 값에 대한 빈도를 찾는다.
+\index{빈도 (frequency)}
 
-Because Hist operators and methods are based on dictionaries,
-these methods are constant time operations;
-that is, their run time does not increase as the Hist gets bigger.
+Hist 연산자와 메쏘드는 딕셔너리에 기반하고 있어서, 
+이들 메쏘드는 상수 시간 연산이다; 즉, Hist가 점점 커짐에 따라 실행시간이 증가하지 않는다.
 \index{Hist}
 
 
-\section{Pmf implementation}
-
-Pmf and Hist are almost the same thing, except that a Pmf
-maps values to floating-point probabilities, rather than integer
-frequencies.  If the sum of the probabilities is 1, the Pmf is normalized.
+\section{Pmf 구현}
+Pmf가 정수 빈도 대신에 값을 부동소수점 확률에 매핑하는 것을 제외하고, 
+Pmf와 Hist는 거의 동일하다.
+확률을 다 더한 합계가 1 이라면, Pmf는 정규화되었다.
 \index{Pmf}
 
-Pmf provides {\tt Normalize}, which computes the sum of the
-probabilities and divides through by a factor:
+Pmf는 {\tt Normalize} 함수를 제공하는데, 확률을 합을 계산하고 갯수로 나눈다.
 
 \begin{verbatim}
 # class Pmf
@@ -332,47 +325,34 @@ probabilities and divides through by a factor:
         return total
 \end{verbatim}
 
-{\tt fraction} determines the sum of the probabilities after
-normalizing; the default value is 1.  If the total probability is 0,
-the Pmf cannot be normalized, so {\tt Normalize} raises {\tt
-  ValueError}.
+{\tt fraction}이 정규화한 후에 확률 합계를 알아낸다; 기본 설정값은 1 이다.
+만약 전체 확률이 0 이라면, Pmf는 정규화될 수 없어서, {\tt Normalize}는 {\tt ValueError} 오류를 일으킨다.
 
-Hist and Pmf have the same constructor.  It can take
-as an argument a {\tt dict}, Hist, Pmf or Cdf, a pandas
-Series, a list of (value, frequency) pairs, or a sequence of values.
+Hist와 Pmf는 동일한 생성자를 갖고 있다.
+인자로 {\tt dict}, Hist, Pmf 혹은 Cdf, 
+판다스 시리즈, (값, 빈도) 리스트 쌍, 혹은 값 시퀀스를 받을 수 있다.
 \index{Hist}
 
-If you instantiate a Pmf, the result is normalized.  If you
-instantiate a Hist, it is not.  To construct an unnormalized Pmf,
-you can create an empty Pmf and modify it.  The Pmf modifiers do
-not renormalize the Pmf.
+만약 Pmf를 인스턴스화 한다면, 결과는 정규화된다.
+만약 Hist를 인스턴스화 한다면, 결과는 정규화되지 않는다.
+정규화되지 않은 Pmf를 생성하기 위해서, 빈 Pmf를  생성해서 변경할 수 있다. Pmf 변경자는 Pmf를 다시 정규화하지 않는다.
 
+\section{Cdf 구현}
 
-\section{Cdf implementation}
+CDF가 값을 누적 확률로 매핑해서 Cdf를 \verb"_DictWrapper"로 구현할 수 있다. 하지만 CDF에 있는 값은 정렬되어 있고 \verb"_DictWrapper"에 있는 값은 정렬되어 있지 않다.
+또한, 역 CDF를 계산하는 것은 유용하다; 즉, 누적 확률에서 값으로 매핑. 그래서, 저자가 선택한 구현 방법은 두 정렬된 리스트다.
+이런 방식으로 이진검색을 사용해서 로그 시간에 앞으로 혹은 역으로 조회할 수 있다.
 
-A CDF maps from values to cumulative probabilities, so I could have
-implemented Cdf as a \verb"_DictWrapper".  But the values in a CDF are
-ordered and the values in a \verb"_DictWrapper" are not.  Also, it is
-often useful to compute the inverse CDF; that is, the map from
-cumulative probability to value.  So the implementaion I chose is two
-sorted lists.  That way I can use binary search to do a forward or
-inverse lookup in logarithmic time.
 \index{Cdf}
-\index{binary search}
-\index{cumulative probability}
+\index{이진 검색 (binary search)}
+\index{누적 확률 (cumulative probability)}
 \index{DictWrapper}
-\index{inverse CDF}
-\index{CDF, inverse}
+\index{역 CDF (inverse CDF)}
+\index{CDF, 역 (CDF, inverse)}
 
-The Cdf constructor can take as a parameter a sequence of values
-or a pandas Series, a dictionary that maps from values to
-probabilities, a sequence of (value, probability) pairs, a Hist, Pmf,
-or Cdf.  Or if it is given two parameters, it treats them as a sorted
-sequence of values and the sequence of corresponding cumulative
-probabilities.
+Cdf 생성자는 인자로 값 시퀀스 혹은 판다스 시리즈, 값에서 확률로 매핑하는 딕셔너리, (값, 확률) 시퀀스 쌍, Hist, Pmf, 혹은 CDF를 받는다. 혹은 만약 인자가 두개 주어진다면, 두 인자를 각각 정렬된 값 시퀀스와 상응하는 누적확률 시퀀스로 처리한다.
 
-Given a sequence, pandas Series, or dictionary, the constructor makes
-a Hist.  Then it uses the Hist to initialize the attributes:
+시퀀스, 판다스 시퀀스, 혹은 딕셔너리가 주어지면, 생성자가 Hist를 만든다. 그리고 나서 Hist를 사용해서 속성을 초기화한다.
 
 \begin{verbatim}
         self.xs, freqs = zip(*sorted(dw.Items()))
@@ -380,16 +360,12 @@ a Hist.  Then it uses the Hist to initialize the attributes:
         self.ps /= self.ps[-1]
 \end{verbatim}
 
-{\tt xs} is the sorted list of values; {\tt freqs} is the list
-of corresponding frequencies.  {\tt np.cumsum} computes
-the cumulative sum of the frequencies.  Dividing through by the
-total frequency yields cumulative probabilities.
-For {\tt n} values, the time to construct the
-Cdf is proportional to $n \log n$.
-\index{frequency}
+{\tt xs}는 정렬된 리스트 값이다; {\tt freqs}는 상응하는 빈도 리스트다. {\tt np.cumsum}이 누적 빈도 합계를 계산한다. 
+전체 빈도로 나누면 누적확률이 된다.
+{\tt n}개 값에 대해서, Cdf를 생성하는 시간은 $n \log n$에 비례한다.
+\index{빈도 (frequency)}
 
-Here is the implementation of {\tt Prob}, which takes a value
-and returns its cumulative probability: 
+다음에 {\tt Prob} 구현한 코드가 있다. 값을 받아 누적 확률을 반환한다.
 
 \begin{verbatim}
 # class Cdf
@@ -401,9 +377,8 @@ and returns its cumulative probability:
         return p
 \end{verbatim}
 
-The {\tt bisect} module provides an implementation of binary search.
-And here is the implementation of {\tt Value}, which takes a
-cumulative probability and returns the corresponding value:
+{\tt bisect} 모듈은 이진 검색 구현을 제공한다.
+그리고, {\tt Value}를 구현했는데 누적 확률을 받아 상응하는 값을 반환한다.
 
 \begin{verbatim}
 # class Cdf
@@ -415,9 +390,10 @@ cumulative probability and returns the corresponding value:
         return self.xs[index]
 \end{verbatim}
 
-Given a Cdf, we can compute the Pmf by computing differences between
-consecutive cumulative probabilities.  If you call the Cdf constructor
-and pass a Pmf, it computes differences by calling {\tt Cdf.Items}:
+Cdf가 주어지면, 연속 누적 확률 (consecutive cumulative probabilities) 사이 차이를 계산해서 Pmf를 계산할 수 있다.
+Cdf 생성자를 호출하고 Pmf를 전달한다면, 
+{\tt Cdf.Items}를 호출해서 차이를 계산한다.
+
 \index{Pmf}
 \index{Cdf}
 
@@ -430,16 +406,14 @@ and pass a Pmf, it computes differences by calling {\tt Cdf.Items}:
         return zip(self.xs, a-b)
 \end{verbatim}
 
-{\tt np.roll} shifts the elements of {\tt a} to the right, and ``rolls''
-the last one back to the beginning.  We replace the first element of
-{\tt b} with 0 and then compute the difference {\tt a-b}.  The result
-is a NumPy array of probabilities.
-\index{NumPy}
+{\tt np.roll}는 {\tt a} 요소를 오른쪽으로 이동하고,
+마지막을 처음으로 ``돌린다(roll)''
+{\tt b} 첫 요소를 0으로 바꾸고 나서 {\tt a-b} 차이를 계산한다.
+결과는 넘파이 확률 배열이다. 
+\index{넘파이 (NumPy)}
 
-Cdf provides {\tt Shift} and {\tt Scale}, which modify the
-values in the Cdf, but the probabilities should be treated as
-immutable.
-
+Cdf는 {\tt Shift}와 {\tt Scale}를 제공한다. 
+Cdf에 값을 변경하지만, 확률은 불변형(immutable)으로 처리되어야 한다.
 
 \section{적률 (Moments)}
 \index{적률 (moment)}
