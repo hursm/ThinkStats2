@@ -107,19 +107,16 @@ def Jitter(values, jitter=0.5):
 값은 임의 시퀀스가 될 수 있다; 결과는 넘파이(NumPy) 배열이다.
 \index{넘파이 (NumPy)}
 
+그림~\ref{scatter1} (오른편)에 결과가 있다.
+지터링(jittering)을 통해서 반올림으로 인한 시각적 효과를 줄이고,
+관계 형태를 좀더 명확히 한다. 하지만, 일반적으로 시각화 목적으로만
+데이터를 지터링해야 하고, 분석을 위해서 지터링된 데이터 사용은 피해야 한다.
 
-
-Figure~\ref{scatter1} (right) shows the result.  Jittering reduces the
-visual effect of rounding and makes the shape of the relationship
-clearer.  But in general you should only jitter data for purposes of
-visualization and avoid using jittered data for analysis.
-
-Even with jittering, this is not the best way to represent the data.
-There are many overlapping points, which hides data
-in the dense parts of the figure and gives disproportionate emphasis
-to outliers.  This effect is called {\bf saturation}.
-\index{outlier}
-\index{saturation}
+지터링 조차도 데이터를 표현하는 가장 최선의 방법이 되지는 못한다.
+중복되는 점이 많아서 그림에서 조밀한 부분에 있는 데이터를 숨기고,
+균형이 맞지 않게 특이점을 강조한다. 이와 같은 효과를 {\bf 포화 (saturation)}라고 부른다.
+\index{특이점 (outlier)}
+\index{포화 (saturation)}
 
 \begin{figure}
 % scatter.py
@@ -129,50 +126,47 @@ hexbin plot (right).}
 \label{scatter2}
 \end{figure}
 
-We can solve this problem with the {\tt alpha} parameter, which makes
-the points partly transparent:
+이런 문제를 {\tt alpha} 모수로 해결할 수 있는데, 수행하는 역할은 점들을 부분적으로 투명하게 한다.
+
 %
 \begin{verbatim}
     thinkplot.Scatter(heights, weights, alpha=0.2)
 \end{verbatim}
 %
-Figure~\ref{scatter2} (left) shows the result.  Overlapping data
-points look darker, so darkness is proportional to density.  In this
-version of the plot we can see two details that were not apparent before:
-vertical clusters at several heights and a horizontal line near 90 kg
-or 200 pounds.  Since this data is based on self-reports in pounds,
-the most likely explanation is that some respondents reported
-rounded values.
+
+그림~\ref{scatter2} (왼편)에 결과가 있다.
+겹쳐지는 데이터 점들이 더 어두워 보여서 색이 짙음이 밀도와 비례하여 균형을 맞춘다. 이 버젼으로 그린 플롯을 살펴보면, 앞에서 명확하지 않은 두가지 자세한 사항을 볼 수 있다; 90 kg 즉, 200 파운드 근처에 수평선과 몇군데 신장에서 수직 군집이 보인다. 데이터가 파운드 단위로 자기 응답에 기반하기 때문에, 가장 그럴듯한 설명은 응답자가 반올림한 값으로 보고를 한 것이다.
+
 \index{thinkplot}
 \index{alpha}
-\index{transparency}
+\index{투영성 (transparency)}
 
-Using transparency works well for moderate-sized datasets, but this
-figure only shows the first 5000 records in the BRFSS, out of a total
-of 414 509.
-\index{hexbin plot}
-\index{plot!hexbin}
+투명성을 사용해서 중간정도 크기 데이터셋를 처리했다.
+하지만, 그림은 단지 BRFSS 자료 414 509 중에서 첫 5000 레코드만 보여준다.
 
-To handle larger datasets, another option is a hexbin plot, which
-divides the graph into hexagonal bins and colors each bin according to
-how many data points fall in it.  {\tt thinkplot} provides 
-{\tt HexBin}:
+\index{육각함 플롯 (hexbin plot)}
+\index{플롯 (plot)!육각함 (hexbin)}
+
+더 커다란 데이터셋을 처리하기 위한,
+또 다른 선택지가 육각함 플롯 (hexbin plot)이 된다.
+그래프를 육각형 통(hexagonal bin)으로 나누고 각 통을 얼마나 많은 데이터가 들어있는지에 따라 색을 칠한다. {\tt thinkplot}에 {\tt HexBin}메쏘드가 있다.
 %
 \begin{verbatim}
     thinkplot.HexBin(heights, weights)
 \end{verbatim}
 %
-Figure~\ref{scatter2} (right) shows the result.  An advantage of a
-hexbin is that it shows the shape of the relationship well, and it is
-efficient for large datasets, both in time and in the size of the file
-it generates.  A drawback is that it makes the outliers invisible.
-\index{thinkplot}
-\index{outlier}
 
-The point of this example is that it is
-not easy to make a scatter plot that shows relationships clearly
-without introducing misleading artifacts.
-\index{artifact}
+그림~\ref{scatter2} (오른편)에 결과가 있다.
+육각함(hexbin)의 장점은 관계 형태도 보여준다는 것이고,
+큰 데이터셋에 대해서도 시간과 파일 크기에 둘 관점에서 효율적이다.
+단점은 특이점이 보이지 않는다는 것이다.
+ 
+\index{thinkplot}
+\index{특이점 (outlier)}
+
+이 사례를 통해서 강조하고자 하는 것은 오해를 불러 일으키는 산출물 없이 관계를 명확하게 보여주는 산점도를 플롯으로 그리는 것이 쉬운 것은 아니라는 점이다.
+
+\index{산출물 (artifact)}
 
 
 \section{Characterizing relationships}
