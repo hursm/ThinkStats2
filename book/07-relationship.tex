@@ -1,35 +1,32 @@
 
 
-\chapter{Relationships between variables}
+\chapter{변수간 관계}
 
-So far we have only looked at one variable at a time.  In this
-chapter we look at relationships between variables.  Two variables are
-related if knowing one gives you information about the other.  For
-example, height and weight are related; people who are taller tend to
-be heavier.  Of course, it is not a perfect relationship: there
-are short heavy people and tall light ones.  But if you are
-trying to guess someone's weight, you will be more accurate if you
-know their height than if you don't.
-\index{adult weight}
-\index{adult height}
+지금까지 한번에 한 변수만 살펴봤다.
+이번장에서 변수간 관계를 살펴본다.
+변수 하나를 알고 있는 것이 다른 변수에 대한 정보를 준다면, 두 변수는 관계가 있다.
+예를 들어, 신장과 체중은 관계가 있다; 키가 더 큰 사람이 체중이 더 나가는 경향이 있다.
+물론, 완벽한 관계는 아니다: 키 작고 뚱뚱한 사람과 키 크고 마른 사람이 있다.
+하지만, 다른 사람의 체중을 추측하려고 한다면, 신장 정보를 모르는 것보다 키 정보를 알고 있는 것이
+좀더 정확하게 추정하는데 도움이 된다.
 
-The code for this chapter is in {\tt scatter.py}.
-For information about downloading and
-working with this code, see Section~\ref{code}.
+\index{성인 체중 (adult weight)}
+\index{성인 신장 (adult height)}
 
 
-\section{Scatter plots}
-\index{scatter plot}
-\index{plot!scatter}
+이번 장에서 사용되는 코드는 {\tt scatter.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
-The simplest way to check for a relationship between two variables
-is a {\bf scatter plot}, but making a good scatter plot is not always easy.
-As an example, I'll plot weight versus height for the respondents
-in the BRFSS (see Section~\ref{lognormal}).
+\section{산점도 (Scatter plots)}
+\index{산점도 (scatter plot)}
+\index{그림 (plot)!산점도 (scatter)}
+
+관계(relationship)을 확인하는 가장 간단한 방법이 {\bf 산점도 (scatter plot)}다.
+하지만, 좋은 산점도를 만드는 것이 항상 쉬운 것은 아니다.
+예제로, BRFSS 응답자에 대한 신장과 체중 플롯을 그릴 것이다. (~\ref{lognormal} 절 참조)
 \index{BRFSS}
 
-Here's the code that reads the data file and extracts height and
-weight:
+데이터 파일을 읽어서 신장과 체중 정보를 추출하는 코드가 다음에 있다.
 
 \begin{verbatim}
     df = brfss.ReadBrfss(nrows=None)
@@ -37,7 +34,7 @@ weight:
     heights, weights = sample.htm3, sample.wtkg2
 \end{verbatim}
 
-{\tt SampleRows} chooses a random subset of the data:
+{\tt SampleRows} 함수는 데이터에서 일부를 임으로 골라낸다. 
 \index{SampleRows}
 
 \begin{verbatim}
@@ -47,16 +44,16 @@ def SampleRows(df, nrows, replace=False):
     return sample
 \end{verbatim}
 
-{\tt df} is the DataFrame, {\tt nrows} is the number of rows to choose,
-and {\tt replace} is a boolean indicating whether sampling should be
-done with replacement; in other words, whether the same row could be
-chosen more than once.
-\index{DataFrame}
-\index{thinkplot}
-\index{boolean}
-\index{replacement}
+{\tt df}는 데이터프레임이고, {\tt nrows}는 선택할 행의 갯수가 되고, 
+{\tt replace}는 복원 추출을 해야 하는지 나타내는 부울(boolean) 표식이다; 
+다른 말로, 동일한 행이 한번 이상 선택되어 추출되는지 나타낸다. 
 
-{\tt thinkplot} provides {\tt Scatter}, which makes scatter plots:
+\index{데이터프레임 (DataFrame)}
+\index{thinkplot}
+\index{부울 (boolean)}
+\index{복원 (replacement)}
+
+{\tt thinkplot}에는 {\tt Scatter} 메쏘드가 있는데, 산점도를 그린다.
 %
 \begin{verbatim}
     thinkplot.Scatter(heights, weights)
@@ -65,9 +62,8 @@ chosen more than once.
                    axis=[140, 210, 20, 200])
 \end{verbatim}
 
-The result, in Figure~\ref{scatter1} (left), shows the shape of
-the relationship.  As we expected, taller
-people tend to be heavier.  
+그림~\ref{scatter1} (왼쪽)에 관계 형태를 보여주는 결과가 있다.
+예상했던 것처럼, 더 키가 큰 사람이 더 체중이 나가는 경향이 있다.
 
 \begin{figure}
 % scatter.py
@@ -77,20 +73,22 @@ in the BRFSS, unjittered (left), jittered (right).}
 \label{scatter1}
 \end{figure}
 
-But this is not the best representation of
-the data, because the data are packed into columns.  The problem is
-that the heights are rounded to the nearest inch, converted to
-centimeters, and then rounded again.  Some information is lost in
-translation.  \index{height} \index{weight} \index{jitter}
+하지만, 상기 그림이 데이터를 가장 잘 표현하는 것은 아니다.
+이유는 데이터가 열에 떼지어 몰려있다. 문제는 
+신장이 가장 가까운 인치(inch) 단위로 반올림되고, 센티미터로 변환하고 나서,
+다시 반올림했다. 변환 과정에서 정보가 유실되었다.
 
-We can't get that information back, but we can minimize the effect on
-the scatter plot by {\bf jittering} the data, which means adding random
-noise to reverse the effect of rounding off.  Since these measurements
-were rounded to the nearest inch, they might be off by up to 0.5 inches or
-1.3 cm.  Similarly, the weights might be off by 0.5 kg.
-\index{uniform distribution}
-\index{distribution!uniform}
-\index{noise}
+\index{신장 (height)} 
+\index{체중 (weight)} 
+\index{지터 (jitter)}
+
+유실된 정보를 다시 되돌릴 수는 없지만, 데이터를 {\bf 지터링(jittering)}\footnote{jittering, 지터로 번역을 했는데 통계 사전에는 등록이 되어있지 않고 일반 사전에는 ``조금씩 움직이다''라고 나와있다.}해서 
+산점도에 효과를 최소화할 수 있다. 반올림 효과를 되돌리도록 확률 잡음(random noise)를 추가한다는 의미다.
+측정값이 가장 근사한 인치(inch) 정보로 반올림되어 있어서, 0.5 인치 즉, 1.3 센티미터까지 차이가 생길 수도 있다. 마찬가지로, 체중은 0.5 kg까지 차이가 생길 수 있다. 
+
+\index{균등 분포 (uniform distribution)}
+\index{분포 (distribution)!균등 (uniform)}
+\index{잡음 (noise)}
 
 %
 \begin{verbatim}
@@ -98,7 +96,7 @@ were rounded to the nearest inch, they might be off by up to 0.5 inches or
     weights = thinkstats2.Jitter(weights, 0.5)
 \end{verbatim}
 
-Here's the implementation of {\tt Jitter}:
+{\tt Jitter} 함수를 구현한 것이 다음에 있다.
 
 \begin{verbatim}
 def Jitter(values, jitter=0.5):
@@ -106,8 +104,10 @@ def Jitter(values, jitter=0.5):
     return np.random.uniform(-jitter, +jitter, n) + values
 \end{verbatim}
 
-The values can be any sequence; the result is a NumPy array.
-\index{NumPy}
+값은 임의 시퀀스가 될 수 있다; 결과는 넘파이(NumPy) 배열이다.
+\index{넘파이 (NumPy)}
+
+
 
 Figure~\ref{scatter1} (right) shows the result.  Jittering reduces the
 visual effect of rounding and makes the shape of the relationship
