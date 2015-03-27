@@ -169,18 +169,17 @@ hexbin plot (right).}
 \index{산출물 (artifact)}
 
 
-\section{Characterizing relationships}
+\section{관계를 특징짓기}
 \label{characterizing}
 
-Scatter plots provide a general impression of the relationship between
-variables, but there are other visualizations that provide more
-insight into the nature of the relationship.  One option is to bin one
-variable and plot percentiles of the other.
-\index{binning}
+산점도는 변수 사이에 관계에 대한 일반적인 인상을 제공한다. 하지만, 관계 본질에 대한 더 많은 통찰을 주는 
+다른 시각화방법이 있다. 한 선택지는 변수를 구간화(binning)하고 다른 변수 백분위수를 플롯으로 그리는 것이다.
 
-NumPy and pandas provide functions for binning data:
-\index{NumPy}
-\index{pandas}
+\index{구간화 (binning)}
+
+넘파이(NumPy)와 판다스가 데이터를 구간화하는 함수를 제공한다.
+\index{넘파이 (NumPy)}
+\index{판다스 (pandas)}
 
 \begin{verbatim}
     df = df.dropna(subset=['htm3', 'wtkg2'])
@@ -189,17 +188,16 @@ NumPy and pandas provide functions for binning data:
     groups = df.groupby(indices)
 \end{verbatim}
 
-{\tt dropna} drops rows with {\tt nan} in any of the listed columns.
-{\tt arange} makes a NumPy array of bins from 135 to, but not including,
-210, in increments of 5.
-\index{dropna}
-\index{digitize}
+{\tt dropna} 메쏘드는 호명된 칼럼(열)에서 {\tt nan}가 있는 행을 제거한다. 
+{\tt arange} 메쏘드는 135부터 210까지 (210은 포함하지 않고) 5만큼 증가하는 구간을 가진 넘파이 배열을 생성한다.
+
+\index{dropna 메쏘드}
+\index{digitize 메쏘드}
 \index{NaN}
 
-{\tt digitize} computes the index of the bin that contains each value
-in {\tt df.htm3}.  The result is a NumPy array of integer indices.
-Values that fall below the lowest bin are mapped to index 0.  Values
-above the highest bin are mapped to {\tt len(bins)}.
+{\tt digitize} 메쏘드는 {\tt df.htm3}에 있는 각 값을 담고 있는 구간 인텍스를 계산한다.
+결과는 정수 인텍스 넘파이(NumPy) 배열이다. 
+가장 하위 구간에 속하는 값은 인덱스 0에 매핑된다. 가장 상위 구간에 속하는 값은 {\tt len(bins)}에 매핑된다.
 
 \begin{figure}
 % scatter.py
@@ -208,20 +206,17 @@ above the highest bin are mapped to {\tt len(bins)}.
 \label{scatter3}
 \end{figure}
 
-{\tt groupby} is a DataFrame method that returns a GroupBy object;
-used in a {\tt for} loop, {\tt groups} iterates the names of the groups
-and the DataFrames that represent them.  So, for example, we can
-print the number of rows in each group like this:
-\index{DataFrame}
-\index{groupby}
+{\tt groupby}는 GroupBy 객체를 반환하는 데이터프레임 메쏘드다;
+{\tt for} 루프에 사용되고, {\tt groups}은 그룹 이름과 그룹을 나타내는 데이터프레임을 반복돌린다.
+\index{데이터프레임 (DataFrame)}
+\index{groupby 메쏘드}
 
 \begin{verbatim}
 for i, group in groups:
     print(i, len(group))
 \end{verbatim}
 
-Now for each group we can compute the mean height and the CDF
-of weight:
+이제 각 그룹에 대해서, 평균 신장과 체중 CDF를 계산할 수 있다.
 \index{Cdf}
 
 \begin{verbatim}
@@ -229,9 +224,8 @@ of weight:
     cdfs = [thinkstats2.Cdf(group.wtkg2) for i, group in groups]
 \end{verbatim}
 
-Finally, we can
-plot percentiles of weight versus height:
-\index{percentile}
+마지막으로, 신장과 체중에 대한 백분위수를 플롯으로 그릴 수 있다.
+\index{백분위수 (percentile)}
 
 \begin{verbatim}
     for percent in [75, 50, 25]:
@@ -240,76 +234,67 @@ plot percentiles of weight versus height:
         thinkplot.Plot(heights, weights, label=label)
 \end{verbatim}
 
-Figure~\ref{scatter3} shows the result.  Between 140 and 200 cm
-the relationship between these variables is roughly linear.  This range
-includes more than 99\% of the data, so we don't have to worry
-too much about the extremes.
+그림~\ref{scatter3}에 결과가 나와 있다.
+140센티미터에서 200센티미터 사이 두 변수 간의 관계는 대략 선형이다.
+이 범위에 99\%이상 데이터가 몰려있다. 그래서, 극단값에 대해서 너무 걱정할 필요는 없다.
 \index{thinkplot}
 
 
-\section{Correlation}
+\section{상관 (Correlation)}
 
-A {\bf correlation} is a statistic intended to quantify the strength
-of the relationship between two variables.
-\index{correlation}
+{\bf 상관 (correlation)}은 두 변수 간 관계강도를 정량화하는데 사용되는 통계량이다.
+\index{상관 (correlation)}
 
-A challenge in measuring correlation is that the variables we want to
-compare are often not expressed in the same units.  And even if they
-are in the same units, they come from different distributions.
-\index{units}
+상관을 측정하는데 걸림돌은 비교하려는 변수가 동일한 단위로 표현되지 않는다.
+그리고 설사 단위가 동일하다고 하더라도, 다른 분포에서 두 변수가 나왔다.
 
-There are two common solutions to these problems:
+\index{단위 (units)}
+
+상기 문제에 대한 두가지 일반적인 해결책이 있다.
 
 \begin{enumerate}
 
-\item Transform each value to a {\bf standard scores}, which is the
-number of standard deviations from the mean.  
-This transform leads to
-the ``Pearson product-moment correlation coefficient.''
-\index{standard score}
-\index{standard deviation}
-\index{Pearson coefficient of correlation}
+\item 각 값을 평균에서 떨어진 표준편차 숫자인 {\bf 표준점수 (standard scores)}로 변환한다. 
+이러한 변환은 ``피어슨 곱적률 상관계수 (Pearson product-moment correlation coefficient)''가 된다.
+\index{표준점수 (standard score)}
+\index{표준편차 (standard deviation)}
+\index{피어슨 상관계수 (Pearson coefficient of correlation)}
 
-\item Transform each value to its {\bf rank}, which is its index in
-the sorted list of values.  This transform
-leads to the ``Spearman rank correlation coefficient.''
-\index{rank}
-\index{percentile rank}
-\index{Spearman coefficient of correlation}
+\item 각 값을 정렬된 리스트 값 인덱스인 {\bf 순위 (rank)}로 변환한다.
+이러한 변환은 ``스피어만 순위 상관계수 (Spearman rank correlation coefficient)''가 된다.
+\index{순위 (rank)}
+\index{백분위수 순위 (percentile rank)}
+\index{스피어만 상관계수 (Spearman coefficient of correlation)}
 
 \end{enumerate}
 
-If $X$ is a series of $n$ values, $x_i$, we can convert to standard
-scores by subtracting the mean and dividing by the standard deviation:
+만약 $X$가 일련 $n$개 값, $x_i$라면, 평균을 빼고 표준편차로 나누어서  
+표준점수로 전환한다.
 $z_i = (x_i - \mu) / \sigma$.
-\index{mean}
-\index{standard deviation}
+\index{평균 (mean)}
+\index{표준편차 (standard deviation)}
 
-The numerator is a deviation: the distance from the mean.  Dividing by
-$\sigma$ {\bf standardizes} the deviation, so the values of $Z$ are
-dimensionless (no units) and their distribution has mean 0 and
-variance 1.
-\index{standardize}
-\index{deviation}
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+분모가 편차다; 평균에서 떨어진 차이. $\sigma$로 나누면 편차를 {\bf 표준화(standardizes)}한다. 그래서 $Z$ 값은 차원이 없다(단위가 없음). 그리고 분포는 평균 0, 분산 1이 된다.
+\index{표준화하다 (standardize)}
+\index{차이 (deviation)}
+\index{정규분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
 
-If $X$ is normally distributed, so is $Z$.  But if $X$ is skewed or has
-outliers, so does $Z$; in those cases, it is more robust to use
-percentile ranks.  If we compute a new variable, $R$, so that $r_i$ is
-the rank of $x_i$, the distribution of $R$ is uniform
-from 1 to $n$, regardless of the distribution of $X$.
-\index{uniform distribution} \index{distribution!uniform}
-\index{robust}
-\index{skewness}
-\index{outlier}
+만약 $X$가 정규 분포라면, $Z$도 그렇다. 하지만, 만약 $X$가 기울어지거나 이상점이 있다면, $Z$도 그렇다; 이와 같은 경우, 백분위 순위를 사용하는 것이 좀더 강건하다.
+만약 새로운 변수, $R$을 계산한다면, $r_i$는 $x_i$의 순위가 되고, $X$가 무슨 분포든지 관계없이, $R$ 분포는 1에서 $n$까지 균등분포다.
+
+\index{균등분포 (uniform distribution)} 
+\index{분포 (distribution)!균등 (uniform)}
+\index{강건성 (robust)}
+\index{왜도 (skewness)}
+\index{이상점 (outlier)}
 
 
-\section{Covariance}
-\index{covariance}
-\index{deviation}
+\section{공분산 (Covariance)}
+\index{공분산 (covariance)}
+\index{편차 (deviation)}
 
 {\bf Covariance} is a measure of the tendency of two variables
 to vary together.  If we have two series, $X$ and $Y$, their
