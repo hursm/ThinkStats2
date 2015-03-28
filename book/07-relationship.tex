@@ -296,38 +296,31 @@ $z_i = (x_i - \mu) / \sigma$.
 \index{공분산 (covariance)}
 \index{편차 (deviation)}
 
-{\bf Covariance} is a measure of the tendency of two variables
-to vary together.  If we have two series, $X$ and $Y$, their
-deviations from the mean are
+{\bf 공분산 (Covariance)}은 함께 변화하는 두 변수의 경향성 측도다.
+만약 두 변수 계열 $X$ and $Y$가 있다면,
+평균에 대한 편자는 다음과 같다.
 %
 \[ dx_i = x_i - \xbar \]
 \[ dy_i = y_i - \ybar \]
 %
-where $\xbar$ is the sample mean of $X$ and $\ybar$ is the sample mean
-of $Y$.  If $X$ and $Y$ vary together, their deviations tend to have
-the same sign.
+$\xbar$가 $X$의 표본 평균이고, 
+$\ybar$이 $Y$의 표본 평균이다.
+만약 $X$와 $Y$가 함께 변한다면, 편차는 동일 기호를 갖는 경향이 있다.
 
-If we multiply them together, the product is positive when the
-deviations have the same sign and negative when they have the opposite
-sign.  So adding up the products gives a measure of the tendency to
-vary together.
+두 변수를 함께 곱한다면, 곱이 양수가 될 때는 편차가 동일한 부호를 갖을 때고, 음수가 될 때는 반대 부호를 갖을 때다.
+그래서, 곱을 합하게 되면 함께 변화하는 경향성 측도가 된다. 
 
-Covariance is the mean of these products:
+공분산은 이들 곱의 평균이다.
+
 %
 \[ Cov(X,Y) = \frac{1}{n} \sum dx_i~dy_i \]
 %
-where $n$ is the length of the two series (they have to be the same
-length).
+$n$은 두 계열 변수의 길이다. (두 계열 변수는 길이가 동일해야 한다.)
 
-If you have studied linear algebra, you might recognize that
-{\tt Cov} is the dot product of the deviations, divided
-by their length.  So the covariance is maximized if the two vectors
-are identical, 0 if they are orthogonal, and negative if they
-point in opposite directions.  {\tt thinkstats2} uses {\tt np.dot} to
-implement {\tt Cov} efficiently:
-\index{linear algebra}
-\index{dot product}
-\index{orthogonal vector}
+만약 선형대수학을 공부해따면, {\tt Cov}가 길이로 나눈 편차의 내적(dot product)이다. 그래서 만약 두 벡터가 동일하다면 공분산은 극대화되고, 직교(orthogonal)하면 0, 반대 방향으로 위치하면 부호가 음수가 된다. {\tt thinkstats2}는 {\tt np.dot}을 사용해서 {\tt Cov}를 효과적으로 구현한다.
+\index{선형대수학 (linear algebra)}
+\index{내적 (dot product)}
+\index{직교 벡터 (orthogonal vector)}
 
 \begin{verbatim}
 def Cov(xs, ys, meanx=None, meany=None):
@@ -343,55 +336,51 @@ def Cov(xs, ys, meanx=None, meany=None):
     return cov
 \end{verbatim}
 
-By default {\tt Cov} computes deviations from the sample means,
-or you can provide known means.  If {\tt xs} and {\tt ys} are
-Python sequences, {\tt np.asarray} converts them to NumPy arrays.
-If they are already NumPy arrays, {\tt np.asarray} does nothing.
-\index{NumPy}
+초기 설정값으로 {\tt Cov}가 표본 평균에서 편차를 계산하거나 이미 계산된 평균값을 인자로 넘길 수 있다. 만약, {\tt xs}와 {\tt ys}이 파이썬 시퀀스라면, {\tt np.asarray}가 넘파이(NumPy) 배열로 전환한다.
+만약 이미 넘파이(NumPy) 배열이라면, {\tt np.asarray}는 아무 것도 하지 않는다.
 
-This implementation of covariance is meant to be simple for purposes
-of explanation.  NumPy and pandas also provide implementations of
-covariance, but both of them apply a correction for small sample sizes
-that we have not covered yet, and {\tt np.cov} returns a covariance
-matrix, which is more than we need for now.
-\index{pandas}
+\index{넘파이 (NumPy)}
+
+공분산 구현이 설명 목적으로 간단하게 구현되었다.
+넘파이(NumPy)와 판다스에 공분산 구현되어 기능을 제공한다.
+하지만, 둘다 여기서 다루어지지 않는 작은 표본 크기에 대한 보정기능을 제공한다. 그리고, {\tt np.cov}는 공분산 행렬을 반환하는데, 공분산 행렬은 지금 당장 필요한 것 이상이다.
+
+\index{판다스 (pandas)}
 
 
-\section{Pearson's correlation}
-\index{correlation}
-\index{standard score}
+\section{피어슨 상관 (Pearson's correlation)}
+\index{상관 (correlation)}
+\index{표준 점수 (standard score)}
 
-Covariance is useful in some computations, but it is seldom reported
-as a summary statistic because it is hard to interpret.  Among other
-problems, its units are the product of the units of $X$ and $Y$.  For
-example, the covariance of weight and height in the BRFSS dataset is
-113 kilogram-centimeters, whatever that means.
-\index{deviation}
-\index{units}
+공분산이 몇몇 연산에서는 유용하지만, 요약 통계량으로는 결코 보고되어지지 않는데 이유는 해석하기기 어렵기 때문이다.
+다른 문제점 중에서, 단위가 $X$와 $Y$ 단위의 곱이다.
+예를 들어, 이것이 무엇을 의미하든지, BRFSS 데이터셋에서 체중과 신장 공분산은 113 킬로그림-센티미터가 된다.
 
-One solution to this problem is to divide the deviations by the standard
-deviation, which yields standard scores, and compute the product of
-standard scores:
+\index{편차 (deviation)}
+\index{단위 (units)}
+
+이 문제에 한 해결책은 표준편차로 편차를 나누고, 표준 점수 곱을 계산하는 것이다.
+
 %
 \[ p_i = \frac{(x_i - \xbar)}{S_X} \frac{(y_i - \ybar)}{S_Y} \]
 %
-Where $S_X$ and $S_Y$ are the standard deviations of $X$ and $Y$.
-The mean of these products is \index{standard deviation}
+$S_X$와 $S_Y$은 $X$와 $Y$의 표준편차다. 이들 곱의 평균은 다음과 같다.
+
 %
 \[ \rho = \frac{1}{n} \sum p_i \]
 %
-Or we can rewrite $\rho$ by factoring out $S_X$ and
-$S_Y$:
+혹은 $S_X$ 와 $S_Y$을 빼내서 $\rho$를 다시 작성할 수 있다.
 %
 \[ \rho = \frac{Cov(X,Y)}{S_X S_Y} \]
 %
-This value is called {\bf Pearson's correlation} after Karl Pearson,
-an influential early statistician.  It is easy to compute and easy to
-interpret.  Because standard scores are dimensionless, so is $\rho$.
-\index{Pearson, Karl}
-\index{Pearson coefficient of correlation}
 
-Here is the implementation in {\tt thinkstats2}:
+이 값을 초창기 영향력 있는 통계학자 칼 피어슨(Karl Pearson)을 따라 {\bf 피어슨 상관 (Pearson's correlation)}이라고 부른다.
+계산하기 쉽고 해석하기도 쉽다. 표준 점수는 차원이 없어서 $\rho$다.
+
+\index{피어슨, 칼 (Pearson, Karl)}
+\index{피어슨 상관계수 (Pearson coefficient of correlation)}
+
+{\tt thinkstats2}에서 구현한 코드가 다음에 있다.
 
 \begin{verbatim}
 def Corr(xs, ys):
@@ -405,27 +394,18 @@ def Corr(xs, ys):
     return corr
 \end{verbatim}
 
-{\tt MeanVar} computes mean and variance slightly more efficiently
-than separate calls to {\tt np.mean} and {\tt np.var}.
+별도로 {\tt np.mean}와 {\tt np.var}을 호출하기 보다 다소 더 효율적으로 {\tt MeanVar}은 평균과 분산을 계산한다.
 \index{MeanVar}
 
-Pearson's correlation is always between -1 and +1 (including both).
-If $\rho$ is positive, we say that the correlation is positive,
-which means that when one variable is high, the other tends to be
-high.  If $\rho$ is negative, the correlation is negative, so
-when one variable is high, the other is low.
+피어슨 상관은 항상 -1과 1 사이다. (1,-1을 포함한다.) 만약, $\rho$가 양수라면, 상관이 양(positive)으로 한 변수값이 높으면, 다른 변수값도 높은 경향이 있다는 의미다. $\rho$가 부(negative)이면, 한 변수가값이 높으면, 다른 변수 값은 낮은 경향이 있다는 의미다.
 
-The magnitude of $\rho$ indicates the strength of the correlation.  If
-$\rho$ is 1 or -1, the variables are perfectly correlated, which means
-that if you know one, you can make a perfect prediction about the
-other.  \index{prediction}
+$\rho$ 크기는 상관 강도를 나타낸다. 만약 $\rho$가 1 혹은 -1 이면, 변수는 완벽하게 상관되어 있다는 의미로, 만약 변수 하나를 알고 있다면 다른 하나에 대해서 완벽한 예측이 가능하다는 의미다.
+\index{예측 (prediction)}
 
-Most correlation in the real world is not perfect, but it is still
-useful.  The correlation of height and weight is 0.51, which is a
-strong correlation compared to similar human-related variables.
+현실 세계에서 대부분의 상관은 완벽하지 않지만, 여전히 유용하다.
+신장과 체중 상관은 0.51로 비슷한 사람과 관련된 변수와 비교하여 볼 때 강한 상관이다.
 
-
-\section{Nonlinear relationships}
+\section{비선형 관계 (Nonlinear relationships)}
 
 If Pearson's correlation is near 0, it is tempting to conclude
 that there is no relationship between the variables, but that
