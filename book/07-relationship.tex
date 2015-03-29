@@ -515,75 +515,53 @@ BRFSS 예제에서, 체중 분포가 대략 로그 정규분포라는 것을 알
 \index{상관 (correlation)}
 \index{인과 (causation)}
 
-If variables A and B are correlated, there are three possible
-explanations: A causes B, or B causes A, or some other set of factors
-causes both A and B.  These explanations are called ``causal
-relationships''.
-\index{causal relationship}
+만약 변수 A와 B가 상관되었다면, 세가지 설명이 가능하다: A가 B의 발생 원인, B가 A의 발생 원인, 혹은 다른 요소가 A와 B의 발생 원인. 이와 같은 설명을 ``인과 관계 (causal relationships)''라고 부른다.
+\index{인과 관계 (causal relationship)}
 
-Correlation alone does not distinguish between these explanations,
-so it does not tell you which ones are true.
-This rule is often summarized with the phrase ``Correlation
-does not imply causation,'' which is so pithy it has its own
-Wikipedia page: \url{http://wikipedia.org/wiki/Correlation_does_not_imply_causation}.
+상관 그 자체로는 가능한 설명이 어느 것인지 구별하지는 못한다. 그래서, 어느 것이 사실인지 여러분에게 알려주지는 못한다. 이 원칙은 종종 다음 상용구로 표현된다. ``상관은 원인을 함축하지 않는다. (Correlation
+does not imply causation)''.
+애석하게도 자체 위키피디아 페이지도 있다. \url{http://wikipedia.org/wiki/Correlation_does_not_imply_causation}.
 
-So what can you do to provide evidence of causation?
+인과 증거를 제공하려면 무엇을 할 수 있을까요?
 
 \begin{enumerate}
 
-\item Use time.  If A comes before B, then A can cause B but not the
-  other way around (at least according to our common understanding of
-  causation).  The order of events can help us infer the direction
-  of causation, but it does not preclude the possibility that something
-  else causes both A and B.
+\item 시간을 사용한다. 만약 A가 B전에 온다면, A가 B를 발생시키는 원인 이지만, 다르게는 아니다. (적어도 인과에 관한 상식적인 이해에 따르면)
+사건 순서는 인과 방향을 추론하는데 도움이 된다. 하지만, 다른 무언가 A와 B를 발생시키는 원인이 된다는 가능성을 배제하지 못한다.
 
-\item Use randomness.  If you divide a large sample into two
-  groups at random and compute the means of almost any variable, you
-  expect the difference to be small.
-  If the groups are nearly identical in all variables but one, you
-  can eliminate spurious relationships.
-  \index{spurious relationship}
+\item 확률(randomness)을 사용한다. 만약 큰 표본을 임의로 두 집단으로 나누고 거의 모든 변수의 평균을 계산한다면, 차이는 작을 것으로 기대한다.
+만약 한 변수를 제외하고 모든 변수에서 집단이 동일하다면, 허위 관계 (spurious relationship)을 제거할 수 있다.
 
-  This works even if you don't know what the relevant variables
-  are, but it works even better if you do, because you can check that
-  the groups are identical.
+\index{허위 관계 (spurious relationship)}
+
+설사 관련 변수가 무엇인지 모른다고 하더라도 이 방식은 동작한다. 하지만, 관련 변수를 알고 있다면 더 잘 동작하는데 이유는 집단이 동일하다는 것을 확인할 수 있기 때문이다. 
 
 \end{enumerate}
 
-These ideas are the motivation for the {\bf randomized controlled
-trial}, in which subjects are assigned randomly to two (or more)
-groups: a {\bf treatment group} that receives some kind of intervention,
-like a new medicine, and a {\bf control group} that receives
-no intervention, or another treatment whose effects are known.
-\index{randomized controlled trial}
-\index{controlled trial}
-\index{treatment group}
-\index{control group}
-\index{medicine}
+이와 같은 아이디어가 {\bf 무작위 대조군 시험 (randomized controlled
+trial)}의 동기가 된다. 시험 대상이 임의로 두 (혹은 그 이상) 집단에 배속된다: {\bf 처리군 (treatment group)}은 신약 같은 일종의 개입을 받고, 
+{\bf 대조군 (control group)}은 개입을 받지 않거나 효과가 알려진 또다른 처리를 받는다.
 
-A randomized controlled trial is the most reliable way to demonstrate
-a causal relationship, and the foundation of science-based medicine
-(see \url{http://wikipedia.org/wiki/Randomized_controlled_trial}).
+\index{무작위 대조군 시험 (randomized controlled trial)}
+\index{대조군 시험 (controlled trial)}
+\index{처리군 (treatment group)}
+\index{대조군 (control group)}
+\index{의학 (medicine)}
 
-Unfortunately, controlled trials are only possible in the laboratory
-sciences, medicine, and a few other disciplines.  In the social sciences,
-controlled experiments are rare, usually because they are impossible
-or unethical.
-\index{ethics}
+무작위 대조군 시험은 인과관계를 시연하는 가장 신뢰성 있는 방법이고, 과학-기반 의학의 초석이다. (\url{http://wikipedia.org/wiki/Randomized_controlled_trial} 참조).
 
-An alternative is to look for a {\bf natural experiment}, where
-different ``treatments'' are applied to groups that are otherwise
-similar.  One danger of natural experiments is that the groups might
-differ in ways that are not apparent.  You can read more about this
-topic at \url{http://wikipedia.org/wiki/Natural_experiment}.
-\index{natural experiment}
+불행하게도 대조군 시험은 실험실 과학, 의학, 그리고 몇몇 학문분야에서만 가능하다. 사회 과학에서, 대조군 실험이 드문데 이유는 불가능하거나 비윤리적이기 때문이다.
+\index{윤리 (ethics)}
 
-In some cases it is possible to infer causal relationships using {\bf
-  regression analysis}, which is the topic of Chapter~\ref{regression}.
-\index{regression analysis}
+또 다른 대안은 {\bf 자연 실험 (natural experiment)}을 살펴보는 것인데, 다른 처리(treatment)가 유사한 집단에 적용된다. 자연 실험의 한가지 위험성은 명확하지 않는 방식으로 집단이 다를지도 모른다는 것이다.
+이 주제에 대해서 웹사이트를 참조한다. \url{http://wikipedia.org/wiki/Natural_experiment}.
+\index{자연 실험 (natural experiment)}
+
+몇몇 경우에, {\bf 회귀 분석 (regression analysis)}을 사용해서 인과 관계를 추론할 수 있다. ~\ref{regression}장에서 다룰 것이다.
+\index{회귀 분석 (regression analysis)}
 
 
-\section{Exercises}
+\section{연습 문제}
 
 A solution to this exercise is in \verb"chap07soln.py".
 
@@ -600,59 +578,46 @@ between these variables?
 \end{exercise}
 
 
-\section{Glossary}
+\section{용어 사전}
 
 \begin{itemize}
 
-\item scatter plot: A visualization of the relationship between
-two variables, showing one point for each row of data.
-\index{scatter plot}
+\item 산점도 (scatter plot): 두 변수 사이 관계를 데이터 각 행마다 점을 찍어 보임으로써 시각화.
+\index{산점도 (scatter plot)}
 
-\item jitter: Random noise added to data for purposes of
-visualization.
-\index{jitter}
+\item 지터 (jitter): 시각화 목적으로 데이터에 추가되는 확률 잡음.
+\index{지터 (jitter)}
 
-\item saturation: Loss of information when multiple points are
-plotted on top of each other. 
-\index{saturation}
+\item 포화 (saturation): 다수의 점이 겹쳐지게 되어서 발생하는 정보 손실.
+\index{포화 (saturation)}
 
-\item correlation: A statistic that measures the strength of the
-relationship between two variables.
-\index{correlation}
+\item 상관 (correlation): 두 변수 사이 관계 강도를 측정하는 통계량.
+\index{상관 (correlation)}
 
-\item standardize: To transform a set of values so that their mean is 0 and
-their variance is 1.
-\index{standardize}
+\item 표준화(standardize): 변수 집합 값을 변환해서 평균 0, 분산 1로 만듦.
+\index{표준화 (standardize)}
 
-\item standard score: A value that has been standardized so that it is
-  expressed in standard deviations from the mean.
-  \index{standard score}
-\index{standard deviation}
+\item 표준 점수 (standard score): 표준화된 값으로, 평균에서 떨어진 표준편차로 표현.
+\index{표준 점수 (standard score)}
+\index{표준 편차 (standard deviation)}
 
-\item covariance: A measure of the tendency of two variables
-to vary together.
-\index{covariance}
+\item 공분산 (covariance): 함께 변화하는 두 변수 경향성 측도.
+\index{공분산 (covariance)}
 
-\item rank: The index where an element appears in a sorted list.
-\index{rank}
+\item 순위 (rank): 인덱스로, 정렬된 목록에 요소가 나타나는 순서.
+\index{순위 (rank)}
 
-\item randomized controlled trial: An experimental design in which subjects
-are divided into groups at random, and different groups are given different
-treatments.
-\index{randomized controlled trial}
+\item 무작위 대조군 시험: 실험계획 (experimental design)으로 대상이 무작위 집단으로 나눠지고, 다른 집단에 다른 처리(treatment)가 주어진다.
+\index{무작위 대조군 시험 (randomized controlled trial)}
 
-\item treatment group: A group in a controlled trial that receives
-some kind of intervention.
-\index{treatment group}
+\item 처리군 집단 (treatment group): 대조군 시험에서 일종의 개입(intervention)을 받는 집단.
+\index{처리 집단 (treatment group)}
 
-\item control group: A group in a controlled trial that receives no
-treatment, or a treatment whose effect is known.
-\index{control group}
+\item 대조군 집단 (control group): 대조군 시험에서 처리를 받지 않거나 이미 효과가 알려진 처리를 받는 집단.
+\index{대조군 집단 (control group)}
 
-\item natural experiment: An experimental design that takes advantage of
-a natural division of subjects into groups in ways that are at least
-approximately random.
-\index{natural experiment}
+\item 자연 실험 (natural experiment): 대상이 집단으로 자연 구분되는 현상을 이용하는 실험계획. 여기서 집단은 최소한 근사적으로 무작위가 된다.
+\index{자연 실험 (natural experiment)}
 
 \end{itemize}
 
