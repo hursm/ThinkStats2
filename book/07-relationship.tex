@@ -407,13 +407,12 @@ $\rho$ 크기는 상관 강도를 나타낸다. 만약 $\rho$가 1 혹은 -1 이
 
 \section{비선형 관계 (Nonlinear relationships)}
 
-If Pearson's correlation is near 0, it is tempting to conclude
-that there is no relationship between the variables, but that
-conclusion is not valid.  Pearson's correlation only measures {\em
-  linear} relationships.  If there's a nonlinear relationship, $\rho$
-understates its strength.  \index{linear relationship}
-\index{nonlinear}
-\index{Pearson coefficient of correlation}
+만약 피어슨 상관이 거의 0이라면, 변수 사이에 관계가 없다고 단정하고 싶을 것이다. 하지만, 그러한 결론은 타당하지 않다. 피어슨 상관은 단지 {\em
+  선형 (linear)} 관계만을 측정한다. 만약 비선형 관계가 있다면, $\rho$는 비선형 강도를 과소평가하게 된다.
+
+\index{선형 관계 (linear relationship)}
+\index{비선형 (nonlinear)}
+\index{피어슨 상관 계수 (Pearson coefficient of correlation)}
 
 \begin{figure}
 \centerline{\includegraphics[height=2.5in]{figs/Correlation_examples.png}}
@@ -421,51 +420,40 @@ understates its strength.  \index{linear relationship}
 \label{corr_examples}
 \end{figure}
 
-Figure~\ref{corr_examples} is from
-\url{http://wikipedia.org/wiki/Correlation_and_dependence}.  It shows
-scatter plots and correlation coefficients for several
-carefully constructed datasets.
-\index{scatter plot}
-\index{plot!scatter}
+그림~\ref{corr_examples}은 \url{http://wikipedia.org/wiki/Correlation_and_dependence} 위키피디아 사이트에서 가져왔다.
+그림에서 의도적으로 생성된 데이터셋에 대한 산점도와 상관 계수가 보여진다.
+\index{산점도 (scatter plot)}
+\index{그림 (plot)!산점 (scatter)}
 
-The top row shows linear relationships with a range of correlations;
-you can use this row to get a sense of what different values of
-$\rho$ look like.  The second row shows perfect correlations with a
-range of slopes, which demonstrates that correlation is unrelated to
-slope (we'll talk about estimating slope soon).  The third row shows
-variables that are clearly related, but because the relationship is
-nonlinear, the correlation coefficient is 0.
-\index{nonlinear}
+상단 줄에는 다양한 상관계수를 가진 선형 관계를 보여준다; 상단 행에서 다양한 $\rho$ 값이 어떤 느낌인지 감을 얻을 수 있다.
+두번째 행이 다양한 기울기를 가진 완전 상관의 예가 있다. 상관이 기울기와 관련이 없다는 것을 보여준다 (곧 기울기를 추정하는 것에 대해 언급할 것이다.) 세번째 행은 명확하게 관련이 있는 변수를 보여준다. 하지만, 관계가 비선형이라, 상관계수는 0이다.
 
-The moral of this story is that you should always look at a scatter
-plot of your data before blindly computing a correlation coefficient.
-\index{correlation}
+\index{비선형 (nonlinear)}
+
+상기 이야기의 교훈은 상관계수를 맹목적으로 계산하기 전에 데이터를 산점도를 그려서 항상 살펴봐야 한다는 것이다.
+
+\index{상관 (correlation)}
 
 
-\section{Spearman's rank correlation}
+\section{스피어만 순위 상관 (Spearman's rank correlation)}
 
-Pearson's correlation works well if the relationship between variables
-is linear and if the variables are roughly normal.  But it is not
-robust in the presence of outliers.
-\index{Pearson coefficient of correlation}
-\index{Spearman coefficient of correlation}
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
-\index{robust}
-Spearman's rank correlation is an alternative that mitigates the
-effect of outliers and skewed distributions.  To compute Spearman's
-correlation, we have to compute the {\bf rank} of each value, which is its
-index in the sorted sample.  For example, in the sample {\tt [1, 2, 5, 7]}
-the rank of the value 5 is 3, because it appears third in the sorted
-list.  Then we compute Pearson's correlation for the ranks.
-\index{skewness}
-\index{outlier}
-\index{rank}
+피어슨 상관은 변수 사이의 관계가 선형이고, 변수가 대략 정규분포를 따른 다면 잘 동작한다. 하지만, 이상값이 존재하는 경우에는 강건하지 못하다.
+스피어만 순위 상관이 대안으로 이상값과 기울어진 분포에 대한 효과를 완화한다. 
+\index{피어슨 상관계수 (Pearson coefficient of correlation)}
+\index{스피어만 상관계수 (Spearman coefficient of correlation)}
+\index{정규분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
+\index{강건성 (robust)}
+스피어만 상관을 계산하기 위해서 각 값의 {\bf 순위 (rank)}를 계산하는데 정렬된 표본에 인덱스에 해당한다.
+예를 들어, 표본 {\tt [1, 2, 5, 7]}에서 값 5에 대한 순위는 3이다. 왜냐하면 정렬된 리스트에서 3번째 등장하기 때문이다. 그리고 나서 피어슨 순위 상관을 계산한다.
 
-{\tt thinkstats2} provides a function that computes Spearman's rank
-correlation:
+\index{왜도 (skewness)}
+\index{이상값 (outlier)}
+\index{순위 (rank)}
+
+{\tt thinkstats2}는 스피어만 순위 상관을 계산하는 함수가 있다.
 
 \begin{verbatim}
 def SpearmanCorr(xs, ys):
@@ -474,15 +462,13 @@ def SpearmanCorr(xs, ys):
     return Corr(xranks, yranks)
 \end{verbatim}
 
-I convert the arguments to pandas Series objects so I can use
-{\tt rank}, which computes the rank for each value and returns
-a Series.  Then I use {\tt Corr} to compute the correlation
-of the ranks.
-\index{pandas}
-\index{Series}
+인자를 판다스 시리즈 객체로 전환해서, 각 값에 대한 순위를 계산하고 시리즈를 반환하는 {\tt 순위 (rank)} 메쏘드를 사용할 수 있다. 
+그리고 나서 {\tt Corr}을 사용해서 순위 상관을 계산한다.
 
-I could also use {\tt Series.corr} directly and specify
-Spearman's method:
+\index{판다스 (pandas)}
+\index{시리즈 (Series)}
+
+직접적으로 {\tt Series.corr}을 사용해서 스피어만 메쏘드를 명세할 수도 있다.
 
 \begin{verbatim}
 def SpearmanCorr(xs, ys):
@@ -491,52 +477,43 @@ def SpearmanCorr(xs, ys):
     return xs.corr(ys, method='spearman')
 \end{verbatim}
 
-The Spearman rank correlation for the BRFSS data is 0.54, a little
-higher than the Pearson correlation, 0.51.  There are several possible
-reasons for the difference, including:
-\index{rank correlation}
+BRFSS 데이터에 대한 스피어만 순위 상관계수는 0.54로 피어슨 상관계수 0.51보다 약간 더 높다. 차이에 대한 가능한 이유가 몇가지 있다:
+
+\index{순위상관 (rank correlation)}
 \index{BRFSS}
 
 \begin{itemize}
 
-\item If the relationship is
-nonlinear, Pearson's correlation tends to underestimate the strength
-of the relationship, and 
-\index{nonlinear}
+\item 만약 관계가 비선형이면, 피어슨 상관은 관계의 강도를 과소추정하는 경향이 있다.
+\index{비선형 (nonlinear)}
 
-\item Pearson's correlation can be affected (in either direction)
-if one of the distributions is skewed or contains outliers.  Spearman's
-rank correlation is more robust.
-\index{skewness}
-\index{outlier}
-\index{robust}
+\item 만약 두 변수 분포중 하나가 기울거나(skewed) 이상점을 포함하게 되면, 피어슨 상관이 (어느 방향이든지) 영향을 받을 수 있다. 스피어만 상관계수가 좀더 강건하다.  
+
+\index{기움 (skewness)}
+\index{이상점 (outlier)}
+\index{강건성 (robust)}
 
 \end{itemize}
 
-In the BRFSS example, we know that the distribution of weights is
-roughly lognormal; under a log transform it approximates a normal
-distribution, so it has no skew.
-So another way to eliminate the effect of skewness is to
-compute Pearson's
-correlation with log-weight and height:
-\index{lognormal distribution}
-\index{distribution!lognormal}
+BRFSS 예제에서, 체중 분포가 대략 로그 정규분포라는 것을 알고 있다; 로그 변환을 통해서 정규 분포로 근사해서, 기울어짐이 없다.
+기울어짐 효과를 제거하는 또다른 방법은 로그 취한 체중과 신장 사이 피어슨 상관을 계산하는 것이다.
+
+\index{로그 정규분포 (lognormal distribution)}
+\index{분포 (distribution)!로그 정규 (lognormal)}
 
 \begin{verbatim}
     thinkstats2.Corr(df.htm3, np.log(df.wtkg2)))
 \end{verbatim}
 
-The result is 0.53, close to the rank correlation, 0.54.  So that
-suggests that skewness in the distribution of weight explains most of
-the difference between Pearson's and Spearman's correlation.
-\index{skewness}
-\index{Spearman coefficient of correlation}
-\index{Pearson coefficient of correlation}
+결과는 0.53으로 순위 상관계수 0.54에 가깝다. 그래서 이것이 의미하는 바는 체중 분포의 기울어짐이 피어슨과 스미어만 상관 사이 대부분 차이를 설명한다.
+\index{기울어짐 (skewness)}
+\index{스피어만 상관계수 (Spearman coefficient of correlation)}
+\index{피어슨 상관계수 (Pearson coefficient of correlation)}
 
 
-\section{Correlation and causation}
-\index{correlation}
-\index{causation}
+\section{상관과 인과 (Correlation and causation)}
+\index{상관 (correlation)}
+\index{인과 (causation)}
 
 If variables A and B are correlated, there are three possible
 explanations: A causes B, or B causes A, or some other set of factors
