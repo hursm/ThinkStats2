@@ -1,81 +1,76 @@
 
 
-\chapter{Estimation}
+\chapter{추정 (Estimation)}
 \label{estimation}
-\index{estimation}
+\index{추정 (estimation)}
 
-The code for this chapter is in {\tt estimation.py}.  For information
-about downloading and working with this code, see Section~\ref{code}.
+이번 장에서 사용되는 코드는 {\tt estimation.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
 
-\section{The estimation game}
+\section{추정 게임}
 
-Let's play a game.  I think of a distribution, and you have to guess
-what it is.  I'll give you two hints: it's a
-normal distribution, and here's a random sample drawn from it:
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+게임 한판합시다. 저자는 생각하는 분포가 있고, 여러분은 그 분포가 무엇인지 맞춰야 한다.
+힌트를 두개 준다: 정규분포이고, 정규분포에서 나온 표본이 다음과 같다.
+
+\index{정규분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
 
 {\tt [-0.441, 1.774, -0.101, -1.138, 2.975, -2.138]}
 
-What do you think is the mean parameter, $\mu$, of this distribution?
-\index{mean}
-\index{parameter}
+상기 분포의 평균 모수, $\mu$가 무얼까요?
+\index{평균 (mean)}
+\index{모수 (parameter)}
 
-One choice is to use the sample mean, $\xbar$, as an estimate of $\mu$.
-In this example, $\xbar$ is 0.155, so it would
-be reasonable to guess $\mu$ = 0.155.
-This process is called {\bf estimation}, and the statistic we used
-(the sample mean) is called an {\bf estimator}.
-\index{estimator}
+한가지 선택은 $\mu$ 추정값(estimate)으로 표본 평균 $\xbar$을 사용한다.
+상기 예제애서 $\xbar$가 0.155 으로, $\mu$ = 0.155 추정하는 것은 합리적이다.
+이러한 과정을 {\bf 추정 (estimation)}이라고 부른다. 사용한 통계량 (표본 평균)은 
+{\bf 추정량(estimator)}이라고 부른다.
+\index{추정량 (estimator)}
 
-Using the sample mean to estimate $\mu$ is so obvious that it is hard
-to imagine a reasonable alternative.  But suppose we change the game by
-introducing outliers.
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+$\mu$를 추정하는데 표본 평균을 사용하는 것이 너무 명확해서 합리적인 다른 대안을 상상하기는 어렵다.
+하지만, 이상값을 도입해서 게임을 바꾸는 것을 가정하자.
+\index{정규분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
 
-{\em I'm thinking of a distribution.}  It's a normal distribution, and
-here's a sample that was collected by an unreliable surveyor who
-occasionally puts the decimal point in the wrong place.
-\index{measurement error}
+{\em 저자가 생각하는 분포가 있다.} 정규분포이고, 잘못된 자리에 종종 소수점을 넣는
+신뢰가 가지 않는 조사원이 수집한 표본이 다음에 있다.
+\index{측정 오류 (measurement error)}
 
 {\tt [-0.441, 1.774, -0.101, -1.138, 2.975, -213.8]}
 
-Now what's your estimate of $\mu$?  If you use the sample mean, your
-guess is -35.12.  Is that the best choice?  What are the alternatives?
-\index{outlier}
+이제 $\mu$ 추정값은 무엇이 될까요? 만약 표본 평균을 사용한다면, 추정치는 -35.12가 된다.
+이것이 최선의 선택일까요? 대안이 무엇이 될까요?
+\index{이상값 (outlier)}
 
-One option is to identify and discard outliers, then compute the sample
-mean of the rest.  Another option is to use the median as an estimator.
-\index{median}
+한가지 선택지는 이상점을 식별하고 버리고 나서, 나머지를 가지고 표본 평균을 계산한다.
+다른 선택지는 중위수를 추정량으로 사용한다.
+\index{중위수 (median)}
 
-Which estimator is best depends on the circumstances (for example,
-whether there are outliers) and on what the goal is.  Are you
-trying to minimize errors, or maximize your chance of getting the
-right answer?
-\index{error}
+어느 추정량이 가장 좋은가는 상황에 따라 달라지고(예를 들어, 이상값이 있느냐),
+목적이 무엇이냐에 달려있다. 오류를 최소화하려고 하는지 혹은 정답을 얻는 가능성을 극대화하려고 하는지.
+
+\index{오류 (error)}
 \index{MSE}
-\index{mean squared error}
+\index{누적평균제곱오차 (mean squared error)}
 
-If there are no outliers, the sample mean minimizes the {\bf mean squared
-error} (MSE).  That is, if we play the game many times, and each time
-compute the error $\xbar - \mu$, the sample mean minimizes
+만약 이상값이 없다면, 표본 평균은 {\bf 누적평균제곱오차 (mean squared
+error), MSE}를 최소화한다. 즉, 만약 게임을 여러번하고, 매번 오차 
+$\xbar - \mu$를 계산하면, 표본 평균은 다음을 최소화 한다.
+
 %
 \[ MSE = \frac{1}{m} \sum (\xbar - \mu)^2 \]
 %
-Where $m$ is the number of times you play the estimation game, not
-to be confused with $n$, which is the size of the sample used to
-compute $\xbar$.
+$m$은 추정 게임을 수행한 횟수다. $\xbar$를 계산하는데 사용된 표본 크기인 $n$와 혼동하면 안된다.
 
-Here is a function that simulates the estimation game and computes
-the root mean squared error (RMSE), which is the square root of
-MSE:
-\index{mean squared error}
+다음에 함수가 있는데 추정 게임을 모사하여 MSE 제곱근인, 
+누적평균제곱오차의 제곱근(root mean squared error, RMSE)을 계산한다.
+
+\index{누적평균제곱오차 (mean squared error)}
 \index{MSE}
 \index{RMSE}
 
@@ -97,12 +92,12 @@ def Estimate1(n=7, m=1000):
     print('rmse median', RMSE(medians, mu))
 \end{verbatim}
 
-Again, {\tt n} is the size of the sample, and {\tt m} is the
-number of times we play the game.  {\tt means} is the list of
-estimates based on $\xbar$.  {\tt medians} is the list of medians.
-\index{median}
+다시 한번, {\tt n}은 표본 크기다. {\tt m}은 게임을 실행한 횟수다.
+{\tt means}은 $\xbar$에 기반한 추정값 리스트다. 
+{\tt medians}은 중위수 리스트다.
+\index{중위수 (median)}
 
-Here's the function that computes RMSE:
+다음에 RMSE를 계산하는 함수가 있다.
 
 \begin{verbatim}
 def RMSE(estimates, actual):
@@ -111,40 +106,32 @@ def RMSE(estimates, actual):
     return math.sqrt(mse)
 \end{verbatim}
 
-{\tt estimates} is a list of estimates; {\tt actual} is the
-actual value being estimated.  In practice, of course, we don't
-know {\tt actual}; if we did, we wouldn't have to estimate it.
-The purpose of this experiment is to compare the performance of
-the two estimators.
-\index{estimator}
+{\tt estimates}는 추정값 리스트다; {\tt actual}은 추정되는 실제 값이다.
+실무에서는 물론 {\tt actual}을 모른다; 만약 알고 있다면, 추정할 필요가 없을 것이다. 실험 목적은 두 추정량 성능을 비교하는 것이다.
+\index{추정량 (estimator)}
 
-When I ran this code, the RMSE of the sample mean was 0.41, which
-means that if we use $\xbar$ to estimate the mean of this
-distribution, based on a sample with $n=7$, we should expect to be off
-by 0.41 on average.  Using the median to estimate the mean yields
-RMSE 0.53, which confirms that $\xbar$ yields lower RMSE, at least
-for this example.
+코드를 실행하면, 표본 평균 RMSE가 0.41로 의미하는 바는 만약
+$n=7$ 표본에 기반하여 $\xbar$를 사용해서 분포 평균을 추정한다면,
+평균 0.41만큼 떨어졌다고 예측된다. 중위수를 사용하여 평균을 추정하면 RMSE 0.53을 산출하는데 적어도 이 사례에서 $\xbar$가 더 낮은 RMSE를 뽑아낸다고 확인해준다.
 
-Minimizing MSE is a nice property, but it's not always the best
-strategy.  For example, suppose we are estimating the distribution of
-wind speeds at a building site.  If the estimate is too high, we might
-overbuild the structure, increasing its cost.  But if it's too
-low, the building might collapse.  Because cost as a function of
-error is not symmetric, minimizing MSE is not the best strategy.
-\index{prediction}
-\index{cost function}
+MSE 최소화는 좋은 특성이다. 하지만, 항상 최선의 전략은 되지 못한다.
+예를 들어, 조선소에서 바람 속도 분포를 추정한다고 가정하다.
+만약 추정값이 너무 높으면, 시설물을 과도하게 짓게되어서 비용이 상승한다.
+하지만, 너무 낮게 추정한다면, 구조물이 붕괴할 수도 있다. 오류 함수로 비용이 좌우 대칭이 아니기 때문에, MSE 최소화가 항상 좋은 전략은 아니다.
+\index{예측, (prediction)}
+\index{비용 함수 (cost function)}
 \index{MSE}
 
-As another example, suppose I roll three six-sided dice and ask you to
-predict the total.  If you get it exactly right, you get a prize;
-otherwise you get nothing.  In this case the value that minimizes MSE
-is 10.5, but that would be a bad guess, because the total of three
-dice is never 10.5.  For this game, you want an estimator that has the
-highest chance of being right, which is a {\bf maximum likelihood
-  estimator} (MLE).  If you pick 10 or 11, your chance of winning is 1
-in 8, and that's the best you can do.  \index{MLE}
-\index{maximum likelihood estimator}
-\index{dice}
+다른 예제로, 6면 주사위 세개를 던져서 합계를 예측하는 것을 가정하자.
+정확하게 합계를 맞춘다면, 상을 받게 된다; 맞추지 못하면 아무 것도 없다.
+이경우, MSE를 최소화하는 값은 10.5가 된다. 하지만, 좋지 못한 추정값이 된다.
+왜냐하면 주사위 세개를 던져 합은 결코 10.5가 되지 못한다. 이 게임에서,
+맞출 가장 높은 확률을 가진 추정량이 필요하다. 그것은 {\bf 최대우도추정량 (maximum likelihood estimator, MLE}이다. 만약 10 혹은 11일 선택하면,
+우승 가능성이 8분의 1이 되고 할 수 있는 최선이 된다.
+
+\index{MLE}
+\index{최대우도추정량 (maximum likelihood estimator)}
+\index{주사위 (dice)}
 
 
 \section{Guess the variance}
