@@ -1,90 +1,78 @@
 
 
-\chapter{Hypothesis testing}
+\chapter{가설 검정 (Hypothesis testing)}
 \label{testing}
 
-The code for this chapter is in {\tt hypothesis.py}.  For information
-about downloading and working with this code, see Section~\ref{code}.
+이번 장에서 사용되는 코드는 {\tt hypothesis.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
-\section{Classical hypothesis testing}
-\index{hypothesis testing}
-\index{apparent effect}
 
-Exploring the data from the NSFG, we saw several ``apparent effects,''
-including differences between first babies and others.
-So far we have taken these effects at face value; in this chapter,
-we put them to the test.
-\index{National Survey of Family Growth}
+\section{전통적 가설 검정 (Classical hypothesis testing)}
+\index{가설 검정 (hypothesis testing)}
+\index{명백한 효과 (apparent effect)}
+
+NSFG에서 데이터를 탐색하면서, 첫째 아이와 첫째가 아닌 아이들 간 차이를 
+포함해서 몇가지 ``명백한 효과 (apparent effects)''를 봤다.
+지금까지 액면 그대로 이러한 효과를 받아들였다; 이번 장에서 이를 검정한다. 
+
+\index{국가 가정 성장 조사 (National Survey of Family Growth)}
 \index{NSFG}
 
-The fundamental question we want to address is whether the effects
-we see in a sample are likely to appear in the larger population.
-For example, in the NSFG sample we see a difference in mean pregnancy
-length for first babies and others.  We would like to know if
-that effect reflects a real difference for women
-in the U.S., or if it might appear in the sample by chance.
-\index{pregnancy length} \index{length!pregnancy}
+다루고자 하는 근본적인 질문은 표본에서 본 효과가 더 큰 모집단에서 나타날 것인가다.
+예를 들어, NSFG 표본에서 첫째 아이와 첫째 아이가 아닌 아이들에 대한 평균 임신 기간에
+차이를 봤다. 알고자 하는 것은 이 효과가 미국 여성에 대한 진정한 차이를 반영하는지 
+혹은, 우연히 표본에서 생겨난 것이냐다.
+\index{임신 기간 (pregnancy length)} 
+\index{기간 (length)!임신 (pregnancy)}
 
-There are several ways we could formulate this question, including
-Fisher null hypothesis testing, Neyman-Pearson decision theory, and
-Bayesian inference\footnote{For more about Bayesian inference, see the
-  sequel to this book, {\it Think Bayes}.}.  What I present here is a
-subset of all three that makes up most of what people use in practice,
-which I will call {\bf classical hypothesis testing}.
-\index{Bayesian inference}
-\index{null hypothesis}
+피셔 귀무 가설 검정(Fisher null hypothesis testing), 네이만 피어슨 의사결정 이론(Neyman-Pearson decision theory), 베이즈 추론(Bayesian inference)\footnote{베이즈 추론에 대한 좀더 많은 정보는 후속해서 출간되는 {\it Think Bayes}를 참조한다.}을 포함해서 질문을 구성하는 방법이 몇가지 있다.
+여기 제시하는 것은 대부분의 사람이 실무에서 사용하는 세가지 방법의 일부분으로 {\bf 전통적 가설 검정 (classical hypothesis testing)}이라고 저자가 작명한 것이다.
+\index{베이즈 추론 (Bayesian inference)}
+\index{귀무 가설 (null hypothesis)}
 
-The goal of classical hypothesis testing is to answer the question,
-``Given a sample and an apparent effect, what is the probability of
-seeing such an effect by chance?''  Here's how we answer that question:
+전통적 가설 검정의 목적은 다음 질문에 답하는 것이다.
+``표본과 명백한 효과가 주어졌다면, 우연히 그런 효과를 목도하는 확률이 얼마인가?''
+다음에 질문에 답을 하는 방법이 있다.
 
 \begin{itemize}
 
-\item The first step is to quantify the size of the apparent effect by
-  choosing a {\bf test statistic}.  In the NSFG example, the apparent
-  effect is a difference in pregnancy length between first babies and
-  others, so a natural choice for the test statistic is the difference
-  in means between the two groups.
-  \index{test statistic}
+\item 첫번째 단계는 {\bf 검정 통계량 (test statistic)}을 선택해서 
+명백한 효과 크기를 정량화한다. NSFG 예제에서, 명백한 효과는 첫번째 아이와 첫째가 아닌 아이들 사이에 임신 기간에 차이가 된다. 그래서, 검정 통계량에 대한 자연스러운 선택이
+두 집단 사이에 평균 차이가 된다.
+  \index{검정 통계량 (test statistic)}
 
-\item The second step is to define a {\bf null hypothesis}, which is a
-  model of the system based on the assumption that the apparent effect
-  is not real.  In the NSFG example the null hypothesis is that there
-  is no difference between first babies and others; that is, that
-  pregnancy lengths for both groups have the same distribution.
-  \index{null hypothesis}
-\index{pregnancy length}
-\index{model}
+\item 두번째 단계는 {\bf 귀무 가설 (null hypothesis)}을 정의하는 것으로,
+명백한 효과가 사실이 아니라는 가정에 기반한 시스템 모형이다.
+NSFG 예제에서, 귀무 가설은 첫째 아이와 첫째가 아닌 아이들 사이에 차이가 없다가 된다;
+즉, 두 집단 임신 기간은 동일한 분포다. 
+\index{귀무 가설 (null hypothesis)}
+\index{임신 기간 (pregnancy length)}
+\index{모형 (model)}
 
-\item The third step is to compute a {\bf p-value}, which is the
-  probability of seeing the apparent effect if the null hypothesis is
-  true.  In the NSFG example, we would compute the actual difference
-  in means, then compute the probability of seeing a
-  difference as big, or bigger, under the null hypothesis.
-  \index{p-value}
+\item 세번째 단계는 {\bf p-값(p-value)}을 계산하는 것으로, 만약 귀무 가설이 사실이라면 명백한 효과를 볼 확률값이 된다. NSFG 예제에서, 평균에 실제 차이를 계산하고 나서, 귀무 가설 아래에서 차이를 크게 혹은 더 크게 볼 확률을 계산한다.
+\index{p-값 (p-value)}
 
-\item The last step is to interpret the result.  If the p-value is
-  low, the effect is said to be {\bf statistically significant}, which
-  means that it is unlikely to have occurred by chance.  In that case
-  we infer that the effect is more likely to appear in the larger
-  population.  \index{statistically significant} \index{significant}
+\item 마지막 단계는 결과를 해석하는 것이다. 만약 p-값이 낮다면, 효과에 
+{\bf 통계적 유의성 (statistically significant)}이 있다고 한다.
+우연히 발생할 것 같지 않다는 의미가 된다. 이 경우 더 큰 모집단에서 효과가 나타날 것 같다고 추론한다.\index{통계적 유의성 (statistically significant)} 
+\index{유의성 (significant)}
 
 \end{itemize}
 
-The logic of this process is similar to a proof by
-contradiction.  To prove a mathematical statement, A, you assume
-temporarily that A is false.  If that assumption leads to a
-contradiction, you conclude that A must actually be true.
-\index{contradiction, proof by}
-\index{proof by contradiction}
+이 과정의 로직(logic)은 모순(contradiction)에 의한 증명과 유사하다. 
+수학 명제(mathematical statement) A를 증명하기 위해, 일시적으로 A 가 거짓이라고 가정한다.
+만약 가정이 모순을 이끌게 되면, A 는 사실 참이어야 한다고 결론낸다.
 
-Similarly, to test a hypothesis like, ``This effect is real,'' we
-assume, temporarily, that it is not.  That's the null hypothesis.
-Based on that assumption, we compute the probability of the apparent
-effect.  That's the p-value.  If the p-value is low, we
-conclude that the null hypothesis is unlikely to be true.
-\index{p-value}
-\index{null hypothesis}
+\index{모순, 증명 (contradiction, proof by)}
+\index{모순에 의한 증명 (proof by contradiction)}
+
+유사하게, ``효과가 사실 (This effect is real)'' 같은 가설을 검정하기 위해서,
+일시적으로 효과가 없다고 가정한다. 이것이 귀무가설이다.
+이 가정에 기반해서, 명백한 효과 확률을 계산한다. 이것이 p-값이다.
+만약 p-값이 작다면, 귀무 가설이 사실이 아닐 것 같다고 결론낸다.
+
+\index{p-값 (p-value)}
+\index{귀무 가설 (null hypothesis)}
 
 
 \section{HypothesisTest}
