@@ -134,51 +134,45 @@ MSE 최소화는 좋은 특성이다. 하지만, 항상 최선의 전략은 되�
 \index{주사위 (dice)}
 
 
-\section{Guess the variance}
-\index{variance}
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+\section{분산 추정}
+\index{분산 (variance)}
+\index{정규분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
 
-{\em I'm thinking of a distribution.}  It's a normal distribution, and 
-here's a (familiar) sample:
+{\em 저자가 마음에 두고 있는 분포가 있다.} 정규분포고, 다음에 (친숙한) 표본이 있다.
 
 {\tt [-0.441, 1.774, -0.101, -1.138, 2.975, -2.138]}
 
-What do you think is the variance, $\sigma^2$, of my distribution?
-Again, the obvious choice is to use the sample variance, $S^2$, as an
-estimator.
+상기 분포의 분산 $\sigma^2$가 무엇일까요? 다시 한번, 명백한 선택은
+표본 분산, $S^2$를 추정량으로 사용하는 것이다.
 %
 \[ S^2 = \frac{1}{n} \sum (x_i - \xbar)^2 \] 
 %
-For large samples, $S^2$ is an adequate estimator, but for small
-samples it tends to be too low.  Because of this unfortunate
-property, it is called a {\bf biased} estimator.
-An estimator is {\bf unbiased} if the expected total (or mean) error,
-after many iterations of the estimation game, is 0.
-\index{sample variance}
-\index{biased estimator}
-\index{estimator!biased}
-\index{unbiased estimator}
-\index{estimator!unbiased}
 
-Fortunately, there is another simple statistic that is an unbiased
-estimator of $\sigma^2$:
+표본크기가 큰 경우, $S^2$가 적절한 추정량이 되지만, 작은 표본에 대해서 너무 작아지는 경향이 있다. 이와 같은 불행한 성질로 인해서, {\bf 편의 (biased)} 추정량이라고 부른다. 
+만약 추정을 많이 반복한 뒤에 기대 총 (혹은 평균) 오류가 0이라면, 추정량은 
+{\bf 불편의(unbiased)}다. 
+
+\index{표본 분산 (sample variance)}
+\index{편의 추정량 (biased estimator)}
+\index{추정량 (estimator)!편의 (biased)}
+\index{불편 추정량 (unbiased estimator)}
+\index{추정량 (estimator)!불편 (unbiased)}
+
+다행스럽게도, $\sigma^2$에 대한 불편 추정량인 또 다른 간단한 통계량이 있다.
+
 %
 \[ S_{n-1}^2 = \frac{1}{n-1} \sum (x_i - \xbar)^2 \] 
 %
-For an explanation of why $S^2$ is biased, and a proof that
-$S_{n-1}^2$ is unbiased, see
-\url{http://wikipedia.org/wiki/Bias_of_an_estimator}.
 
-The biggest problem with this estimator is that its name and symbol
-are used inconsistently.  The name ``sample variance'' can refer to
-either $S^2$ or $S_{n-1}^2$, and the symbol $S^2$ is used
-for either or both.
+$S^2$가 왜 편의가 있고, $S_{n-1}^2$가 왜 불편 추정량인지에 대한 설명은 웹사이트 \url{http://wikipedia.org/wiki/Bias_of_an_estimator} 참조바랍니다.
 
-Here is a function that simulates the estimation game and tests
-the performance of $S^2$ and $S_{n-1}^2$:
+이 추정량에 대한 가장 큰 문제점은 명칭과 기호가 일관되지 못하게 사용된다는데 있다. ``표본 분산''이 $S^2$ 혹은 $S_{n-1}^2$, 
+그리고 기호 $S^2$이 한쪽 혹은 양쪽에 사용될 수 있다.
+
+추정 게임을 모의시험하고 $S^2$ 와 $S_{n-1}^2$의 성능을 시험하는 함수가 다음에 있다.
 
 \begin{verbatim}
 def Estimate2(n=7, m=1000):
@@ -198,16 +192,11 @@ def Estimate2(n=7, m=1000):
     print('mean error unbiased', MeanError(estimates2, sigma**2))
 \end{verbatim}
 
-Again, {\tt n} is the sample size and {\tt m} is the number of times
-we play the game.  {\tt np.var} computes $S^2$ by default and
-$S_{n-1}^2$ if you provide the argument {\tt ddof=1}, which stands for
-``delta degrees of freedom.''  I won't explain that term, but you can read
-about it at
-\url{http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)}.
-\index{degrees of freedom}
+한번 더, {\tt n}가 표본 크기이고, {\tt m}은 게임을 수행한 횟수다.
+{\tt np.var}는 기본 설정으로 $S^2$을 계산하고, 만약 인자로 {\tt ddof=1}을 넣으면 $S_{n-1}^2$을 계산한다. {\tt ddof}는 ``델타 자유도 (delta degrees of freedom)''의 축약어다. 웹사이트에서 자세한 사항 참조한다. \url{http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)}
+\index{자유도 (degrees of freedom)}
 
-{\tt MeanError} computes the mean difference between the estimates
-and the actual value:
+{\tt MeanError}는 추정값과 실제값 사이 평균 차이를 계산한다.
 
 \begin{verbatim}
 def MeanError(estimates, actual):
@@ -215,31 +204,26 @@ def MeanError(estimates, actual):
     return np.mean(errors)
 \end{verbatim}
 
-When I ran this code, the mean error for $S^2$ was -0.13.  As
-expected, this biased estimator tends to be too low.  For $S_{n-1}^2$,
-the mean error was 0.014, about 10 times smaller.  As {\tt m}
-increases, we expect the mean error for $S_{n-1}^2$ to approach 0.
-\index{mean error}
+코드를 실행하면, $S^2$에 대한 평균 오차는 -0.13이다.
+기대한 것처럼, 편의 추정량이 너무 적은 경향이 있다. 
+$S_{n-1}^2$에 대해서, 평균 오차는 0.014로 10배 더 적다.
+{\tt m}이 커감에 따라, 평균 오차 $S_{n-1}^2$가 0에 수렴해간다.
 
-Properties like MSE and bias are long-term expectations based on
-many iterations of the estimation game.  By running simulations like
-the ones in this chapter, we can compare estimators and check whether
-they have desired properties.
-\index{biased estimator}
-\index{estimator!biased}
+\index{평균 오차 (mean error)}
 
-But when you apply an estimator to real
-data, you just get one estimate.  It would not be meaningful to say
-that the estimate is unbiased; being unbiased is a property of the
-estimator, not the estimate.
+MSE나 편의(bias) 같은 성질은 많은 추정 게임에 기반한 장기 기대가 된다.
+이장에서와 같은 모의시험을 수행해서, 추정량을 비교하고, 바람직한 성질을 갖는지 점검할 수 있다.
 
-After you choose an estimator with appropriate properties, and use it to
-generate an estimate, the next step is to characterize the
-uncertainty of the estimate, which is the topic of the next
-section.
+\index{편의 추정량 (biased estimator)}
+\index{추정량 (estimator)!편의 (biased)}
+
+하지만, 추정량을 실제 데이터에 적용했을 때,
+단지 하나 추정값만 얻는다. 추정값이 편의가 없다고 말하는 것이 의미가 없을 수 있다; 불편(unbiased)하다는 것은 추정량(estimator)의 성질이지 추정값(estimate)의 성질은 아니다.
+
+적절한 성질을 갖는 추정량을 선택하고 추정값을 생성하고 나면, 다음 단계는 추정값의 불확실을 특성화해야 한다. 다음 절의 주제다.
 
 
-\section{Sampling distributions}
+\section{표본 분포 (Sampling distributions)}
 \label{gorilla}
 
 Suppose you are a scientist studying gorillas in a wildlife
