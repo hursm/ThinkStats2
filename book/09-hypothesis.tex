@@ -9,10 +9,10 @@
 
 \section{전통적 가설 검정 (Classical hypothesis testing)}
 \index{가설 검정 (hypothesis testing)}
-\index{명백한 효과 (apparent effect)}
+\index{외관 효과 (apparent effect)}
 
 NSFG에서 데이터를 탐색하면서, 첫째 아이와 첫째가 아닌 아이들 간 차이를 
-포함해서 몇가지 ``명백한 효과 (apparent effects)''를 봤다.
+포함해서 몇가지 ``외관 효과 (apparent effects)''를 봤다.
 지금까지 액면 그대로 이러한 효과를 받아들였다; 이번 장에서 이를 검정한다. 
 
 \index{국가 가정 성장 조사 (National Survey of Family Growth)}
@@ -37,7 +37,7 @@ NSFG에서 데이터를 탐색하면서, 첫째 아이와 첫째가 아닌 아�
 \begin{itemize}
 
 \item 첫번째 단계는 {\bf 검정 통계량 (test statistic)}을 선택해서 
-명백한 효과 크기를 정량화한다. NSFG 예제에서, 명백한 효과는 첫번째 아이와 첫째가 아닌 아이들 사이에 임신 기간에 차이가 된다. 그래서, 검정 통계량에 대한 자연스러운 선택이
+외관 효과 크기를 정량화한다. NSFG 예제에서, 명백한 효과는 첫번째 아이와 첫째가 아닌 아이들 사이에 임신 기간에 차이가 된다. 그래서, 검정 통계량에 대한 자연스러운 선택이
 두 집단 사이에 평균 차이가 된다.
   \index{검정 통계량 (test statistic)}
 
@@ -68,7 +68,7 @@ NSFG 예제에서, 귀무 가설은 첫째 아이와 첫째가 아닌 아이들 
 
 유사하게, ``효과가 사실 (This effect is real)'' 같은 가설을 검정하기 위해서,
 일시적으로 효과가 없다고 가정한다. 이것이 귀무가설이다.
-이 가정에 기반해서, 명백한 효과 확률을 계산한다. 이것이 p-값이다.
+이 가정에 기반해서, 외관 효과 확률을 계산한다. 이것이 p-값이다.
 만약 p-값이 작다면, 귀무 가설이 사실이 아닐 것 같다고 결론낸다.
 
 \index{p-값 (p-value)}
@@ -121,7 +121,7 @@ class HypothesisTest(object):
 \index{검정 통계량 (test statistic)}
 \index{귀무 가설 (null hypothesis)}
 
-{\tt PValue}는 귀무 가설 아래에서 명백한 효과 확률을 계산한다.
+{\tt PValue}는 귀무 가설 아래에서 외관 효과 확률을 계산한다.
 매개 변수로 {\tt iters}을 받는데 실행할 모의 시험 횟수다.
 첫번째 행은 모의 시험 데이터를 생성하고, 검정 통계량을 계산하고, 
 \verb"test_stats"에 저장한다.
@@ -193,24 +193,21 @@ p-값이 1\%과 10\% 사이라면, 경계값으로 생각해야한다. 그래서
 \label{testdiff}
 \index{평균 (mean)!차이 (difference in)}
 
-One of the most common effects to test is a difference in mean
-between two groups.  In the NSFG data, we saw that the mean pregnancy
-length for first babies is slightly longer, and the mean birth weight
-is slightly smaller.  Now we will see if those effects are
-statistically significant.
-\index{National Survey of Family Growth}
-\index{NSFG}
-\index{pregnancy length}
-\index{length!pregnancy}
+검정할 가장 일반적인 효과중의 하나가 두 그룹 사이 평균 차이다.
+NSFG 데이터에서 첫번째 아이에 대한 평균 임신기간이 약간 더 길었고,
+평균 출산 체중은 약간 더 적었다. 이제 이러한 효과가 통계적으로 유의적인지 살펴보자.
 
-For these examples, the null hypothesis is that the distributions
-for the two groups are the same.  One way to model the null
-hypothesis is by {\bf permutation}; that is, we can take values
-for first babies and others and shuffle them, treating
-the two groups as one big group:
-\index{null hypothesis}
-\index{permutation}
-\index{model}
+\index{국가 가족 성장 조사 (National Survey of Family Growth)}
+\index{NSFG}
+\index{임신 기간 (pregnancy length)}
+\index{기간 (length)!임신 (pregnancy)}
+
+이 예제에서, 귀무가설은 두 집단에 대한 분포가 동일하다는 것이다.
+귀무 가설을 모형화하는 한 방법은 {\bf 순열(permutation)}에 의한 것이다; 즉, 첫번째 아이와 첫째가 아닌 아이들에 대한 값을 뽑아서 뒤섞어서, 두 집단을 하나의 큰 집단으로 처리한다.
+
+\index{귀무 가설 (null hypothesis)}
+\index{순열 (permutation)}
+\index{모형 (model)}
 
 \begin{verbatim}
 class DiffMeansPermute(thinkstats2.HypothesisTest):
@@ -231,23 +228,20 @@ class DiffMeansPermute(thinkstats2.HypothesisTest):
         return data
 \end{verbatim}
 
-{\tt data} is a pair of sequences, one for each
-group.  The test statistic is the absolute difference in the means.
+{\tt data}는 한쌍 시퀀스로 각 시퀀스는 각 집단이 된다.
+검정 통계량은 평균에 있어 절대값 차이다.
 \index{HypothesisTest}
 
-{\tt MakeModel} records the sizes of the groups, {\tt n} and
-{\tt m}, and combines the groups into one NumPy
-array, {\tt self.pool}.
+{\tt MakeModel}은 집단 크기 {\tt n}과 {\tt m}을 기록하고
+집단을 넘파이(NumPy) 배열 {\tt self.pool}에 결합한다.
 \index{NumPy}
 
-{\tt RunModel} simulates the null hypothesis by shuffling the
-pooled values and splitting them into two groups with sizes {\tt n}
-and {\tt m}.  As always, the return value from {\tt RunModel} has
-the same format as the observed data.
-\index{null hypothesis}
-\index{model}
+{\tt RunModel}은 합동값(pooled value)을 뒤섞고 두 집단 {\tt n}과 {\tt m}으로 쪼개서 귀무가설을 모의 시험한다.
+항상 그렇지만, {\tt RunModel}에서 반환되는 값은 관측 데이터와 동일한 형식이다.
+\index{귀무 가설 (null hypothesis)}
+\index{모형 (model)}
 
-To test the difference in pregnancy length, we run:
+임신 기간에 차이를 검정하기 위해서, 다음을 실행한다. 
 
 \begin{verbatim}
     live, firsts, others = first.MakeFrames()
@@ -256,33 +250,29 @@ To test the difference in pregnancy length, we run:
     pvalue = ht.PValue()
 \end{verbatim}
 
-{\tt MakeFrames} reads the NSFG data and returns DataFrames
-representing all live births, first babies, and others.
-We extract pregnancy lengths as NumPy arrays, pass them as
-data to {\tt DiffMeansPermute}, and compute the p-value.  The
-result is about 0.17, which means that we expect to see a difference
-as big as the observed effect about 17\% of the time.  So
-this effect is not statistically significant.
-\index{DataFrame}
-\index{p-value}
-  \index{significant} \index{statistically significant}
-\index{pregnancy length}
+{\tt MakeFrames}는 NSFG 데이터를 읽고, 모든 정상출산, 첫째 아이, 첫째가 아닌 아이들을 대표하는 데이터프레임을 반환한다.
+임신 기간을 넘파이(NumPy) 배열로 추출하고, 데이터로 {\tt DiffMeansPermute}에 전달하고, p-값을 계산한다.
+결과는 약 0.17로 의미하는 바는 약 17\% 정도 관측된 효과에 차이를 예상할 수 있다. 그래서, 효과가 통계적으로 유의하지 않다.
+
+\index{데이터프레임 (DataFrame)}
+\index{p-값 (p-value)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
+\index{임신 기간 (pregnancy length)}
 
 \begin{figure}
 % hypothesis.py
-\centerline{\includegraphics[height=2.5in]{figs/hypothesis1.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/hypothesis1.pdf}}
 \caption{CDF of difference in mean pregnancy length under the null
 hypothesis.}
 \label{hypothesis1}
 \end{figure}
 
-{\tt HypothesisTest} provides {\tt PlotCdf}, which plots the
-distribution of the test statistic and a gray line indicating
-the observed effect size:
+{\tt HypothesisTest}에는 {\tt PlotCdf}가 있는데 관측 효과 크기를 나타내는 회색선과 검정 통계량 분포를 플롯으로 그린다.
 \index{thinkplot}
 \index{HypothesisTest}
 \index{Cdf}
-\index{effect size}
+\index{효과 크기 (effect size)}
 
 \begin{verbatim}
     ht.PlotCdf()
@@ -290,36 +280,32 @@ the observed effect size:
                    ylabel='CDF')
 \end{verbatim}
 
-Figure~\ref{hypothesis1} shows the result.  The CDF intersects the
+그림~\ref{hypothesis1}에 결과가 있다.
+CDF는 0.83에서 관측 차이와 교차하는데, p-값의 보수 0.17이다.
+
+ shows the result.  The CDF intersects the
 observed difference at 0.83, which is the complement of the p-value,
 0.17.
-\index{p-value}
+\index{p-값 (p-value)}
 
-If we run the same analysis with birth weight, the computed p-value
-is 0; after 1000 attempts,
-the simulation never yields an effect
-as big as the observed difference, 0.12 lbs.  So we would
-report $p < 0.001$, and
-conclude that the difference in birth weight is statistically
-significant.
-\index{birth weight}
-\index{weight!birth}
-  \index{significant} \index{statistically significant}
+만약 출생 체중으로 동일한 분석을 실행한다면, 계산된 p-값은 0 이다; 1000 번 시험 후에, 모의시험은 결코 관측 차이가 0.12 lbs 보다 큰 효과를 산출하지 못한다.
+그래서, $p < 0.001$ 가 나오고, 출생 체중에 차이는 통계적으로 유의하다고 결론낸다. 
+
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
 
 
-\section{Other test statistics}
+\section{다른 검정 통계량 (ther test statistics)}
 
-Choosing the best test statistic depends on what question you are
-trying to address.  For example, if the relevant question is whether
-pregnancy lengths are different for first
-babies, then it makes sense to test the absolute difference in means,
-as we did in the previous section.
-\index{test statistic}
-\index{pregnancy length}
+최선의 검정 통계량을 고르는 것은 무슨 질문을 하느냐에 달려 있다.
+예를 들어, 만약 관련된 질문이 첫번째 아이에 대해서 임신 기간이 다른지에 관한 것이라면, 앞절에서 수행했던 것과 같이, 평균에 대해 차이 절대값을 검정하는 것이 의미가 있다.
 
-If we had some reason to think that first babies are likely
-to be late, then we would not take the absolute value of the difference;
-instead we would use this test statistic:
+\index{검정 통계량 (test statistic)}
+\index{임신 기간 (pregnancy length)}
+
+만약 첫번째 아이가 늦게 출생하는 경향이 있다고 생각할 이유가 있다면, 차이값의 절대값을 취하지 않는다; 대신에 다음 검정 통계량을 사용한다.
 
 \begin{verbatim}
 class DiffMeansOneSided(DiffMeansPermute):
@@ -330,32 +316,26 @@ class DiffMeansOneSided(DiffMeansPermute):
         return test_stat
 \end{verbatim}
 
-{\tt DiffMeansOneSided} inherits {\tt MakeModel} and {\tt RunModel}
-from {\tt DiffMeansPermute}; the only difference is that
-{\tt TestStatistic} does not take the absolute value of the
-difference.  This kind of test is called {\bf one-sided} because
-it only counts one side of the distribution of differences.  The
-previous test, using both sides, is {\bf two-sided}.
-\index{one-sided test}
-\index{two-sided test}
+{\tt DiffMeansOneSided}은 {\tt DiffMeansPermute}에서 {\tt MakeModel}와 {\tt RunModel}을 상속받는다; 유일한 차이는 {\tt TestStatistic}가 
+차이에 절대값을 취하지 않는다는 것이다.
+이런 유형의 검증을 {\bf 단측 (one-sided)} 검증이라고 한다. 왜냐하면,
+차이 분포의 단측면만 고려하기 때문이다. 앞선 검정은 양쪽을 사용하기 때문에 {\bf 양측 (two-sided)} 검증이라고 한다.
+\index{단측 검증 (one-sided test)}
+\index{양측 검증 (two-sided test)}
 
-For this version of the test, the p-value is 0.09.  In general
-the p-value for a one-sided test is about half the p-value for
-a two-sided test, depending on the shape of the distribution.
-\index{p-value}
+이 버젼 검정에 대해서, p-값은 0.09 다. 일반적으로 단측 검정에 대한 p-값은 양측 검정에 대한 p-값의 약 절반이다. 물론 분포 모양에 달려있다.
 
-The one-sided hypothesis, that first babies are born late, is more
-specific than the two-sided hypothesis, so the p-value is smaller.
-But even for the stronger hypothesis, the difference is
-not statistically significant.
-  \index{significant} \index{statistically significant}
+\index{p-값 (p-value)}
 
-We can use the same framework to test for a difference in standard
-deviation.  In Section~\ref{visualization}, we saw some evidence that
-first babies are more likely to be early or late, and less likely to
-be on time.  So we might hypothesize that the standard deviation is
-higher.  Here's how we can test that:
-\index{standard deviation}
+단측 가설, 첫째 아이가 늦게 태어난다는 것이 양측 가설보다 좀더 구체적이다. 그래서 p-값이 더 작다. 하지만, 더 강한 가정에 조차도, 차이는 통계적으로 유의적이지 않다.
+
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
+
+동일한 프레임워크(framework)를 사용해서 표준 편차에 차이도 검정할 수 있다. 
+~\ref{visualization} 절에서 첫번째 아이가 늦게 혹은 빨리 출산할 것같은 증거를 일부 보았다. 그래서, 표준 편차가 좀더 클 것이라는 가설을 세울 수 있다. 다음에 이 가설을 시험하는 방법이 있다.
+
+\index{표준 편차 (standard deviation)}
 
 \begin{verbatim}
 class DiffStdPermute(DiffMeansPermute):
@@ -366,39 +346,32 @@ class DiffStdPermute(DiffMeansPermute):
         return test_stat
 \end{verbatim}
 
-This is a one-sided test because the hypothesis is that the standard
-deviation for first babies is higher, not just different.  The p-value
-is 0.09, which is not statistically significant.
-\index{p-value}
-\index{permutation}
-  \index{significant} \index{statistically significant}
+이것은 단측 검정인데 이유는 가설이 첫번째 아이 집단에 대한 표준편차가 단지 다르다는 것이 아니라 더 높다는 것이다. p-값이 0.09로, 통계적으로 유의적이지 않다.
+
+\index{p-값 (p-value)}
+\index{순열 (permutation)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
 
 
-\section{Testing a correlation}
+\section{상관 검정 (Testing a correlation)}
 \label{corrtest}
 
-This framework can also test correlations.  For example, in the NSFG
-data set, the correlation between birth weight and mother's age is
-about 0.07.  It seems like older mothers have heavier babies.  But
-could this effect be due to chance?
-\index{correlation}
-\index{test statistic}
+상기 프레임워크를 사용해서 상관도 검정할 수 있다. 
+예를 들어, NSFG 데이터셋에서, 산모 나이와 출생 체중 사이 상관관계는 약 0.07 이다. 
+나이가 많은 산모 아이가 더 체중이 나가는 것처럼 보인다. 하지만 이 효과가 우연에 의한 것일까요?
+\index{상관 (correlation)}
+\index{검정 통계량 (test statistic)}
 
-For the test statistic, I use
-Pearson's correlation, but Spearman's would work as well.
-If we had reason to expect positive correlation, we would do a
-one-sided test.  But since we have no such reason, I'll
-do a two-sided test using the absolute value of correlation.
-\index{Pearson coefficient of correlation}
-\index{Spearman coefficient of correlation}
+검정 통계량으로, 피어슨 상관을 사용했지만, 스피어만 상관도 동일하게 동작한다. 만약 양의 상관 관계로 예측하는 합리적 논거가 있다면, 단측 검정을 할 수도 있다. 하지만, 그런 이유가 없기 때문에, 상관 절대값을 사용해서 양측검정을 수행한다.
+\index{피어슨 상관계수 (Pearson coefficient of correlation)}
+\index{스피어만 상관계수 (Spearman coefficient of correlation)}
 
-The null hypothesis is that there is no correlation between mother's
-age and birth weight.  By shuffling the observed values, we can
-simulate a world where the distributions of age and
-birth weight are the same, but where the variables are unrelated:
-\index{birth weight}
-\index{weight!birth}
-\index{null hypothesis}
+귀무 가설은 산모 연령과 출생 체중 사이에 상관 관계가 없다는 것이다.
+관측값을 뒤섞어서, 산모 연령과 출생 체중 분포가 같지만 변수 사이에 관련이 없는 세상을 모의 시험할 수 있다.
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{귀무 가설 (null hypothesis)}
 
 \begin{verbatim}
 class CorrelationPermute(thinkstats2.HypothesisTest):
@@ -414,14 +387,12 @@ class CorrelationPermute(thinkstats2.HypothesisTest):
         return xs, ys
 \end{verbatim}
 
-{\tt data} is a pair of sequences.  {\tt TestStatistic} computes the
-absolute value of Pearson's correlation.  {\tt RunModel} shuffles the
-{\tt xs} and returns simulated data.
+{\tt data}는 한쌍 시퀀스다. {\tt TestStatistic}가 피어슨 상관 절대값을 계산한다. {\tt RunModel}이 {\tt xs}를 뒤섞고 모의시험한 데이터를 반환한다.
 \index{HypothesisTest}
-\index{permutation}
-\index{Pearson coefficient of correlation}
+\index{순열 (permutation)}
+\index{피어슨 상관계수 (Pearson coefficient of correlation)}
 
-Here's the code that reads the data and runs the test:
+다음에 데이터를 읽어 들이고, 시험을 수행하는 코드가 있다.
 
 \begin{verbatim}
     live, firsts, others = first.MakeFrames()
@@ -431,36 +402,28 @@ Here's the code that reads the data and runs the test:
     pvalue = ht.PValue()
 \end{verbatim}
 
-I use {\tt dropna} with the {\tt subset} argument to drop rows
-that are missing either of the variables we need.
+{\tt subset} 인자로 {\tt dropna}를 사용해서 필요한 변수 둘 중에서 결측된 행을 뺀다.
 \index{dropna}
 \index{NaN}
-\index{missing values}
+\index{결측값 (missing values)}
 
-The actual correlation is 0.07.  The computed p-value is 0; after 1000
-iterations the largest simulated correlation is 0.04.  So although the
-observed correlation is small, it is statistically significant.
-\index{p-value}
-  \index{significant} \index{statistically significant}
+실제 상관계수는 0.07이다. 계산된 p-값은 0 이다; 1000 번 반복한 뒤에, 가장 큰 모의 시험 상관계수 p-값은 0.04다. 그래서, 관측된 상관계수가 작을지라도, 통계적 유의성이 있다.
+\index{p-값 (p-value)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
 
-This example is a reminder that ``statistically significant'' does not
-always mean that an effect is important, or significant in practice.
-It only means that it is unlikely to have occurred by chance.
+``통계적 유의성 (statistically significant)''이 항상 효과가 중요하거나, 실무에서 유의적이라는 의미는 아니라는 것을 상기 예제가 상기 시킨다.
+단지 유연으로 발생할 것 같지 않는다는 의미다.
 
-
-\section{Testing proportions}
+\section{비율 검정 (Testing proportions)}
 \label{casino}
-\index{chi-squared test}
+\index{카이제곱 검정 chi-squared test}
 
-Suppose you run a casino and you suspect that a customer is
-using a crooked die; that
-is, one that has been modified to make one of the faces more
-likely than the others.  You apprehend the alleged
-cheater and confiscate the die, but now you have to prove that it
-is crooked.  You roll the die 60 times and get the following results:
-\index{casino}
-\index{dice}
-\index{crooked die}
+카지노를 운영한다고 가정합시다. 그런데 고객 한명이 비뚤어진 주사위를 사용하고 있다고 용의선상에 올려놓는다; 즉, 다른 쪽보다 한쪽 면이 더 많이 나오도록 변형한 주사위. 주인장이 주장하는 사기꾼을 체포하고 주사위를 압수했다. 하지만, 이제 주사위가 비뚤어졌다는 것을 주인장이 증명해야 한다.
+주사위를 60번 던져서 다음과 같은 결과를 얻었다.
+\index{카지노 (casino)}
+\index{주사위 (dice)}
+\index{비뚤어진 주사위 (crooked die)}
 
 \begin{center}
 \begin{tabular}{|l|c|c|c|c|c|c|}
@@ -472,23 +435,16 @@ Frequency &  8  &  9  &  19  &  5  &  8  &  11  \\
 \end{tabular}
 \end{center}
 
-On average you expect each value to appear 10 times.  In this
-dataset, the value 3 appears more often than expected, and the value 4
-appears less often.  But are these differences statistically
-significant?
-\index{frequency}
-  \index{significant} \index{statistically significant}
+평균적으로 주사위 각 값은 10번씩 나올 것으로 예상된다.
+데이터셋에서, 값 3이 기대한 것보다 더 자주 나오고, 값 4는 덜 나오는 것 처럼 보인다.하지만, 이 차이가 통계적으로 유의적일까요?
+\index{빈도 (frequency)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
 
-To test this hypothesis, we can compute the expected frequency for
-each value, the difference between the expected and observed
-frequencies, and the total absolute difference.  In this
-example, we expect each side to come up 10 times out of 60; the
-deviations from this expectation are -2, -1, 9, -5, -2, and 1; so the
-total absolute difference is 20.  How often would we see such a
-difference by chance?
-\index{deviation}
+가설을 검정하기 위해서, 각 값에 대한 기대 빈도, 기대 빈도와 관측 빈도 차이, 전체 절대값 차이를 계산할 수 있다. 상기 예제에서, 주사위 각 면은 60 회 중에서 10 회 나올 것으로 예상된다; 이 기대값에서 편차가 -2, -1, 9, -5, -2, 1 이 된다; 그래서 전체 절대값 차이는 20 이 된다. 우연히 이러한 차이를 얼마나 자주 목도할까?
+\index{편차 (deviation)}
 
-Here's a version of {\tt HypothesisTest} that answers that question:
+다음에 상기 질문에 대답하는 {\tt HypothesisTest} 버젼이 있다.
 \index{HypothesisTest}
 
 \begin{verbatim}
@@ -510,44 +466,39 @@ class DiceTest(thinkstats2.HypothesisTest):
         return freqs
 \end{verbatim}
 
-The data are represented as a list of frequencies: the observed
-values are {\tt [8, 9, 19, 5, 8, 11]}; the expected frequencies
-are all 10.  The test statistic is the sum of the absolute differences.
-\index{frequency}
+데이터는 빈도 리스트로 표현된다: 관측값은 {\tt [8, 9, 19, 5, 8, 11]}이 되고 ; 기대 빈도는 모두 10 이다.
+검정 통계량은 절대값 차이의 총합이다.
+\index{빈도 (frequency)}
 
-The null hypothesis is that the die is fair, so we simulate that by
-drawing random samples from {\tt values}.  {\tt RunModel} uses {\tt
-  Hist} to compute and return the list of frequencies.
+귀무 가설은 주사위가 공정하다는 것으로 {\tt values} 에서 난수 표본을 뽑아 모의 시험한다. {\tt RunModel} 은 {\tt Hist}를 사용해서 계산하고, 빈도 리스트를 반환한다.
+
 \index{Hist}
-\index{null hypothesis}
-\index{model}
+\index{귀무 가설 (null hypothesis)}
+\index{모형 (model)}
 
-The p-value for this data is 0.13, which means that if the die is
-fair we expect to see the observed total deviation, or more, about
-13\% of the time.  So the apparent effect is not statistically
-significant.
-\index{p-value}
-\index{deviation}
-  \index{significant} \index{statistically significant}
+이 데이터에 대한 p-값은 0.13으로 의미하는 바는 만약 주사위가 공정하다면, 전체 관측 편차를 약 13\% 가능성으로 볼 것으로 기대된다. 그래서, 명백한 효과는 통계적으로 유의하지 않다.
+\index{p-값 (p-value)}
+\index{편차 (deviation)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
 
 
-\section{Chi-squared tests}
+\section{카이제곱 검정 (Chi-squared tests)}
 \label{casino2}
 
-In the previous section we used total deviation as the test statistic.
-But for testing proportions it is more common to use the chi-squared
-statistic:
+이전 절에서 검정 통계량으로 총편차를 사용했다. 하지만,
+비율을 검정하는데, 카이제곱 통계량을 사용하는 것이 좀더 일반적이다.
 %
 \[ \goodchi^2 = \sum_i \frac{(O_i - E_i)^2}{E_i} \]
 %
 %% TODO: Consider using upper case chi, which is more strictly correct,
 %% but harder to distinguish from X.
 % 
-Where $O_i$ are the observed frequencies and $E_i$ are the expected
-frequencies.  Here's the Python code:
-\index{chi-squared test}
-\index{chi-squared statistic}
-\index{test statistic}
+
+여기서, $O_i$는 관측빈도, $E_i$는 기대빈도다. 다음에 파이썬 코드가 있다.
+\index{카이제곱 검정 (chi-squared test)}
+\index{카이제곱 통계량 (chi-squared statistic)}
+\index{검정 통계량 (test statistic)}
 
 \begin{verbatim}
 class DiceChiTest(DiceTest):
@@ -560,44 +511,32 @@ class DiceChiTest(DiceTest):
         return test_stat
 \end{verbatim}
 
-Squaring the deviations (rather than taking absolute values) gives
-more weight to large deviations.  Dividing through by {\tt expected}
-standardizes the deviations, although in this case it has no effect
-because the expected frequencies are all equal.
-\index{deviation}
+(절대값을 취하기 보다)편차를 제곱하면 큰 편차에 더 많은 가중치를 준다.
+{\tt expected}로 나누게 되면 편차를 표준화한다. 이 경우에 기대 빈도가 모두 같아서 효과가 없다.
 
-The p-value using the chi-squared statistic is 0.04,
-substantially smaller than what we got using total deviation, 0.13.
-If we take the 5\% threshold seriously, we would consider this effect
-statistically significant.  But considering the two tests togther, I
-would say that the results are borderline.  I would not rule out the
-possibility that the die is crooked, but I would not convict the
-accused cheater.
-\index{p-value}
-  \index{significant} \index{statistically significant}
+\index{편차 (deviation)}
 
-This example demonstrates an important point: the p-value depends
-on the choice of test statistic and the model of the null hypothesis,
-and sometimes these choices determine whether an effect is
-statistically significant or not.
-\index{null hypothesis}
-\index{model}
+카이제곱 통계량을 사용한 p-값은 0.04로 총편차를 사용해서 얻은 0.13보다도 훨씬 작다. 만약 5\% 분계점을 심각하게 생각한다면, 효과가 통계적으로 유의하다고 고려할 수 있다. 하지만, 검정 두가지를 모두 고려해서, 결과는 경계선에 있다고 말할 수 있다. 주사위가 삐뚤어졌다는 가능성을 배제하지는 않지만, 고발된 사기꾼에게 유죄 판결을 하지는 않을 것이다.
+
+\index{p-값 (p-value)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
+
+상기 예제는 중요한 점을 시연해 준다: p-값이 검정 통계량과 귀무 가설 모형에 달려있다. 그리고 때때로, 이러한 선택에 따라 효과가 통계적으로 유의성을 갖거나 갖지 않거나 결정된다.
+\index{귀무 가설 (null hypothesis)}
+\index{모형 (model)}
 
 
-\section{First babies again}
+\section{다시 첫째 아이}
 
-Earlier in this chapter we looked at pregnancy lengths for first
-babies and others, and concluded that the apparent differences in
-mean and standard deviation are not statistically significant.  But in
-Section~\ref{visualization}, we saw several apparent differences
-in the distribution of pregnancy length, especially in the range from
-35 to 43 weeks.  To see whether those differences are statistically
-significant, we can use a test based on a chi-squared statistic.
-\index{standard deviation}
-\index{statistically significant} \index{significant}
-\index{pregnancy length}
+이장 앞에서 첫번째 아이와 첫째가 아닌 아이들에 대한 임신 기간을 살펴봤고, 평균과 표준편차에 명백한 차이는 통계적으로 유의적이지 않다고 결론냈다. 하지만, ~\ref{visualization} 절에서 평균 기간 분포에서 명백한 차이를 몇가지 봤다. 특히, 35주에서 43주차 범위에서 그렇다. 이러한 차이가 통계적 유의성이 있는지 살펴보기 위해서, 카이제곱 통계량에 기반한 검정을 사용할 수 있다.
+\index{표준 편차 (standard deviation)}
+\index{통계적 유의성 (statistically significant)} 
+\index{유의성 (significant)}
+\index{임신 기간 (pregnancy length)}
 
-The code combines elements from previous examples:
+다음 코드는 앞선 예제로부터 요소를 결합한다.
+
 \index{HypothesisTest}
 
 \begin{verbatim}
@@ -618,22 +557,18 @@ class PregLengthTest(thinkstats2.HypothesisTest):
         return data
 \end{verbatim}
 
-The data are represented as two lists of pregnancy lengths.  The null
-hypothesis is that both samples are drawn from the same distribution.
-{\tt MakeModel} models that distribution by pooling the two
-samples using {\tt hstack}.  Then {\tt RunModel} generates
-simulated data by shuffling the pooled sample and splitting it
-into two parts.
-\index{null hypothesis}
-\index{model}
+데이터는 두개 임신 기간 리스트로 표현된다. 귀무가설은
+표본 모두 동일한 분포에서 추출되었다는 것이다.
+{\tt MakeModel}은 {\tt hstack}을 사용해서 두 표본을 합동(pooling)해서 분포를 모형화한다. 그리고 나서, {\tt RunModel}은 합동 표본을 뒤섞고 이것을 두 부분으로 쪼갬으로써 모의 실험 데이터를 생성한다.
+\index{귀무 가설 (null hypothesis)}
+\index{모형 (model)}
 \index{hstack}
-\index{pregnancy length}
+\index{임신 기간 (pregnancy length)}
 
-{\tt MakeModel} also defines {\tt values}, which is the
-range of weeks we'll use, and \verb"expected_probs",
-which is the probability of each value in the pooled distribution.
+{\tt MakeModel}은 또한 {\tt values}를 정의하는데, 사용할 주차 범위가 되고, 
+\verb"expected_probs"는 합동 분포(pooled distribution)에서 각 값의 확률이다.
 
-Here's the code that computes the test statistic:
+다음에 검정 통계량을 계산하는 코드가 있다.
 
 \begin{verbatim}
 # class PregLengthTest:
@@ -651,93 +586,64 @@ Here's the code that computes the test statistic:
         return stat
 \end{verbatim}
 
-{\tt TestStatistic} computes the chi-squared statistic for
-first babies and others, and adds them.
-\index{chi-squared statistic}
+{\tt TestStatistic}은 첫째 아이와 첫째 아이가 아닌 아이들에 대한 카이제곱 통계량을 계산하고 더한다.
+\index{카이제곱 통계량 (chi-squared statistic)}
 
-{\tt ChiSquared} takes a sequence of pregnancy lengths, computes
-its histogram, and computes {\tt observed}, which is a list of
-frequencies corresponding to {\tt self.values}.
-To compute the list of expected frequencies, it multiplies the
-pre-computed probabilities, \verb"expected_probs", by the sample
-size.  It returns the chi-squared statistic, {\tt stat}.
+{\tt ChiSquared}는 임신 기간 시퀀을 받아, 히스토그램을 계산하고,
+{\tt observed}를 계산하는데, 이는 {\tt self.values}에 상응하는 빈도 리스트다. 기대 빈도 리스트를 계산하기 위해서, 표본 크기에 미리 계산된 확률 \verb"expected_probs"을 곱한다. 그러면 카이제곱 통계량 {\tt stat}을 반환한다.
 
-For the NSFG data the total chi-squared statistic is 102, which
-doesn't mean much by itself.  But after 1000 iterations, the largest
-test statistic generated under the null hypothesis is 32.  We conclude
-that the observed chi-squared statistic is unlikely under the null
-hypothesis, so the apparent effect is statistically significant.
-\index{null hypothesis}
-\index{statistically significant} \index{significant}
+NSFG 데이터에 대해서, 전체 카이제곱 통계량은 102로 그 자체로 많은 것을 의미하지는 않는다. 하지만, 1000회 반복 후에, 귀무가설 아래에서 가장 큰 검정 통계량은 32다. 관측 카이제곱 통계량이 귀무가설 아래에서 가능할 것 같지 않다고 결론내린다. 그래서, 외관 효과는 통계적 유의성이 있다.
 
-This example demonstrates a limitation of chi-squared tests: they
-indicate that there is a difference between the two groups,
-but they don't say anything specific about what the difference is.
+\index{귀무 가설 (null hypothesis)}
+\index{통계적 유의성 (statistically significant)} 
+\index{유의성 (significant)}
 
+이번 예제는 카이제곱 검정 한계를 보여준다: 두 집단 사이에 차이가 있다는 것을 나타내지만, 차이가 무엇인지에 관한 구체적인 어떤 것도 말하지는 못한다.
 
-\section{Errors}
-\index{error}
+\section{오류 (Errors)}
+\index{오류 (error)}
 
-In classical hypothesis testing, an effect is considered statistically
-significant if the p-value is below some threshold, commonly 5\%.
-This procedure raises two questions:
-\index{p-value}
-\index{threshold}
-\index{statistically significant} \index{significant}
+전통적인 가설 검정에서 만약 p-값이 특정 분계점, 흔히 5\% 보다 아래라면, 통계적 유이성이 있다고 본다. 이러한 절차는 두가지 질문을 불러온다.
+\index{p-값 (p-value)}
+\index{분계점 (threshold)}
+\index{통계적 유의성 (statistically significant)} 
+\index{유의성 (significant)}
 
 \begin{itemize}
 
-\item If the effect is actually due to chance, what is the probability
-that we will wrongly consider it significant?  This
-probability is the {\bf false positive rate}.
-\index{false positive}
+\item 만약 효과가 실제로 우연으로 인한다면, 효과를 잘못해서 유의적으로 고려할 확률은 얼마나 될까? 이 확률이 {\bf 거짓 양성률 (false positive rate)}이다.
+\index{거짓 양성 (false positive)}
 
-\item If the effect is real, what is the chance that the hypothesis
-test will fail?  This probability is the {\bf false negative rate}.
-\index{false negative}
+\item 만약 효과가 진실이라면, 가설 검정이 실패할 가능성은 얼마나 될까?
+이 확률이 {\bf 거짓 음성률 (false negative rate)}이다.
+\index{거짓 음성 (false negative)}
 
 \end{itemize}
 
-The false positive rate is relatively easy to compute: if the
-threshold is 5\%, the false positive rate is 5\%.  Here's why:
+거짓 양성률은 상대적으로 계산하기 쉽다: 만약 분계점이 5\% 이면, 거짓 양성률은 5\% 다. 다음에 이유가 있다.
 
 \begin{itemize}
 
-\item If there is no real effect, the null hypothesis is true, so we
-  can compute the distribution of the test statistic by simulating the
-  null hypothesis.  Call this distribution $\CDF_T$.
-\index{null hypothesis}
+\item 만약 실제 효과가 없다면, 귀무 가설은 사실이다. 그래서 귀무 가설을 모의 시험함으로써, 검정 통계량 분포를 계산할 수 있다. 이 분포를 $\CDF_T$ 라고 부른다.
+\index{귀무 가설 (null hypothesis)}
 \index{CDF}
 
-\item Each time we run an experiment, we get a test statistic, $t$,
-  which is drawn from $CDF_T$.  Then we compute a p-value, which is
-  the probability that a random value from $CDF_T$ exceeds {\tt t},
-  so that's $1 - CDF_T(t)$.
+\item 실험을 매번 실행할 때마다, 검정 통계량 $t$ 를 얻는데, $CDF_T$에서 뽑아낸 것이다. 그리고 나서, p-값을 계산하는데, $CDF_T$에서 나온 난수 값이 {\tt t}를 초과하는 확률이다. 그래서 $1 - CDF_T(t)$이 된다.
 
-\item The p-value is less than 5\% if $CDF_T(t)$ is greater
-  than 95\%; that is, if $t$ exceeds the 95th percentile.
-  And how often does a value chosen from $CDF_T$ exceed
-  the 95th percentile?  5\% of the time.
+\item 만약 $CDF_T(t)$가 95\%보다 크다면, p-값이 5\% 보다 작다; 즉, 만약 $t$가 95번째 백분위수를 초과하면 그렇다. 그리고, $CDF_T$에서 고른 값이 95번째 백분위수를 얼마나 자주 초과할까? 거의 5\% 다.
 
 \end{itemize}
 
-So if you perform one hypothesis test with a 5\% threshold, you expect
-a false positive 1 time in 20.
+그래서, 5\% 분계점을 가진 가설 검정을 수행한다면, 거짓 양성이 20번 중 1번 예상된다. 
 
-
-\section{Power}
+\section{검정력 (Power)}
 \label{power}
 
-The false negative rate is harder to compute because it depends on
-the actual effect size, and normally we don't know that.
-One option is to compute a rate
-conditioned on a hypothetical effect size.
-\index{effect size}
+거짓 음성률은 계산하기 더 어렵다. 왜냐하면, 실제 효과 크기에 의존하고 정상적으로는 실제 효과 크기를 모르기 때문이다. 한가지 선택옵션은 가상 효과크기(hypothetical effect size) 조건으로 거짓 음성률을 계산하는 것이다.
+\index{효과 크기 (effect size)}
 
-For example, if we assume that the observed difference between groups
-is accurate, we can use the observed samples as a model of the
-population and run hypothesis tests with simulated data:
-\index{model}
+예를 들어, 만약 두 집단 사이에 관측 차이가 정확하다면, 관측 표본을 모집단 모형으로 사용해서 모의 시험 데이터로 가설 검정을 실행할 수 있다.
+\index{모형 (model)}
 
 \begin{verbatim}
 def FalseNegRate(data, num_runs=100):
@@ -756,23 +662,21 @@ def FalseNegRate(data, num_runs=100):
     return count / num_runs
 \end{verbatim}
 
-{\tt FalseNegRate} takes data in the form of two sequences, one for
-each group.  Each time through the loop, it simulates an experiment by
-drawing a random sample from each group and running a hypothesis test.
-Then it checks the result and counts the number of false negatives.
-\index{Resample}
-\index{permutation}
+{\tt FalseNegRate}는 각 집단마다 하나씩 두 시퀀스 형태로 데이터를 받는다.
 
-{\tt Resample} takes a sequence and draws a sample with the same
-length, with replacement:
-\index{replacement}
+루프를 매번 돌 때마다, 각 집단에서 난수 표본을 뽑아서 가설 검정을 실행함으로써 실험을 모의 시험한다. 그리고 나서 결과를 확인하고 거짓 음성 갯수를 계수한다.
+\index{Resample}
+\index{순열 (permutation)}
+
+{\tt Resample}은 시퀀스를 받아 복원 추출로 동일 길이를 가진 표본을 뽑는다.
+\index{복원 (replacement)}
 
 \begin{verbatim}
 def Resample(xs):
     return np.random.choice(xs, len(xs), replace=True)
 \end{verbatim}
 
-Here's the code that tests pregnancy lengths:
+다음에 임신 기간을 검정하는 코드가 있다.
 
 \begin{verbatim}
     live, firsts, others = first.MakeFrames()
@@ -780,100 +684,70 @@ Here's the code that tests pregnancy lengths:
     neg_rate = FalseNegRate(data)
 \end{verbatim}
 
-The result is about 70\%, which means that if the actual difference in
-mean pregnancy length is 0.078 weeks, we expect an experiment with this
-sample size to yield a negative test 70\% of the time.
-\index{pregnancy length}
+결과가 약 70\%로 의미하는 바는 만약 평균 임신기간에 실제 차이가 0.078 주라면, 이 표본 크기를 가진 실험은 대략 70\% 음성 검정을 산출할 것으로 기대된다.
+\index{임신 기간 (pregnancy length)}
 
-This result is often presented the other way around: if the actual
-difference is 0.078 weeks, we should expect a positive test only 30\%
-of the time.  This ``correct positive rate'' is called the {\bf power}
-of the test, or sometimes ``sensitivity''.  It reflects the ability of
-the test to detect an effect of a given size.
-\index{power}
-\index{sensitivity}
-\index{correct positive}
+이 결과는 종종 다르게 제시된다: 만약 실제 차이가 0.078 주라면, 
+대략 30\% 만 양성 검정을 기대해야 한다. 
+이 ``정확한 양성률 (correct positive rate)''이 검정 {\bf 검정력(power)}이라고 부르고, 종종 ``민감도 (sensitivity)''라고 한다. 주어진 크기 효과를 탐지하는 검정 능력을 반영한다.
+\index{검정력 (power)}
+\index{민감도 (sensitivity)}
+\index{정확한 양성 (correct positive)}
 
-In this example, the test had only a 30\% chance of yielding a
-positive result (again, assuming that the difference is 0.078 weeks).
-As a rule of thumb, a power of 80\% is considered acceptable, so
-we would say that this test was ``underpowered.''
-\index{underpowered}
+이 예제에서, 검정은 단지 30\% 가능성만으로 양성 결과를 산출한다(다시, 차이가 0.078 주라는 것을 가정하면). 경험 법칙으로, 80\% 검정력이 납득할 수 있는 수준이다. 그래서 이 검정은 ``검정력 부족 (underpowered)''하다고 말할 수 있다.
+\index{검정력 부족 (underpowered)}
 
-In general a negative hypothesis test does not imply that there is no
-difference between the groups; instead it suggests that if there is a
-difference, it is too small to detect with this sample size.
+일반적으로 음성 가설 검정이 두 집단 사이에 차이가 없다는 것을 의미하는 것은 아니다; 대신에 만약 차이가 있다면, 너무 작아서 표본크기로 탐지할 수 없다는 것을 제시한다.
 
-
-\section{Replication}
+\section{반복 (Replication)}
 \label{replication}
 
-The hypothesis testing process I demonstrated in this chapter is not,
-strictly speaking, good practice.
+이번 장에서 시연한 가설검정과정은 엄밀히 말하면 좋은 관례(good practice)는 아니다.
 
-First, I performed multiple tests.  If you run one hypothesis test,
-the chance of a false positive is about 1 in 20, which might be
-acceptable.  But if you run 20 tests, you should expect at least one
-false positive, most of the time.
-\index{multiple tests}
+첫째, 다중 검정(multiple tests)을 수행했다. 만약 가설 검정 하나를 실행한다면, 거짓양성(false positive) 가능성은 약 20번 중에 한번으로 수용가능하다. 하지만, 20번 검정을 수행한다면, 대부분 적어도 한번은 거짓양성을 예상해야한다.
+\index{다중 검정 (multiple tests)}
 
-Second, I used the same dataset for exploration and testing.  If
-you explore a large dataset, find a surprising effect, and then test
-whether it is significant, you have a good chance of generating a
-false positive.
-\index{statistically significant} \index{significant}
+둘째, 탐색과 검정에 동일한 데이터셋을 사용했다. 만약 대용량 데이터셋을 탐색하고, 놀라운 효과를 발견하고 나서, 효과가 유의성이 있는지 검정한다면, 거짓 양성(false positive)을 생성할 가능성이 있다.
 
-To compensate for multiple tests, you can adjust the p-value
-threshold (see
-  \url{https://en.wikipedia.org/wiki/Holm-Bonferroni_method}).  Or you
-can address both problems by partitioning the data, using one set for
-exploration and the other for testing.
-\index{p-value}
-\index{Holm-Bonferroni method}
+\index{통계적 유의성 (statistically significant)} 
+\index{유의성 (significant)}
 
-In some fields these practices are required or at least encouraged.
-But it is also common to address these problems implicitly by
-replicating published results.  Typically the first paper to report a
-new result is considered exploratory.  Subsequent papers that
-replicate the result with new data are considered confirmatory.
-\index{confirmatory result}
+다중 검정을 보상하기 위해서, p-값 분계점을 조정할 수 있다. (\url{https://en.wikipedia.org/wiki/Holm-Bonferroni_method} 참조). 혹은, 한 데이터셋은 탐색, 다른 데이터셋은 검정으로 데이터를 분할해서 두 문제를 다룰 수 있다. 
+\index{p-값 (p-value)}
+\index{홈-본페로니 법 (Holm-Bonferroni method)}
 
-As it happens, we have an opportunity to replicate the results in this
-chapter.  The first edition of this book is based on Cycle 6 of the
-NSFG, which was released in 2002.  In October 2011, the CDC released
-additional data based on interviews conducted from 2006--2010.  {\tt
-  nsfg2.py} contains code to read and clean this data.  In the new
-dataset:
+몇몇 분야에서는 이러한 관례가 요구되고 있거나 적어도 장려한다. 하지만, 이러한 문제를 암묵적으로 출판된 결과를 반복(replication)하면서 다루는 것도 흔하다. 전형적으로, 새로운 결과를 보고하는 첫번째 논문은 탐색적으로 고려된다. 새로운 데이터로 결과를 반복하는 이어지는 논문은 확증적(confirmatory)으로 고려된다.
+\index{확증적 결과 (confirmatory result)}
+
+공교롭게도, 이 장에서 결과를 반복할 기회가 있다.
+이책 첫번째 판은 2002년에 나온 NSFG 사이클 6에 기반했다.
+2011년 10월 CDC가 2006--2010에 실시한 인터뷰에 기반한 추가 데이터를 출시했다. {\tt nsfg2.py} 에는 이 데이터를 읽고 정제한 코드가 포함되어 있다. 새로운 데이터셋으로 분석한 결과는 다음과 같다.
 \index{NSFG}
 
 \begin{itemize}
 
-\item The difference in mean pregnancy length is
-0.16 weeks and statistically significant with $p < 0.001$ (compared
-to 0.078 weeks in the original dataset).
-\index{statistically significant} \index{significant}
-\index{pregnancy length}
+\item 평균 임신 기간에 차이는 0.16 주다. $p < 0.001$ 으로 통계적 유의성이 있다. (원본 데이터셋 0.078주와 비교된다.)
 
-\item The difference in birth weight is 0.17 pounds with $p < 0.001$
-(compared to 0.12 lbs in the original dataset).
-\index{birth weight}
-\index{weight!birth}
+\index{통계적 유의성 (statistically significant)} 
+\index{유의성 (significant)}
+\index{임신 기간 (pregnancy length)}
 
-\item The correlation between birth weight and mother's age is
-0.08 with $p < 0.001$ (compared to 0.07).
+\item 출생 체중에 차이는 0.17 파운드로 $p < 0.001$ 이다.
+(원본 데이터셋 0.12 lbs와 비교된다.)
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
 
-\item The chi-squared test is statistically significant with
-$p < 0.001$ (as it was in the original).
+\item 출생 체중과 산모 연령 사이 상관계수는 0.08 로 $p < 0.001$ 이다. (0.07과 비교된다.).
+
+\item 카이제곱검정은 $p < 0.001$ 으로 통계적 유의성이 있다.
+$p < 0.001$ (원본 데이터도 그렇다.).
 
 \end{itemize}
 
-In summary, all of the effects that were statistically significant
-in the original dataset were replicated in the new dataset, and the
-difference in pregnancy length, which was not significant in the
-original, is bigger in the new dataset and significant.
+요약하면, 원본 데이터에서 통계적 유의성이 있는 모든 효과가 새로운 데이터셋에서도 반복되었다. 그리고 임신기간에 차이는 원데이터에서 유의성이 없었으나 새로운 데이터셋에서는 더 커졌고 유의성이 있다.
 
 
-\section{Exercises}
+\section{연습 문제}
 
 A solution to these exercises is in \verb"chap09soln.py".
 
@@ -930,62 +804,55 @@ birth weight.  How much does the model affect the results?
 \end{exercise}
 
 
-\section{Glossary}
+\section{용어 사전}
 
 \begin{itemize}
 
-\item hypothesis testing: The process of determining whether an apparent
-effect is statistically significant.
-\index{hypothesis testing}
+\item 가설 검정 (hypothesis testing): 외관 효과(apparent effect)가 통계적 유의성이 있는지 결정하는 과정.
+\index{가설 검정 (hypothesis testing)}
 
-\item test statistic: A statistic used to quantify an effect size.
-\index{test statistic}
-\index{effect size}
+\item 검정 통계량 (test statistic): 효과 크기를 정량화하는데 사용되는 통계량.
+\index{검정 통계량 (test statistic)}
+\index{효과 크기 (effect size)}
 
-\item null hypothesis: A model of a system based on the assumption that
-an apparent effect is due to chance.
-\index{null hypothesis}
+\item 귀무 가설 (null hypothesis): 외관 효과가 우연에 의한 것이라는 가정에 기반한 시스템 모델.
+\index{귀무 가설 (null hypothesis)}
 
-\item p-value: The probability that an effect could occur by chance.
-\index{p-value}
+\item p-값 (p-value): 효과가 우연에 의해서 발생한 확률.
+\index{p-값 (p-value)}
 
-\item statistically significant: An effect is statistically
-  significant if it is unlikely to occur by chance.
-  \index{significant} \index{statistically significant}
+\item 통계적 유의성 (statistically significant): 우연에 의해서 발생할 것 같지 않다면, 효과는 통계적 유의성이 있다.
+\index{통계적 유의성 (statistically significant)} 
+\index{유의성 (significant)}
 
-\item permutation test: A way to compute p-values by generating
-  permutations of an observed dataset.
-  \index{permutation test}
+\item 순열 검정 (permutation test): 관측 데이터셋에서 순열을 생성해서 p-값을 계산하는 방법.
+\index{순열 검정 (permutation test)}
 
-\item resampling test: A way to compute p-values by generating
-  samples, with replacement, from an observed dataset.
-  \index{resampling test}
+\item 재표본 검정 (resampling test): 관측 데이터셋에서 복원으로 표본을 생성해서 p-값을 계산하는 방법.
+\index{재표본 검정 (resampling test)}
 
-\item two-sided test: A test that asks, ``What is the chance of an effect
-as big as the observed effect, positive or negative?''
+\item 양측 검정 (two-sided test): ``효과 크기가 양으로 혹은 음으로 관측 효과보다 얼마나 큰가?'' 를 묻는 검정.
 
-\item one-sided test: A test that asks, ``What is the chance of an effect
-as big as the observed effect, and with the same sign?''
-\index{one-sided test}
-\index{two-sided test}
-\index{test!one-sided}
-\index{test!two-sided}
+\item 단측 검정 (one-sided test): ``효과 크기가 동일 부호로 관측 효과보다 얼마나 큰가?'' 를 묻는 검정.
+\index{단측 검정 (one-sided test)}
+\index{양측 검정 (two-sided test)}
+\index{검정 (test)!단측 (one-sided)}
+\index{검정 (test)!양측 (two-sided)}
 
-\item chi-squared test: A test that uses the chi-squared statistic as
-the test statistic.
-\index{chi-squared test}
+\item 카이-제곱 검정 (chi-squared test): 검정 통계량으로 카이-제곱 통계량을 사용하는 검정.
+\index{카이-제곱 검정 (chi-squared test)}
 
-\item false positive: The conclusion that an effect is real when it is not.
-\index{false positive}
+\item 거짓 양성 (false positive): 사실이 아닐 때, 효과가 사실이라는 결론.
+\index{거짓 양성 (false positive)}
 
-\item false negative: The conclusion that an effect is due to chance when it
-is not.
-\index{false negative}
+\item 거짓 음성 (false negative): 우연이 아닐 때 효과가 우연 때문이라는 결론.
+\index{거짓 음성 (false negative)}
 
-\item power: The probability of a positive test if the null hypothesis
-is false.
-\index{power}
-\index{null hypothesis}
+\item 검정력 (power): 대립가설이 사실일 때, 이를 사실로서 결정할 확률이다. 검정력이 90\%라고 하면, 대립가설이 사실임에도 불구하고 귀무가설을 채택할 확률은 10\%이다.\footnote{\url{http://ko.wikipedia.org/wiki/검정력} 참조}
+\index{검정력 (power)}
+\index{귀무 가설 (null hypothesis)}
 
 \end{itemize}
+
+
 
