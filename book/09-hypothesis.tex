@@ -77,11 +77,11 @@ NSFG 예제에서, 귀무 가설은 첫째 아이와 첫째가 아닌 아이들 
 
 \section{HypothesisTest}
 \label{hypotest}
-\index{mean!difference in}
+\index{평균 (mean)!차이 (difference in)}
 
-{\tt thinkstats2} provides {\tt HypothesisTest}, a
-class that represents the structure of a classical hypothesis
-test.  Here is the definition:
+{\tt thinkstats2}에는 전통적 가설 검정 구조를 표현하는 {\tt HypothesisTest} 클래스가 있다.
+
+다음에 클래스 정의가 있다.
 \index{HypothesisTest}
 
 \begin{verbatim}
@@ -109,38 +109,31 @@ class HypothesisTest(object):
         raise UnimplementedMethodException()
 \end{verbatim}
 
-{\tt HypothesisTest} is an abstract parent class that provides
-complete definitions for some methods and place-keepers for others.
-Child classes based on {\tt HypothesisTest} inherit \verb"__init__"
-and {\tt PValue} and provide {\tt TestStatistic},
-{\tt RunModel}, and optionally {\tt MakeModel}.
+{\tt HypothesisTest}는 추상 부모 클래스로 메쏘드 몇개에 대한 완전한 정의와 
+다른 메쏘드를 위한 자리잡기(place-keeper) 기능 제공한다.
+{\tt HypothesisTest}에 기반한 자식 클래스는 \verb"__init__"와 {\tt PValue} 을 상속받고, {\tt TestStatistic}, {\tt RunModel}, 그리고 선택옵션으로 {\tt MakeModel} 메쏘드를 제공한다.
 \index{HypothesisTest}
 
-\verb"__init__" takes the data in whatever form is appropriate.  It
-calls {\tt MakeModel}, which builds a representation of the null
-hypothesis, then passes the data to {\tt TestStatistic}, which
-computes the size of the effect in the sample.
-\index{test statistic}
-\index{null hypothesis}
+\verb"__init__"은 적절한 어떤 형식의 데이터도 받아들인다.
+{\tt MakeModel} 호출해서 귀무 가설을 표현을 구축하고 나서,
+데이터를 {\tt TestStatistic}에 전달하고 표본 효과 크기를 계산한다.
 
-{\tt PValue} computes the probability of the apparent effect under
-the null hypothesis.  It takes as a parameter {\tt iters}, which is
-the number of simulations to run.  The first line generates simulated
-data, computes test statistics, and stores them in
-\verb"test_stats".
-The result is
-the fraction of elements in \verb"test_stats" that
-exceed or equal the observed test statistic, {\tt self.actual}.
-\index{simulation}
+\index{검정 통계량 (test statistic)}
+\index{귀무 가설 (null hypothesis)}
 
-As a simple example\footnote{Adapted from MacKay, {\it Information
-    Theory, Inference, and Learning Algorithms}, 2003.}, suppose we
-toss a coin 250 times and see 140 heads and 110 tails.  Based on this
-result, we might suspect that the coin is biased; that is, more likely
-to land heads.  To test this hypothesis, we compute the
-probability of seeing such a difference if the coin is actually
-fair:
-\index{biased coin}
+{\tt PValue}는 귀무 가설 아래에서 명백한 효과 확률을 계산한다.
+매개 변수로 {\tt iters}을 받는데 실행할 모의 시험 횟수다.
+첫번째 행은 모의 시험 데이터를 생성하고, 검정 통계량을 계산하고, 
+\verb"test_stats"에 저장한다.
+결과는 관측된 검정 통계량 {\tt self.actual}와 동일하거나 큰 \verb"test_stats" 에 있는 비율이다.
+\index{모의 시험 (simulation)}
+
+간단한 예제\footnote{인용 출처: MacKay, {\it Information
+Theory, Inference, and Learning Algorithms}, 2003.}로, 250번 동전을 던져서 앞면 140회, 뒷면 110회 나왔다고 가정하자.
+이 결과에 기초하여, 동전에 편의가 있는지 의심할지도 모른다; 즉, 좀더 앞면이 나올 것 같다.
+이 가설을 검정하기 위해서, 확률을 계산해서 만약 동전이 정말 공정하다면, 그런 차이가 있는지 살펴본다.
+
+\index{편의 동전 (biased coin)}
 \index{MacKay, David}
 
 \begin{verbatim}
@@ -160,55 +153,45 @@ class CoinTest(thinkstats2.HypothesisTest):
         return data
 \end{verbatim}
 
-The parameter, {\tt data}, is a pair of
-integers: the number of heads and tails.  The test statistic is
-the absolute difference between them, so {\tt self.actual}
-is 30.
+모수 {\tt data}는 정수 짝이다: 앞면 숫자, 뒷면 숫자.
+검정 통계량은 둘 사이 절대값 차이다. 그래서 {\tt self.actual}은 30 이다.
 \index{HypothesisTest}
 
-{\tt RunModel} simulates coin tosses assuming that the coin is
-actually fair.  It generates a sample of 250 tosses, uses Hist
-to count the number of heads and tails, and returns a pair of
-integers.
+{\tt RunModel}은 동전이 정말 공정하다고 가정하고 동전던지기를 모의 시험한다.
+250번 동전던지기 표본을 생성하고, Hist를 사용해서 앞면과 뒷면 횟수를 계수하고 나서,
+정수 짝을 반환한다.
 \index{Hist}
-\index{model}
+\index{모형 (model)}
 
-Now all we have to do is instantiate {\tt CoinTest} and call
-{\tt PValue}:
+이제 해야할 일은 {\tt CoinTest} 인스턴스화 하고, {\tt PValue}를 호출한다.
 
 \begin{verbatim}
     ct = CoinTest((140, 110))
     pvalue = ct.PValue()
 \end{verbatim}
 
-The result is about 0.07, which means that if the coin is
-fair, we expect to see a difference as big as 30 about 7\% of the
-time.
+결과는 약 0.07 이 된다. 만약 동전이 공정하다면, 30 만큼 차이는 이번에 약 7\% 확률로 기대할 수 있다.
 
-How should we interpret this result?  By convention,
-5\% is the threshold of statistical significance.  If the
-p-value is less than 5\%, the effect is considered significant; otherwise
-it is not.
-\index{p-value}
-\index{statistically significant} \index{significant}
+이러한 결과를 어떻게 해석해야 할까요? 통상 관례로, 5\%가 통계적 유의성의 임계치다.
+만약 p-값이 5\%보다 적다면, 효과가 유의적이라고 생각하고; 그렇지 않다면, 반대로 생각한다.
 
-But the choice of 5\% is arbitrary, and (as we will see later) the
-p-value depends on the choice of the test statistics and
-the model of the null hypothesis.  So p-values should not be considered
-precise measurements.
-\index{null hypothesis}
+\index{p-값 (p-value)}
+\index{통계적 유의성 (statistically significant)} 
+\index{유의성 (significant)}
 
-I recommend interpreting p-values according to their order of
-magnitude: if the p-value is less than 1\%, the effect is unlikely to
-be due to chance; if it is greater than 10\%, the effect can plausibly
-be explained by chance.  P-values between 1\% and 10\% should be
-considered borderline.  So in this example I conclude that the
-data do not provide strong evidence that the coin is biased or not.
+하지만, 5\% 선택은 작위적이고, (나중에 살펴보겠지만) p-값은 검정 통계량과 귀무 가설 모형에 의존성이 있다.
+그래서, p-값이 정밀한 측정으로 생각하지는 말아야 한다.
+\index{귀무 가설 (null hypothesis)}
 
+p-값을 해석함에 있어 저자가 추전하는 것은 p-값 크기에 따라 달리하는 것이다:
+만약 p-값이 1\%보다 작다면 효과가 우연에 의한 것일 것 같지는 않다;
+만약 p-값이 10\%보다 크다면, 효과는 우연으로 설명될 수 있을 것 같다.
+p-값이 1\%과 10\% 사이라면, 경계값으로 생각해야한다. 그래서, 상기 사례를 통해서는 
+동전에 편의가 있는지 없는지 데이터가 강력한 증거를 주지는 못한다고 결론낸다. 
 
-\section{Testing a difference in means}
+\section{평균 차이 검정 (Testing a difference in means)}
 \label{testdiff}
-\index{mean!difference in}
+\index{평균 (mean)!차이 (difference in)}
 
 One of the most common effects to test is a difference in mean
 between two groups.  In the NSFG data, we saw that the mean pregnancy
