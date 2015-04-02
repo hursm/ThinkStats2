@@ -485,53 +485,34 @@ and the observed slope, 0.017 lbs/year.}
 \section{가중 재표본추출 (Weighted resampling)}
 \label{weighted}
 
-So far we have treated the NSFG data as if it were a representative
-sample, but as I mentioned in Section~\ref{nsfg}, it is not.  The
-survey deliberately oversamples several groups in order to
-improve the chance of getting statistically significant results; that
-is, in order to improve the power of tests involving these groups.
-  \index{significant} \index{statistically significant}
+지금까지 NSFG 데이터를 마치 대표 표본인 것처럼 다루었다. 하지만, ~\ref{nsfg} 절에서 언급한 것 같이, 대표 표본은 아니다. 의도적으로 조사는 몇몇 집단을 오버샘플링(oversampling) 하는데 이유는 통계적으로 유의적인 결과를 도출할 확률을 높이기 위해서다; 즉, 이들 집단에 대해서 검정력을 향상하기 위해서다.
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
 
-This survey design is useful for many purposes, but it means that we
-cannot use the sample to estimate values for the general
-population without accounting for the sampling process.
+조사설계가 많은 목적에 대해서 유용하지만, 표집 과정을 고려하지 않고, 일반 모집단에 대한 값을 추정하는데 표본을 사용할 수 있다는 것을 의미하지는 않는다.
 
-For each respondent, the NSFG data includes a variable called {\tt
-  finalwgt}, which is the number of people in the general population
-the respondent represents.  This value is called a {\bf sampling
-  weight}, or just ``weight.''
-\index{sampling weight}
-\index{weight}
-\index{weighted resampling}
-\index{resampling!weighted}
+각 응답자에 대해서, NSFG 데이터는 {\tt finalwgt} 변수가 있는데, 응답자가 대표하는 일반 모집단에 속한 사람 숫자다. 이 값은 {\bf 표집 가중치 (sampling weight}, 즉 ``가중치 (weight)''라고 불린다.
+\index{표집 가중치 (sampling weight)}
+\index{가중치 (weight)}
+\index{가중 재표본추출 (weighted resampling)}
+\index{재표본추출 (resampling)!가중 (weighted)}
 
-As an example, if you survey 100,000 people in a country of 300
-million, each respondent represents 3,000 people.  If you oversample
-one group by a factor of 2, each person in the oversampled
-group would have a lower weight, about 1500.
+예제로, 만약 3억 인구를 가진 나라에서 100,000 명을 조사한다면, 각 응답자는 3,000 명을 대표한다. 만약 한 집단을 2배 오버샘플링한다면, 오버샘플링된 집단에 각 사람은 더 적은 가중치(약 1500)가 된다.
 
-To correct for oversampling, we can use resampling; that is, we
-can draw samples from the survey using probabilities proportional
-to sampling weights.  Then, for any quantity we want to estimate, we can
-generate sampling distributions, standard errors, and confidence
-intervals.  As an example, I will estimate mean birth weight with
-and without sampling weights.
-\index{standard error}
-\index{confidence interval}
-\index{birth weight}
-\index{weight!birth}
-\index{sampling distribution}
-\index{oversampling}
+오버샘플링을 보정하기 위해서, 재표본추출(resampling)을 사용할 수 있다; 즉, 표집 가중치에 비례하는 확률을 사용해서 조사자료에서 표본을 추출한다.
+그리고 나서, 추정하려고 하는 임의 정량정보에 대해서 표집 분포, 표본 오차, 신뢰구간을 생성할 수 있다. 예제로, 평균 출생 체중을 표본 가중치를 두고, 안두고 추정할 것이다.
 
-In Section~\ref{regest}, we saw {\tt ResampleRows}, which chooses
-rows from a DataFrame, giving each row the same probability.
-Now we need to do the same thing using probabilities
-proportional to sampling weights.
-{\tt ResampleRowsWeighted} takes a DataFrame, resamples rows according
-to the weights in {\tt finalwgt}, and returns a DataFrame containing
-the resampled rows:
-\index{DataFrame}
-\index{resampling}
+\index{표본 오차 (standard error)}
+\index{신뢰 구간 (confidence interval)}
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{표집 분포 (sampling distribution)}
+\index{오버샘플링 (oversampling)}
+
+~\ref{regest}절에서, {\tt ResampleRows}를 살펴봤다. 동일한 확률을 각 행에 두고 데이터프레임에서 행을 추출한다. 이제 동일한 것을 표집 가중치에 비례한 확률을 사용해서 수행할 필요가 있다. {\tt ResampleRowsWeighted}는 데이터프레임을 인자로 받고, {\tt finalwgt}에 있는 가중치에 따라 행을 재표본 추출하고, 재표본추출된 행을 포함하는 데이터프레임을 반환한다.
+
+\index{데이터프레임 (DataFrame)}
+\index{재표본추출 (resampling)}
 
 \begin{verbatim}
 def ResampleRowsWeighted(df, column='finalwgt'):
@@ -542,34 +523,29 @@ def ResampleRowsWeighted(df, column='finalwgt'):
     return sample
 \end{verbatim}
 
-{\tt weights} is a Series; converting it to a dictionary makes
-a map from the indices to the weights.  In {\tt cdf} the values
-are indices and the probabilities are proportional to the
-weights.
+{\tt weights}는 시리즈다; 시리즈를 딕셔너리로 전환하는 것은 인덱스를 가중치로 매핑한다. {\tt cdf}에서 값은 인덱스고, 확률은 가중치에 비례한다.
 
-{\tt indices} is a sequence of row indices; {\tt sample} is a
-DataFrame that contains the selected rows.  Since we sample with
-replacement, the same row might appear more than once.  \index{Cdf}
-\index{replacement}
+{\tt indices}는 행인덱스 시퀀스다; {\tt sample}은 선택된 행을 담고 있는 데이터프레임이다. 복원 표본 추출을 했기 때문에, 동일한 행이 한번이상 나올 수 있다.
+\index{Cdf}
+\index{복원 (replacement)}
 
-Now we can compare the effect of resampling with and without
-weights.  Without weights, we generate the sampling distribution
-like this:
-\index{sampling distribution}
+이제, 가중치를 두고, 두지 않고 재표본추출 효과를 비교할 수 있다.
+가중치를 두지 않고, 다음과 같이 표집분포를 생성한다.
+\index{표집 분포 (sampling distribution)}
 
 \begin{verbatim}
     estimates = [ResampleRows(live).totalwgt_lb.mean()
                  for _ in range(iters)]
 \end{verbatim}
 
-With weights, it looks like this:
+가중치를 두면, 다음과 같다.
 
 \begin{verbatim}
     estimates = [ResampleRowsWeighted(live).totalwgt_lb.mean()
                  for _ in range(iters)]
 \end{verbatim}
 
-The following table summarizes the results:
+다음 표에 요약결과가 나와있다.
 
 \begin{center}
 \begin{tabular}{|l|c|c|c|}
@@ -590,16 +566,14 @@ Weighted            &  7.35  &  0.014  &  (7.32, 7.37)  \\
 %stderr 0.0142738972319
 %ci (7.3232804012858885, 7.3704916897506925)
 
-In this example, the effect of weighting is small but non-negligible.
-The difference in estimated means, with and without weighting, is
-about 0.08 pounds, or 1.3 ounces.  This difference is substantially
-larger than the standard error of the estimate, 0.014 pounds, which
-implies that the difference is not due to chance.
-\index{standard error}
-\index{confidence interval}
+예제애서, 가중치를 둔 효과는 적지만 무시할만하지는 않다.
+가중치를 두고, 두지 않고 추정된 평균에 차이는 약 0.08 파운드, 1.3 온스다.
+차이가 추정값 표준 오차(0.014 파운드)보다 실질적으로 더 크다. 함축하는 바는 차이는 우연적 요소에 의한 것은 아니라는 것이다.
+\index{표준 오차 (standard error)}
+\index{신뢰 구간 (confidence interval)}
 
 
-\section{Exercises}
+\section{연습문제}
 
 A solution to this exercise is in \verb"chap10soln.ipynb"
 
@@ -629,30 +603,28 @@ estimates?
 \end{exercise}
 
 
-\section{Glossary}
+\section{용어 사전}
 
 \begin{itemize}
 
-\item linear fit: a line intended to model the relationship between
-variables.  \index{linear fit}
+\item 선형적합 (linear fit): 변수 사이 관계를 모형화하려는 직선.
+\index{선형적합 (linear fit)}
 
-\item least squares fit: A model of a dataset that minimizes the
-sum of squares of the residuals.
-\index{least squares fit}
+\item 최소제곱적합 (least squares fit): 잔차제곱합을 최소화하는 데이터셋 모형.
+\index{최소제곱적합 (least squares fit)}
 
-\item residual: The deviation of an actual value from a model.
-\index{residuals}
+\item 잔차 (residual): 실제값과 모형값 편차.
+\index{잔차 (residuals)}
 
-\item goodness of fit: A measure of how well a model fits data.
-\index{goodness of fit}
+\item 적합도 (goodness of fit): 모형이 데이터에 얼마나 잘 적합하는지에 대한 척도.
+\index{적합도 (goodness of fit)}
 
-\item coefficient of determination: A statistic intended to
-quantify goodness of fit.
-\index{coefficient of determination}
+\item 결정계수 (coefficient of determination): 적합도를 계량화하려는 통계량.
+\index{결정계수 (coefficient of determination)}
 
-\item sampling weight: A value associated with an observation in a
-  sample that indicates what part of the population it represents.
-\index{sampling weight}
+\item 표집 가중치 (sampling weight): 
+표본이 모집단 어느 부분을 대표하는지 나타내는데 표본 관측과 연관된 값.
+\index{표집 가중치 (sampling weight)}
 
 \end{itemize}
 
