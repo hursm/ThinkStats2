@@ -1,79 +1,53 @@
 
 
-\chapter{Regression}
+\chapter{회귀 (Regression)}
 \label{regression}
 
-The linear least squares fit in the previous chapter is an example of
-{\bf regression}, which is the more general problem of fitting any
-kind of model to any kind of data.  This use of the term ``regression''
-is a historical accident; it is only indirectly related to the
-original meaning of the word.
-\index{model}
-\index{regression}
+앞장에서 선형최소적합은 {\bf 회귀 (regression)}의 한 사례다. 회귀는 어떤 종류의 데이터를 어떤 종류의 모형에도 적합하는 더 일반적인 문제다. ``회귀 (regression)'' 용어 사용은 역사적 우연이다; 단어의 본래 의미와는 간접적으로 연관된다.
+\index{모형 (model)}
+\index{회귀 (regression)}
 
-The goal of regression analysis is to describe the relationship
-between one set of variables, called the {\bf dependent variables},
-and another set of variables, called independent or {\bf
-  explanatory variables}.
-\index{explanatory variable}
-\index{dependent variable}
+회귀분석의 목적은 {\bf 종속변수 (dependent variables)}라고 불리는 변수집합과 {\bf 설명변수 (explanatory variables)}라고 불리는 또 다른 집합변수 사이 관계를 기술하는 것이다.
+\index{설명변수 (explanatory variable)}
+\index{종속변수 (dependent variable)}
 
-In the previous chapter we used mother's age as an explanatory
-variable to predict birth weight as a dependent variable.  When there
-is only one dependent and one explanatory variable, that's {\bf
-  simple regression}.  In this chapter, we move on to {\bf multiple
-  regression}, with more than one explanatory variable.  If there is
-more than one dependent variable, that's multivariate
-regression.
-\index{birth weight}
-\index{weight!birth}
-\index{simple regression}
-\index{multiple regression}
+앞장에서 종속변수로 출생 체중을 예측하는데 설명변수로 산모 연령을 사용했다.
+단지 종속변수가 하나 설명변수도 하나라면, {\bf 단순회귀(simple regression)}가 된다. 이번 장에서는 하나 이상 설명변수를 갖는 {\bf 다중회귀(multiple regression)}로 옮겨간다. 만약 종속변수가 하나이상이라면, 다변량회귀(multivariate regression)이 된다.
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{단순회귀 (simple regression)}
+\index{다중회귀 (multiple regression)}
 
-If the relationship between the dependent and explanatory variable
-is linear, that's {\bf linear regression}.  For example,
-if the dependent variable is $y$ and the explanatory variables
-are $x_1$ and $x_2$, we would write the following linear
-regression model:
+
+만약 종속변수와 설명변수 간 관계가 선형이면, {\bf 선형회귀 (linear regression)}가 된다. 예를 들어, 종속변수가 $y$이고, 설명변수가 $x_1$과 $x_2$라면, 
+다음과 같이 선형회귀모형을 작성할 수 있다.
 %
 \[ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \eps \]
 %
-where $\beta_0$ is the intercept, $\beta_1$ is the parameter
-associated with $x_1$, $\beta_2$ is the parameter associated with
-$x_2$, and $\eps$ is the residual due to random variation or other
-unknown factors.
-\index{regression model}
-\index{linear regression}
 
-Given a sequence of values for $y$ and sequences for $x_1$ and $x_2$,
-we can find the parameters, $\beta_0$, $\beta_1$, and $\beta_2$, that
-minimize the sum of $\eps^2$.  This process is called
-{\bf ordinary least squares}.  The computation is similar to {\tt
-  thinkstats2.LeastSquare}, but generalized to deal with more than one
-explanatory variable.  You can find the details at
-\url{https://en.wikipedia.org/wiki/Ordinary_least_squares}
-\index{explanatory variable}
-\index{ordinary least squares}
-\index{parameter}
+여기서 $\beta_0$는 절편, $\beta_1$은 $x_1$과 연관된 모수, $\beta_2$는 
+$x_2$와 연관된 모수, 그리고 $\eps$는 확률변동 혹은 다른 미지 요인으로 인한 잔차다.
+\index{회귀모형 (regression model)}
+\index{선형회귀 (linear regression)}
 
-The code for this chapter is in {\tt regression.py}.  For information
-about downloading and working with this code, see Section~\ref{code}.
+$y$에 대한 시퀀스 값과 $x_1$과 $x_2$에 대한 시퀀스 값이 주어지면, $\eps^2$ 합을 최소화하는 $\beta_0$, $\beta_1$, $\beta_2$ 모수를 찾을 수 있다. 이 과정을 {\bf 보통최소제곱(ordinary least squares)}이라고 부른다. 
+연산은 {\tt thinkstats2.LeastSquare}와 유사하지만, 하나 이상의 설명변수를 다루도록 일반화되었다. 자세한 정보는 웹사이트를 참조한다. \url{https://en.wikipedia.org/wiki/Ordinary_least_squares}
+\index{설명변수 (explanatory variable)}
+\index{보통최소제곱 (ordinary least squares)}
+\index{모수 (parameter)}
+
+이번 장에서 사용되는 코드는 {\tt regression.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
 \section{StatsModels}
 \label{statsmodels}
 
-In the previous chapter I presented {\tt thinkstats2.LeastSquares}, an
-implementation of simple linear regression intended to be easy to
-read.  For multiple regression we'll switch to StatsModels, a Python
-package that provides several forms of regression and other
-analyses.  If you are using Anaconda, you already have StatsModels;
-otherwise you might have to install it.
-\index{Anaconda}
+앞장에서 가독성이 좋은 단순선형회귀모형을 구현한 {\tt thinkstats2.LeastSquares}를 제시했다. 다중회귀에 대해서 StatsModels로 전환한다. 파이썬 팩키지로 몇가지 형태 회귀분석와 다른 분석 기능을 제공한다. 만약 아나콘다(Anaconda)를 사용하고 있다면, 이미 StatsModels이 설치되어 있다; 그렇지 않다면, 설치해야할지 모른다.
+\index{아나콘다 (Anaconda)}
 
-As an example, I'll run the model from the previous chapter with
-StatsModels:
+예제로, StatModels을 가지고 앞장 모형을 실행한다.
 \index{StatsModels}
-\index{model}
+\index{모형 (model)}
 
 \begin{verbatim}
     import statsmodels.formula.api as smf
@@ -84,77 +58,66 @@ StatsModels:
     results = model.fit()
 \end{verbatim}
 
-{\tt statsmodels} provides two interfaces (APIs); the ``formula''
-API uses strings to identify the dependent and explanatory variables.
-It uses a syntax called {\tt patsy}; in this example, the \verb"~"
-operator separates the dependent variable on the left from the
-explanatory variables on the right.
-\index{explanatory variable}
-\index{dependent variable}
+{\tt statsmodels}은 인터페이스(APIs) 두개를 제공한다; ``formula'' API는 문자열로 종속변화 설명변수를 식별한다.
+{\tt patsy}라는 구문(syntax)을 사용한다; 상기 예제에서, \verb"~" 연산자가 왼편에 종속변수와 오른편에 설명변수를 구별한다.
+\index{설명변수 (explanatory variable)}
+\index{종속변수 (dependent variable)}
 \index{Patsy}
 
-{\tt smf.ols} takes the formula string and the DataFrame, {\tt live},
-and returns an OLS object that represents the model.  The name {\tt ols}
-stands for ``ordinary least squares.''
-\index{DataFrame}
-\index{model}
-\index{ordinary least squares}
+{\tt smf.ols}는 인자로 문자열 공식과 데이터프레임 {\tt live}를 받고,
+모형을 표현하는 OLS객체를 반환한다.
+{\tt ols} 는 ``ordinary least squares'' 약자다.
+\index{데이터프레임 (DataFrame)}
+\index{모형 (model)}
+\index{보통최소제곱 (ordinary least squares)}
 
-The {\tt fit} method fits the model to the data and returns a
-RegressionResults object that contains the results.
+{\tt fit}메쏘드는 모형을 데이터에 적합하고 결과를 담고 있는 객체 RegressionResults를 반환한다.
 \index{RegressionResults}
 
-The results are also available as attributes.  {\tt params}
-is a Series that maps from variable names to their parameters, so we can
-get the intercept and slope like this:
-\index{Series}
+결과는 또한 속성(attribute)으로도 접근가능하다.
+{\tt params}은 시리즈로 변수명을 모수에 매핑한다.
+그래서, 다음과 같은 절편과 기울기를 얻을 수 있다.
+\index{시리즈 (Series)}
 
 \begin{verbatim}
     inter = results.params['Intercept']
     slope = results.params['agepreg']
 \end{verbatim}
 
-The estimated parameters are 6.83 and 0.0175, the same as
-from {\tt LeastSquares}.
-\index{parameter}
+추정한 모수는 6.83 와 0.0175으로 {\tt LeastSquares}로 추정한 것과 동일한다.
+\index{모수 (parameter)}
 
-{\tt pvalues} is a Series that maps from variable names to the associated
-p-values, so we can check whether the estimated slope is statistically
-significant:
-\index{p-value}
-  \index{significant} \index{statistically significant}
+{\tt pvalues}는 시리즈로 변수명과 연관된 p-값을 매핑한다.
+그래서 추정한 기울기가 통계적으로 유의한지 점검할 수 있다.
+\index{p-값 (p-value)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
 
 \begin{verbatim}
     slope_pvalue = results.pvalues['agepreg']
 \end{verbatim}
 
-The p-value associated with {\tt agepreg} is {\tt 5.7e-11}, which
-is less than $0.001$, as expected.
-\index{age}
+{\tt agepreg}와 연관된 p-값은 {\tt 5.7e-11} 으로 예상한 것처럼 $0.001$ 보다 적다.
+\index{연령 (age)}
 
-{\tt results.rsquared} contains $R^2$, which is $0.0047$.  {\tt
-  results} also provides \verb"f_pvalue", which is the p-value
-associated with the model as a whole, similar to testing whether $R^2$
-is statistically significant.
-\index{model}
-\index{coefficient of determination}
-\index{r-squared}
+{\tt results.rsquared}는 $R^2$ 정보를 담고 있는데 $0.0047$이다.  
+{\tt results}는 또한 전체 모형과 연관된 p-값인 \verb"f_pvalue"도 제공하는데 $R^2$가 통계적으로 유의한가를 점검하는 검정과 유사하다. 
+\index{모형 (model)}
+\index{결정계수 (coefficient of determination)}
+\index{r-제곱 (r-squared)}
 
-And {\tt results} provides {\tt resid}, a sequence of residuals, and
-{\tt fittedvalues}, a sequence of fitted values corresponding to
-{\tt agepreg}.
-\index{residuals}
+{\tt results}는 잔차 시퀀스인 {\tt resid}와 {\tt agepreg}에 상응하는 적합한 값 시퀀스 {\tt fittedvalues}도 제공한다.
+\index{잔차 (residuals)}
 
-The results object provides {\tt summary()}, which
-represents the results in a readable format.  
+{\tt results} 객체는 {\tt summary()} 메쏘드도 제공하는데,
+가독성이 좋은 형식으로 결과를 표현한다.
 
 \begin{verbatim}
     print(results.summary())
 \end{verbatim}
-
-But it prints a lot of information that is not relevant (yet), so
-I use a simpler function called {\tt SummarizeResults}.  Here are
-the results of this model:
+하지만 (아직) 관련되지도 않은 많은 정보를 출력한다.
+그래서 {\tt SummarizeResults}로 불리는 더 간단한 함수를 사용한다.
+다음에 모형 결과가 있다.
 
 \begin{verbatim}
 Intercept       6.83    (0)
@@ -164,80 +127,64 @@ Std(ys) 1.408
 Std(res) 1.405
 \end{verbatim}
 
-{\tt Std(ys)} is the standard deviation of the dependent variable,
-which is the RMSE if you have to guess birth weights without the benefit of
-any explanatory variables.  {\tt Std(res)} is the standard deviation
-of the residuals, which is the RMSE if your guesses are informed
-by the mother's age.  As we have already seen, knowing the mother's
-age provides no substantial improvement to the predictions.
-\index{standard deviation}
-\index{birth weight}
-\index{weight!birth}
-\index{explanatory variable}
-\index{dependent variable}
+{\tt Std(ys)}는 만약 어떤 설명변수 도움없이 출생 체중을 추측해야 한다면 갖게될 종속변수 표준편차 RMSE가 된다.
+{\tt Std(res)}는 만약 추측에 산모 연령 정보를 안다면 갖게될 잔차 표준편차 RMSE가 된다. 
+이미 살펴봤듯이, 산모 연령을 아는 것이 그다지 예측에 향상을 가져오지는 않는다.
+
+\index{표준편차 (standard deviation)}
+\index{출생체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{설명변수 (explanatory variable)}
+\index{종속변수 (dependent variable)}
 \index{RMSE}
-\index{predictive power}
+\index{예측력 (predictive power)}
 
 
-\section{Multiple regression}
+\section{다중회귀 (Multiple regression)}
 \label{multiple}
 
-In Section~\ref{birth_weights} we saw that first babies tend to be
-lighter than others, and this effect is statistically significant.
-But it is a strange result because there is no obvious mechanism that
-would cause first babies to be lighter.  So we might wonder whether
-this relationship is {\bf spurious}.
-\index{multiple regression}
-\index{spurious relationship}
+~\ref{birth_weights}절에서 첫째 아이 체중이 첫째가 아닌 아이들 체중보다 가벼운 경향이 있고, 그 효과가 통계적 유의적성이 있다는 것을 봤다.
+하지만, 이상한 결과로 이유는 첫번째 아이 체중이 더 가볍다고 할 수 있는 분명한 메커니즘(mechanism)은 없다. 그래서 이러한 관계가 {\bf 거짓(spurious)}인지 궁금하다.
+\index{다중회귀 (multiple regression)}
+\index{거짓관계(spurious relationship)}
 
-In fact, there is a possible explanation for this effect.  We have
-seen that birth weight depends on mother's age, and we might expect
-that mothers of first babies are younger than others.
-\index{weight}
-\index{age}
-
-With a few calculations we can check whether this explanation
-is plausible.  Then we'll use multiple regression to investigate
-more carefully.  First, let's see how big the difference in weight
-is:
+사실 이 효과에 대한 가능한 설명이 있기는 하다. 출생 체중이 산모 연령에 의존한 것을 봤다. 그리고 첫째 아이 산모는 첫째가 아닌 아이 산모보다 더 어리다는 것을 예상할 수 있다.
+\index{체중 (weight)}
+\index{연령 (age)}
+계산 몇번으로 상기 설명이 그럴듯한지 점검할 수 있다.
+그리고 나서, 다중회귀를 사용해서 좀더 자세히 조사할 것이다. 먼저 체중 차이가 얼마나 큰지 살펴본다.
 
 \begin{verbatim}
 diff_weight = firsts.totalwgt_lb.mean() - others.totalwgt_lb.mean()
 \end{verbatim}
 
-First babies are 0.125 lbs lighter, or 2 ounces.  And the difference
-in ages:
+첫째 아이는 0.125 lbs, 즉 2 온스 가볍다. 그리고 연령 차이는 다음과 같다.
 
 \begin{verbatim}
 diff_age = firsts.agepreg.mean() - others.agepreg.mean()
 \end{verbatim}
 
-The mothers of first babies are 3.59 years younger.  Running the
-linear model again, we get the change in birth weight as a function
-of age:
-\index{birth weight}
-\index{weight!birth}
+첫째 아이 산모 나이가 3.59 년 더 젊다.
+다시 선형 모형을 돌리게 되면, 연령 함수로 출생체중에 변화값를 얻는다.
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
 
 \begin{verbatim}
 results = smf.ols('totalwgt_lb ~ agepreg', data=live).fit()
 slope = results.params['agepreg']
 \end{verbatim}
 
-The slope is 0.175 pounds per year.  If we multiply the slope by
-the difference in ages, we get the expected difference in birth
-weight for first babies and others, due to mother's age:
+기울기는 년당 0.175 파운드다. 만약 기울기를 연령 차이와 곱하게 되면, 산모 연령 때문에 첫째 아이와 첫째가 아닌 아이들에 대한 출생 체중 평균 차이를 얻게된다. 
 
 \begin{verbatim}
 slope * diff_age
 \end{verbatim}
 
-The result is 0.063, just about half of the observed difference.
-So we conclude, tentatively, that the observed difference in birth
-weight can be partly explained by the difference in mother's age. 
+결과는 0.063 으로 관측 차이의 약 절반이다. 
+그래서 잠정적으로 출생 체중에 관측 차이는 부분적으로 산모 연령 차이로 설명될 수 있다고 결론낸다.
 
-Using multiple regression, we can explore these relationships
-more systematically.
-\index{multiple regression}
+다중 회귀를 사용해서, 관계를 좀더 체계적으로 탐색할 수 있다.
+\index{다중 회귀 (multiple regression)}
 
 \begin{verbatim}
     live['isfirst'] = live.birthord == 1
@@ -245,13 +192,11 @@ more systematically.
     results = smf.ols(formula, data=live).fit()
 \end{verbatim}
 
-The first line creates a new column named {\tt isfirst} that is
-True for first babies and false otherwise.  Then we fit a model
-using {\tt isfirst} as an explanatory variable.
-\index{model}
-\index{explanatory variable}
+첫번째 행은 {\tt isfirst}라는 새로운 칼럼(열)을 생성한다. 첫번째 아이는 참(True), 첫번째 아이가 아니면 거싲(False)다. 그리고 나서, 설명변수로 {\tt isfirst}를 사용해서 모형에 적합한다.
+\index{모형 (model)}
+\index{설명 변수 (explanatory variable)}
 
-Here are the results:
+다음에 결과가 있다.
 
 \begin{verbatim}
 Intercept         7.33   (0)
@@ -259,27 +204,19 @@ isfirst[T.True]  -0.125  (2.55e-05)
 R^2 0.00196
 \end{verbatim}
 
-Because {\tt isfirst} is a boolean, {\tt ols} treats it as a
-{\bf categorical variable}, which means that the values fall
-into categories, like True and False, and should not be treated
-as numbers.  The estimated parameter is the effect on birth
-weight when {\tt isfirst} is true, so the result,
--0.125 lbs, is the difference in
-birth weight between first babies and others.  
-\index{birth weight}
-\index{weight!birth}
-\index{categorical variable}
-\index{boolean}
+{\tt isfirst}는 부울(boolean)이기 때문에, \tt ols}는 이 변수를 
+{\bf 범주형 변수 (categorical variable)}로 처리한다. 의미하는 바는 값이 참(true)과 거짓(false) 같은 범주에 속하기 때문에 숫자로 처리되면 안된다는 것이다.
+추정된 모수는 {\tt isfirst}가 참일때 출생 체중에 대한 효과다. 그래서 결과 -0.125 lbs 는 첫번째 아이와 첫째가 아닌 아이들 간에 출생체중 차이다.
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{범주형 변수 (categorical variable)}
+\index{부울 (boolean)}
 
-The slope and the intercept are statistically significant,
-which means that they were unlikely to occur by chance, but the
-the $R^2$ value for this model is small, which means that
-{\tt isfirst} doesn't account for a substantial part of the
-variation in birth weight.
-\index{coefficient of determination}
-\index{r-squared}
+기울기와 절편이 통계적 유의성이 있다. 의미하는 바는 우연으로 발생한 것 같지는 않다. 하지만, 모형 $R^2$ 값이 작다. 의미하는 바는 {\tt isfirst} 가 출생체중 변동 상당부분을 설명하지는 못한다는 것이다.
+\index{결정계수 (coefficient of determination)}
+\index{r-제곱 (r-squared)}
 
-The results are similar with {\tt agepreg}:
+결과는 {\tt agepreg}와 비슷하다.
 
 \begin{verbatim}
 Intercept       6.83    (0)
@@ -287,14 +224,11 @@ agepreg         0.0175  (5.72e-11)
 R^2 0.004738
 \end{verbatim}
 
-Again, the parameters are statistically significant, but
-$R^2$ is low.
-\index{coefficient of determination}
-\index{r-squared}
+다시 한번, 모수는 통계적 유의성이 있으나, $R^2$ 값은 낮다.
+\index{결정계수 (coefficient of determination)}
+\index{r-제곱 (r-squared)}
 
-These models confirm results we have already seen.  But now we
-can fit a single model that includes both variables.  With the
-formula \verb"totalwgt_lb ~ isfirst + agepreg", we get:
+상기 모형은 지금까지 살펴본 결과를 다시 확인해 준다. 하지만, 이제 변수 두개를 넣어서 모형을 적합할 수 있다. 구문 공식 \verb"totalwgt_lb ~ isfirst + agepreg"을 대입하면, 다음을 얻는다:
 
 \begin{verbatim}
 Intercept        6.91    (0)
@@ -303,24 +237,20 @@ agepreg          0.0154  (3.93e-08)
 R^2 0.005289
 \end{verbatim}
 
-In the combined model, the parameter for {\tt isfirst} is smaller
-by about half, which means that part of the apparent effect of
-{\tt isfirst} is actually accounted for by {\tt agepreg}.  And
-the p-value for {\tt isfirst} is about 2.5\%, which is on the
-border of statistical significance.
-\index{p-value}
-\index{model}
+조합 모형에서, {\tt isfirst}에 대한 모수는 약 절반 작아졌다. 의미하는 것은 {\tt isfirst}의 외관효과가 사실 {\tt agepreg}으로 설명이 된다는 것이다.
+그리고 {\tt isfirst}에 대한 p-값은 약 2.5\%로, 통계적 유의성 경계선상에 있다.
+\index{p-값 (p-value)}
+\index{모형 (model)}
 
-$R^2$ for this model is a little higher, which indicates that the
-two variables together account for more variation in birth weight
-than either alone (but not by much).
-\index{birth weight}
-\index{weight!birth}
-\index{coefficient of determination}
-\index{r-squared}
+모형에 $R^2$값이 약간 더 크다. 따라서 변수 두개가 혼자보다 출산 체중에 변동성을 더 많이 (하지만 그다지 많지는 않다) 설명하는 것을 나타낸다.
+
+\index{출생 체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{결정계수 (coefficient of determination)}
+\index{r-제곱 (r-squared)}
 
 
-\section{Nonlinear relationships}
+\section{비선형 관계 (Nonlinear relationships)}
 \label{nonlinear}
 
 Remembering that the contribution of {\tt agepreg} might be nonlinear,
