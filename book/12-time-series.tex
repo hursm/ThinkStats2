@@ -1,82 +1,68 @@
 
-\chapter{Time series analysis}
+\chapter{시계열 분석}
 
-A {\bf time series} is a sequence of measurements from a system that
-varies in time.  One famous example is the ``hockey stick graph'' that
-shows global average temperature over time (see
-\url{https://en.wikipedia.org/wiki/Hockey_stick_graph}).
-\index{time series}
-\index{hockey stick graph}
+{\bf 시계열(time series)}은 시스템에서 시간에 따라 변화하는 측정값 시퀀스다. 
+유명한 사례는 ``하키스틱 그래프 (hockey stick graph)''로 시간에 따른 글로벌 평균 기온을 보여준다.(\url{https://en.wikipedia.org/wiki/Hockey_stick_graph} 참조).
+\index{시계열 (time series)}
+\index{하키스틱 그래프 (hockey stick graph)}
 
-The example I work with in this chapter comes from Zachary M. Jones, a
-researcher in political science who studies the black market for
-cannabis in the U.S.  (\url{http://zmjones.com/marijuana}).  He
-collected data from a web site called ``Price of Weed'' that
-crowdsources market information by asking participants to report the
-price, quantity, quality, and location of cannabis transactions
-(\url{http://www.priceofweed.com/}).  The goal of his project is to
-investigate the effect of policy decisions, like legalization, on
-markets.  I find this project appealing because it is an example that
-uses data to address important political questions, like drug policy.
-\index{Price of Weed}
-\index{cannabis}
+이번 장에서 작업할 예제는 정치과학 연구자 Zachary M. Jones에게서 왔다. 
+Zachary는 미국 대마초(마리화나)에 대한 암시장(black market)을 연구한다(\url{http://zmjones.com/marijuana}). ``담배 가격 (Price of Weed)''으로 불리는 웹사이트에서 데이터를 수집했다. 이 웹사이트는 대마초 거래장소, 가격, 품질, 수량을 참여자에게 물어 시장정보를 클라우드 소싱(crowd sourcing)했다(\url{http://www.priceofweed.com/}).
+이 프로젝트의 목적은 사장에 대한 합법화(legalization)같은 정책결정 효과를 조사하는 것이다. 이 프로젝트에 매력을 발견했는데 이유는 데이터를 사용해서 중요한 정치적 질문 예를 들면, 약물정책(drug policy)같이 다루기 깨문이다.
 
-I hope you will
-find this chapter interesting, but I'll take this opportunity to
-reiterate the importance of maintaining a professional attitude to
-data analysis.  Whether and which drugs should be illegal are
-important and difficult public policy questions; our decisions should
-be informed by accurate data reported honestly.
-\index{ethics}
+\index{담배 가격 (Price of Weed)}
+\index{대마초 (cannabis)}
 
-The code for this chapter is in {\tt timeseries.py}.  For information
-about downloading and working with this code, see Section~\ref{code}.
+이번 장에서 흥미를 찾았으면하는 희망이 있지만, 분석에 전문가적인 태도를 유지하는 중요성을 반복하는 기회가 되었으면 한다. 약물(drug)가 불법 혹은 어느 약물이 불법이 되어야 하느냐는 중요하고 어려운 공공정책질문이다; 정직하게 보고된 정확한 데이터로 우리의 결정을 통보해야 한다.
 
+\index{윤리 (ethics)}
 
-\section{Importing and cleaning}
+이번 장에서 사용되는 코드는 {\tt timeseries.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
-The data I downloaded from
-Mr. Jones's site is in the repository for this book.
-The following code reads it into a
-pandas DataFrame:
-\index{pandas}
-\index{DataFrame}
+\section{가져오기(Importing)와 정제하기(cleaning)}
+
+Mr. Jones 사이트에서 다운로드한 데이터는 이책 저장소에 있다.
+다음 코드가 데이터를 읽어 판다스 데이터프레임으로 저장한다.
+\index{판다스 (pandas)}
+\index{데이터프레임 (DataFrame)}
 
 \begin{verbatim}
     transactions = pandas.read_csv('mj-clean.csv', parse_dates=[5])
 \end{verbatim}
 
-\verb"parse_dates" tells \verb"read_csv" to interpret values in column 5
-as dates and convert them to NumPy {\tt datetime64} objects.
-\index{NumPy}
+\verb"parse_dates"는 5번째 칼럼(열)값을 날짜 자료형으로 해석하고, 
+넘파이(NumPy) {\tt datetime64} 객체로 전환한다.
+\index{넘파이 (NumPy)}
 
-The DataFrame has a row for each reported transaction and 
-the following columns:
+데이터프레임에는 각각 보고된 거래건에 대한 행과 다음 칼럼(열)이 있다.
 
 \begin{itemize}
 
-\item city: string city name.
+\item city (도시): 문자열 도시 이름.
 
-\item state: two-letter state abbreviation.
+\item state (주): 알파벳 두 글자로된 미국 주명.
 
-\item price: price paid in dollars.
-\index{price}
+\item price (가격): 달러로 지불된 가격.
+\index{가격 (price)}
 
-\item amount: quantity purchased in grams.
+\item amount (수량): 그램으로 구입한 수량.
 
-\item quality: high, medium, or low quality, as reported by the purchaser.
+\item quality (품질): 구매자가 보고한 고급, 보통, 저급 품질.
 
-\item date: date of report, presumed to be shortly after date of purchase.
+\item date (날짜): 보고날짜, 추측컨데 구매일 직후 날짜.
 
-\item ppg: price per gram, in dollars.
+\item ppg: 달러 표기된 그램당 가격 (price per gram)
 
-\item state.name: string state name.
+\item state.name: 문자열 미국 주 이름
 
-\item lat: approximate latitude of the transaction, based on city name.
+\item lat: 도시 이름에 기반한 거래가 발생한 근사치 위도 정보.
 
-\item lon: approximate longitude of the transaction.
+\item lon: 거래가 발생한 근사치 위도 정보.
 
 \end{itemize}
+
+
 
 Each transaction is an event in time, so we could treat this dataset
 as a time series.  But the events are not equally spaced in time; the
