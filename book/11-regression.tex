@@ -600,17 +600,14 @@ $\log o$ 예측 값을 계산하고 나서 확률로 전환한다.
 
 \section{모수 추정 (Estimating parameters)}
 
-Unlike linear regression, logistic regression does not have a
-closed form solution, so it is solved by guessing an initial
-solution and improving it iteratively.
-\index{logistic regression}
-\index{closed form}
+선형회귀와 달리, 로지스틱 회귀는 닫힌 형식 해답(closed form solution)이 없다. 그래서, 초기 해답(solution)을 추측하고 반복적으로 해답에 접근해 간다.
+\index{로지스틱 회귀 (logistic regression)}
+\index{닫힌 형식 (closed form)}
 
-The usual goal is to find the maximum-likelihood estimate (MLE),
-which is the set of parameters that maximizes the likelihood of the
-data.  For example, suppose we have the following data:
+통상적인 목표는 최대우도추정량(maximum-likelihood estimate, MLE)을 찾는 것으로, 데이터 우도(likelihood)를 최대화하는 모수 집합이다.
+예를 들어, 다음 데이터가 있다고 가정하자.
 \index{MLE}
-\index{maximum likelihood estimator}
+\index{최대우도추정량 (maximum likelihood estimator)}
 
 \begin{verbatim}
 >>> y = np.array([0, 1, 0, 1])
@@ -618,22 +615,21 @@ data.  For example, suppose we have the following data:
 >>> x2 = np.array([0, 1, 1, 1])
 \end{verbatim}
 
-And we start with the initial guesses $\beta_0=-1.5$, $\beta_1=2.8$,
-and $\beta_2=1.1$:
+최초 추측값 $\beta_0=-1.5$, $\beta_1=2.8$, $\beta_2=1.1$ 에서 출발한다.
 
 \begin{verbatim}
 >>> beta = [-1.5, 2.8, 1.1]
 \end{verbatim}
 
-Then for each row we can compute \verb"log_o":
+그리고 나서, 각 행에 대해서 \verb"log_o"을 계산한다:
 
 \begin{verbatim}
 >>> log_o = beta[0] + beta[1] * x1 + beta[2] * x2 
 [-1.5 -0.4 -0.4  2.4]
 \end{verbatim}
 
-And convert from log odds to probabilities:
-\index{log odds}
+그리고 로그 오즈를 확률로 전환한다.
+\index{로그 오즈 (log odds)}
 
 \begin{verbatim}
 >>> o = np.exp(log_o)
@@ -643,73 +639,61 @@ And convert from log odds to probabilities:
 [ 0.182  0.401  0.401  0.916 ]
 \end{verbatim}
 
-Notice that when \verb"log_o" is greater than 0, {\tt o}
-is greater than 1 and {\tt p} is greater than 0.5.
+\verb"log_o"가 0 보다 클 때, 
+{\tt o}는 1 보다 크고 {\tt p}는 0.5 보다 크다는 것을 주목한다.
 
-The likelihood of an outcome is {\tt p} when {\tt y==1} and {\tt 1-p}
-when {\tt y==0}.  For example, if we think the probability of a boy is
-0.8 and the outcome is a boy, the likelihood is 0.8; if
-the outcome is a girl, the likelihood is 0.2.  We can compute that
-like this:
-\index{likelihood}
+결과 우도는 {\tt y==1}일 때 {\tt p}, {\tt y==0}일 때 {\tt 1-p}다.
+예를 들어, 남아가 태어날 확률이 0.8이고, 결과가 남아라고 생각한다면, 우도는 0.8이다; 만약 결과가 여아라면, 우도는 0.2다. 다음과 같이 계산할 수 있다.
+\index{우도 (likelihood)}
 
 \begin{verbatim}
 >>> likes = y * p + (1-y) * (1-p)
 [ 0.817  0.401  0.598  0.916 ]
 \end{verbatim}
 
-The overall likelihood of the data is the product of {\tt likes}:
+데이터 전체 우도는 {\tt likes} 곱이다.:
 
 \begin{verbatim}
 >>> like = np.prod(likes)
 0.18
 \end{verbatim}
 
-For these values of {\tt beta}, the likelihood of the data is 0.18.
-The goal of logistic regression is to find parameters that maximize
-this likelihood.  To do that, most statistics packages use an
-iterative solver like Newton's method (see
-\url{https://en.wikipedia.org/wiki/Logistic_regression#Model_fitting}).
-\index{Newton's method}
-\index{iterative solver}
+{\tt beta} 값에 대해, 데이터 우도는 0.18이다. 로지스틱 회귀 목표는 우도를 최대화하는 모수를 찾아내는 것이다. 이를 위해서, 대부분의 통계 팩키지는 뉴톤 방법(Newton's Method) 같은 반복 해결사(iterative solver)를 사용한다.(
+\url{https://en.wikipedia.org/wiki/Logistic_regression#Model_fitting} 참조).
+\index{뉴톤 방법 (Newton's method)}
+\index{반복 해결사 (iterative solver)}
 
 
-\section{Implementation}
+\section{구현 (Implementation)}
 \label{implementation}
 
-StatsModels provides an implementation of logistic regression
-called {\tt logit}, named for the function that converts from
-probability to log odds.  To demonstrate its use, I'll look for
-variables that affect the sex ratio.
+StatsModels에는 로지스틱 회귀 기능을 제공하는 확률을 로그 오즈(log odds)로 전환하는 함수 이름을 따서 {\tt logit}이라고 부른다.
+사용법을 시연하기 위해서, 성비(sex ratio)에 영향을 주는 변수를 찾는다.
 \index{StatsModels}
-\index{sex ratio}
-\index{logit function}
+\index{성비 (sex ratio)}
+\index{로짓 함수 (logit function)}
 
-Again, I load the NSFG data and select pregnancies longer than
-30 weeks:
+다시, NSFG 데이터를 적재하고 임신 30 주차 이상된 정보만 선택한다.
 
 \begin{verbatim}
     live, firsts, others = first.MakeFrames()
     df = live[live.prglngth>30]
 \end{verbatim}
 
-{\tt logit} requires the dependent variable to be binary (rather than
-boolean), so I create a new column named {\tt boy}, using {\tt
-  astype(int)} to convert to binary integers:
-\index{dependent variable}
-\index{boolean}
-\index{binary}
+{\tt logit}에 종속변수는 (부울 자료형 보다) 이진(binary)이 되어야 한다. 그래서 이진 정수(binary integer)로 전환하는 {\tt astype(int)} 메쏘드를 사용해서 새로운 칼럼(열) {\tt boy}를 생성한다.
+
+\index{종속변수 (dependent variable)}
+\index{부울 (boolean)}
+\index{이진 (binary)}
 
 \begin{verbatim}
     df['boy'] = (df.babysex==1).astype(int)
 \end{verbatim}
 
-Factors that have been found to affect sex ratio include parents'
-age, birth order, race, and social status.  We can use logistic
-regression to see if these effects appear in the NSFG data.  I'll
-start with the mother's age:
-\index{age}
-\index{race}
+성비에 영향을 주는 것을 밝혀진 요인은 부모 연령, 출생 순서, 인종, 사회적 지위가 포함된다. 로지스틱 회귀를 사용해서 이러한 효과가 NSFG 데이터에 나타나는지 살펴보자. 산모 연령부터 시작하자.
+
+\index{연령 (age)}
+\index{인종 (race)}
 
 \begin{verbatim}
     import statsmodels.formula.api as smf
@@ -719,21 +703,17 @@ start with the mother's age:
     SummarizeResults(results)
 \end{verbatim}
 
-{\tt logit} takes the same arguments as {\tt ols}, a formula
-in Patsy syntax and a DataFrame.  The result is a Logit object
-that represents the model.  It contains attributes called
-{\tt endog} and {\tt exog} that contain the {\bf endogenous
-variable}, another name for the dependent variable,
-and the {\bf exogenous variables}, another name for the
-explanatory variables.  Since they are NumPy arrays, it is
-sometimes convenient to convert them to DataFrames:
-\index{NumPy}
-\index{pandas}
-\index{DataFrame}
-\index{explanatory variable}
-\index{dependent variable}
-\index{exogenous variable}
-\index{endogenous variable}
+{\tt logit}은 {\tt ols}와 동일한 인자, Patsy 구문 공식(formula)과 데이터프레임을 받는다.
+결과는 모형을 표현하는 Logit 객체다.
+객체 내부에는 {\tt endog}와 {\tt exog} 속성이 포함된다; 종속변수를 부르는 다른 이름 {\bf 내생 변수 (endogenous variable)}와 설명변수를 부르는 다른 이름 {\bf 외생 변수 (exogenous variables)}가 있다.
+넘파이(NumPy) 배열이기 때문에, 때때로 배열을 데이터프레임으로 변환하는 것이 편리하다.
+\index{넘파이 (NumPy)}
+\index{판다스 (pandas)}
+\index{데이터프레임 (DataFrame)}
+\index{설명 변수 (explanatory variable)}
+\index{종속 변수 (dependent variable)}
+\index{외생 변수 (exogenous variable)}
+\index{내생 변수 (endogenous variable)}
 \index{Patsy}
 
 \begin{verbatim}
@@ -741,9 +721,8 @@ sometimes convenient to convert them to DataFrames:
     exog = pandas.DataFrame(model.exog, columns=model.exog_names)
 \end{verbatim}
 
-The result of {\tt model.fit} is a BinaryResults object, which is
-similar to the RegressionResults object we got from {\tt ols}.
-Here is a summary of the results:
+{\tt model.fit} 결과는 BinaryResults 객체로, {\tt ols} 적합에서 얻은 RegressionResults 객체와 유사하다.
+다음에 요약결과가 있다.
 
 \begin{verbatim}
 Intercept   0.00579   (0.953)
@@ -751,22 +730,17 @@ agepreg     0.00105   (0.783)
 R^2 6.144e-06
 \end{verbatim}
 
-The parameter of {\tt agepreg} is positive, which suggests that
-older mothers are more likely to have boys, but the p-value is
-0.783, which means that the apparent effect could easily be due
-to chance.
-\index{p-value}
-\index{age}
+{\tt agepreg} 모수는 양수다. 나이가 더 많은 산모가 남아를 더 선호하는 것같지만, p-값은 0.783으로 외관효과는 우연에 의한 것으로 볼 수 있다.
+\index{p-값 (p-value)}
+\index{연령 (age)}
 
-The coefficient of determination, $R^2$, does not apply to logistic
-regression, but there are several alternatives that are used
-as ``pseudo $R^2$ values.''  These values can be useful for comparing
-models.  For example, here's a model that includes several factors
-believed to be associated with sex ratio:
-\index{model}
-\index{coefficient of determination}
-\index{r-squared}
-\index{pseudo r-squared}
+결정계수, $R^2$는 로지스틱 회귀에 적용되지 않는다.
+하지만, ``의사 $R^2$ 값 (pseudo $R^2$ values)''으로 사용될 수 있는 대안이 몇개 있는데 모형을 비교하는데 유용하다.
+예를 들어, 성비와 연관되어 있다고 믿어지는 요인 몇개를 포함한 모형이 다음에 있다.
+\index{모형 (model)}
+\index{결정계수 (coefficient of determination)}
+\index{r-제곱 (r-squared)}
+\index{의사 r-제곱 (pseudo r-squared)}
 
 \begin{verbatim}
     formula = 'boy ~ agepreg + hpagelb + birthord + C(race)'
@@ -774,10 +748,10 @@ believed to be associated with sex ratio:
     results = model.fit()
 \end{verbatim}
 
-Along with mother's age, this model includes father's age at
-birth ({\tt hpagelb}), birth order ({\tt birthord}), and
-race as a categorical variable.  Here are the results:
-\index{categorical variable}
+산모 연령과 함께, 모형에는 출생시점에 아버지 연령 ({\tt hpagelb}), 
+출생 순서 ({\tt birthord}), 범주형 변수로 인종이 포함된다.
+다음에 결과가 있다.
+\index{범주형 변수 (categorical variable)}
 
 \begin{verbatim}
 Intercept      -0.0301     (0.772)
@@ -789,36 +763,30 @@ birthord        0.00501    (0.821)
 R^2 0.000144
 \end{verbatim}
 
-None of the estimated parameters are statistically significant.  The
-pseudo-$R^2$ value is a little higher, but that could be due to
-chance.
-\index{pseudo r-squared}
-  \index{significant} \index{statistically significant}
+추정 모수 어떤 것도 통계적 유의성이 없다. 의사-$R^2$ 값은 약간 더 높다. 하지만 우연적인 요인 때문일 수 있다.
+\index{의사 r-제곱 (pseudo r-squared)}
+\index{유의성 (significant)} 
+\index{통계적 유의성 (statistically significant)}
 
 
-\section{Accuracy}
+\section{정밀도 (Accuracy)}
 \label{accuracy}
 
-In the office pool scenario,
-we are most interested in the accuracy of the model:
-the number of successful predictions, compared with what we would
-expect by chance.
-\index{model}
-\index{accuracy}
+복권판매소 시나리오에서, 모형 정밀도(accuracy of the model)에 더 관심이 있다: 우연한 기대와 비교하여 성공적으로 예측한 횟수.
 
-In the NSFG data, there are more boys than girls, so the baseline
-strategy is to guess ``boy'' every time.  The accuracy of this
-strategy is just the fraction of boys:
+\index{모형 (model)}
+\index{정밀도 (accuracy)}
+
+NSFG 데이터에는 여아보다 남아가 더 많다. 그래서 기본 전략은 매번 ``남아''로 추측한다. 이 전략 정확도는 단지 남아 비율이 된다.
 
 \begin{verbatim}
     actual = endog['boy']
     baseline = actual.mean()
 \end{verbatim}
 
-Since {\tt actual} is encoded in binary integers, the mean is the
-fraction of boys, which is 0.507.
+{\tt actual}이 이진 정수로 부호화되어 있어서, 평균은 남아 비율, 0.507이 된다.
 
-Here's how we compute the accuracy of the model:
+다음에 모형 정확도를 계산한 방법이 나와있다.
 
 \begin{verbatim}
     predict = (results.predict() >= 0.5)
@@ -826,30 +794,26 @@ Here's how we compute the accuracy of the model:
     true_neg = (1 - predict) * (1 - actual)
 \end{verbatim}
 
-{\tt results.predict} returns a NumPy array of probabilities, which we
-round off to 0 or 1.  Multiplying by {\tt actual}
-yields 1 if we predict a boy and get it right, 0 otherwise.  So,
-\verb"true_pos" indicates ``true positives''.
-\index{NumPy}
-\index{true positive}
-\index{true negative}
+{\tt results.predict}는 확률 넘파이(NumPy) 배열을 반환하는데, 0 혹은 1로 반올림한다. {\tt actual}을 곱해서 만약 남아를 예측하고 맞다면 1, 그렇지 않다면 0 을 산출한다. 그래서 \verb"true_pos" 는 ``적중률(true positives)''을 나타낸다.
+\index{넘파이 (NumPy)}
+\index{적중률 (true positive)}
+\index{오탐률 (true negative)}
+% 새로 용어정의해야함... true positive, true negative, false positive, false naegative 
 
-Similarly, \verb"true_neg" indicates the cases where we guess ``girl''
-and get it right.  Accuracy is the fraction of correct guesses:
+마찬가지로 \verb"true_neg"는 ``여아''라고 추측하고 맞춘 경우를 나타낸다. 정밀도는 추측이 적중한 비율이다.
 
 \begin{verbatim}
     acc = (sum(true_pos) + sum(true_neg)) / len(actual)
 \end{verbatim}
 
-The result is 0.512, slightly better than the
-baseline, 0.507.  But, you should not take this result too seriously.
-We used the same data to build and test the model, so the model
-may not have predictive power on new data.
-\index{model}
+결과값이 0.512 로 기본 전략 0.507 보다 다소 높게 나온다.
+하지만, 이 결과를 너무 심각하게 받아들이면 안된다. 
+동일한 데이터를 사용해서 모형을 구축했고 검정했다.
+그래서 모형이 새로운 데이터에 예측력을 갖추지 못할 수 있다.
+\index{모형 (model)}
 
-Nevertheless, let's use the model to make a prediction for the office
-pool.  Suppose your friend is 35 years old and white,
-her husband is 39, and they are expecting their third child:
+그럼에도 불구하고, 모형을 사용해서 복권판매소에 대한 예측을 해보자.
+친구 나이가 35세이고, 백인, 친구 남편 나이는 39, 그리고 세번째 아이를 임신하고 있다고 가정하자.
 
 \begin{verbatim}
     columns = ['agepreg', 'hpagelb', 'birthord', 'race']
@@ -857,15 +821,14 @@ her husband is 39, and they are expecting their third child:
     y = results.predict(new)
 \end{verbatim}
 
-To invoke {\tt results.predict} for a new case, you have to construct
-a DataFrame with a column for each variable in the model.  The result
-in this case is 0.52, so you should guess ``boy.''  But if the model
-improves your chances of winning, the difference is very small.
-\index{DataFrame}
+신규 사례에 대해서 {\tt results.predict}을 호출하기 위해서, 
+모형에 각 변수에 대한 칼럼을 갖는 데이터프레임을 작성해야 한다. 
+이 경우에 0.52가 나와서 ``남아''로 추정해야 한다. 하지만, 만약 모형이 승리 가능성을 향상시키지만, 차이는 매우 작다.
+\index{데이터프레임 (DataFrame)}
 
 
 
-\section{Exercises}
+\section{연습 문제}
 
 My solution to these exercises is in \verb"chap11soln.ipynb".
 
@@ -937,78 +900,61 @@ What is the probability that she is married, cohabitating, etc?
 
 
 
-\section{Glossary}
+\section{용어 사전}
 
 \begin{itemize}
 
-\item regression: One of several related processes for estimating parameters
-that fit a model to data.
-\index{regression}
+\item 회귀 (regression): 데이터에 모형을 적합하는 모형을 추정하기 위한 몇가지 관련된 과정 중의 하나.
+\index{회귀 (regression)}
 
-\item dependent variables: The variables in a regression model we would
-like to predict.  Also known as endogenous variables.
-\index{dependent variable}
-\index{endogenous variable}
+\item 종속변수 (dependent variables): 회귀모형에서 예측하려는 변수. 또한, 내생변수로도 알려져있다.
+\index{종속변수 (dependent variable)}
+\index{내생변수 (endogenous variable)}
 
-\item explanatory variables: The variables used to predict or explain
-the dependent variables.  Also known as independent, or exogenous,
-variables.
-\index{explanatory variable}
-\index{exogenous variable}
+\item 설명변수 (explanatory variables): 종속변수를 예측하거나 설명하는데 사용되는 변수. 또한, 독립변수 혹은 외생변수로도 알려져 있다.
+\index{설명변수 (explanatory variable)}
+\index{외생변수 (exogenous variable)}
 
-\item simple regression: A regression with only one dependent and
-one explanatory variable.
-\index{simple regression}
+\item 단순회귀 (simple regression): 단지 하나의 종속변수, 하나의 독립변수만을 갖는 회귀.
+\index{단순회귀 (simple regression)}
 
-\item multiple regression: A regression with multiple explanatory
-variables, but only one dependent variable.
-\index{multiple regression}
+\item 다중회귀 (multiple regression): 설명변수 다수를 갖는 회귀, 하지만 종속변수는 하나다.
+\index{다중회귀 (multiple regression)}
 
-\item linear regression: A regression based on a linear model.
-\index{linear regression}
+\item 선형회귀 (linear regression): 선형 모형에 기반한 회귀.
+\index{선형회귀 (linear regression)}
 
-\item ordinary least squares: A linear regression that estimates
-parameters by minimizing the squared error of the residuals.
-\index{ordinary least squares}
+\item 보통최소제곱 (ordinary least squares): 잔차 제곱 오차를 최소화함으로써 모수를 추정하는 선형회귀.
+\index{보통최소제곱 (ordinary least squares)}
 
-\item spurious relationship: A relationship between two variables that is 
-caused by a statistical artifact or a factor, not included in the
-model, that is related to both variables.
-\index{spurious relationship}
+\item 거짓 관계 (spurious relationship): 
+모형에 포함되지 않는 통계적 산출물 혹은 요인으로 발생하여 두 변수가 연관된 두 변수 사이 관계. 
+\index{거짓 관계 (spurious relationship)}
 
-\item control variable: A variable included in a regression to
-eliminate or ``control for'' a spurious relationship.
-\index{control variable}
+\item 제어변수 (control variable): 거짓관계를 ``제어 목적으로'' 혹은 제거하는데 회귀에 포함되는 변수.
+\index{제어변수 (control variable)}
 
-\item proxy variable: A variable that contributes information to
-a regression model indirectly because of a relationship with another
-factor, so it acts as a proxy for that factor.
-\index{proxy variable}
+\item 대리변수 (proxy variable): 다른 요인과 관계때문에 간접적으로 회귀 모형에 정보를 기여하는 변수. 그래서 그 요인에 대한 대리(proxy) 역할을 한다.
+\index{대리변수 (proxy variable)}
 
-\item categorical variable: A variable that can have one of a
-discrete set of unordered values.
-\index{categorical variable}
+\item 범주형 변수 (categorical variable): 이산형 순서없는 값을 갖는 변수.
+\index{범주형 변수 (categorical variable)}
 
-\item join: An operation that combines data from two DataFrames
-using a key to match up rows in the two frames.
-\index{join}
-\index{DataFrame}
+\item 결합 (join): 두 프레임에 행을 매칭하는 키(key)르 사용해서 두 데이터프레임에 데이터를 결합하는 연산.
+\index{결합 (join)}
+\index{데이터프레임 (DataFrame)}
 
-\item data mining: An approach to finding relationships between
-variables by testing a large number of models.
-\index{data mining}
+\item 데이터마이닝 (data mining): 많은 모형을 검정함으로써 변수 사이 관계를 찾아내는 접근법.
+\index{데이터마이닝 (data mining)}
 
-\item logistic regression: A form of regression used when the
-dependent variable is boolean.
-\index{logistic regression}
+\item 로지스틱 회귀 (logistic regression): 종속변수가 부울(boolean) 자료형식일 때 사용되는 회귀 형태.
+\index{로지스틱 회귀 (logistic regression)}
 
-\item Poisson regression: A form of regression used when the
-dependent variable is a non-negative integer, usually a count.
-\index{Poisson regression}
+\item 포아송 회귀 (Poisson regression): 종속변수가 음수가 아닌 정수, 통상 갯수일 때, 사용되는 회귀 형식.
+\index{포아송 회귀 (Poisson regression)}
 
-\item odds: An alternative way of representing a probability, $p$, as
-  the ratio of the probability and its complement, $p / (1-p)$.
-\index{odds}
+\item 오즈 (odds): 확률 $p$를 확률과 확률보(complement) 비율로 $p / (1-p)$로 나타내는 대안적인 방법.
+\index{오즈 (odds)}
 
 \end{itemize}
 
