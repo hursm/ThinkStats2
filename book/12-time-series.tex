@@ -163,14 +163,12 @@ quality cannabis.}
 \section{선형 회귀 (Linear regression)}
 \label{timeregress}
 
-Although there are methods specific to time series analysis, for many
-problems a simple way to get started is by applying general-purpose
-tools like linear regression.  The following function takes a
-DataFrame of daily prices and computes a least squares fit, returning
-the model and results objects from StatsModels:
-\index{DataFrame}
+시계열분석에 특화된 방법론이 있지만, 많은 문제에 대해서, 시작하기 좋은 단순한 방법은 선형 회귀같은 범용 도구를 적용해보는 것이다.
+다음 함수는 일별 가격 정보 데이터프레임을 받아서, 최소제곱 적합을 계산한다. StatsModels에서 모형과 결과 객체를 반환한다.
+
+\index{데이터프레임 (DataFrame)}
 \index{StatsModels}
-\index{linear regression}
+\index{선형 회귀 (linear regression)}
 
 \begin{verbatim}
 def RunLinearModel(daily):
@@ -179,8 +177,7 @@ def RunLinearModel(daily):
     return model, results
 \end{verbatim}
 
-Then we can iterate through the qualities and fit a model to
-each:
+그리고 나서, 수량을 반복하고 각각 모형에 적합한다.
 
 \begin{verbatim}
     for name, daily in dailies.items():
@@ -189,7 +186,7 @@ each:
         regression.SummarizeResults(results)
 \end{verbatim}
 
-Here are the results:
+다음에 결과가 나와있다.
 
 \begin{center}
 \begin{tabular}{|l|l|l|c|} \hline
@@ -201,23 +198,18 @@ low     &  5.362  & 0.568   & 0.030 \\
 \end{tabular}
 \end{center}
 
-The estimated slopes indicate that the price of high quality cannabis
-dropped by about 71 cents per year during the observed interval; for
-medium quality it increased by 28 cents per year, and for low quality
-it increased by 57 cents per year.  These estimates are all
-statistically significant with very small p-values.
-\index{p-value}
-  \index{significant} \index{statistically significant}
+추정된 기울기는 고품질 대마초 가격이 관측구간에서 매년 약 71 센트 하락했다; 중간 품질 대마초에 대해서는 매년 약 28 센트 층가했고, 저급 품질 대마초에 대해서는 매년 약 57 센트 증가했다. 이러한 추정값은 매우 작은 p-값으로 모두 통계적으로 유의하다.
 
-The $R^2$ value for high quality cannabis is 0.44, which means
-that time as an explanatory variable accounts for 44\% of the observed
-variability in price.  For the other qualities, the change in price
-is smaller, and variability in prices is higher, so the values
-of $R^2$ are smaller (but still statistically significant).
-\index{explanatory variable}
-  \index{significant} \index{statistically significant}
+\index{p-값 (p-value)}
+  \index{유의성 (significant)} 
+  \index{통계적 유의성 (statistically significant)}
 
-The following code plots the observed prices and the fitted values:
+고품질 대마초에 대한 $R^2$ 값은 0.44로 설명변수로서 시간이 관측된 가격 변동성의 44\%를 설명한다.
+다른 대마초 품질에 대해서는 가격 변동이 더 작고, 가격에 변동성이 더 커서, $R^2$ 값이 더 작다(하지만, 여전히 통계적 유의성이 있다.)
+\index{설명 변수 (explanatory variable)}
+  \index{통계적 유의성 (statistically significant)}
+
+다음 코드는 관측 가격과 적합값(fitted value)을 플롯으로 그린다.
 
 \begin{verbatim}
 def PlotFittedValues(model, results, label=''):
@@ -227,14 +219,12 @@ def PlotFittedValues(model, results, label=''):
     thinkplot.Plot(years, results.fittedvalues, label='model')
 \end{verbatim}
 
-As we saw in Section~\ref{implementation}, {\tt model} contains
-{\tt exog} and {\tt endog}, NumPy arrays with the exogenous
-(explanatory) and endogenous (dependent) variables.
-\index{NumPy}
-\index{explanatory variable}
-\index{dependent variable}
-\index{exogenous variable}
-\index{endogenous variable}
+~\ref{implementation} 절에서 보았듯이, {\tt model}에는 {\tt exog}, {\tt endog}, 넘파이(NumPy)배열이 외생(설명), 내생(종속) 변수로 포함된다.
+\index{넘파이 (NumPy)}
+\index{설명변수 (explanatory variable)}
+\index{종속변수 (dependent variable)}
+\index{외생변수 (exogenous variable)}
+\index{내생변수 (endogenous variable)}
 
 \begin{figure}
 % timeseries.py
@@ -244,77 +234,57 @@ and a linear least squares fit.}
 \label{timeseries2}
 \end{figure}
 
-{\tt PlotFittedValues} makes a scatter plot of the data points and a line
-plot of the fitted values.  Figure~\ref{timeseries2} shows the results
-for high quality cannabis.  The model seems like a good linear fit
-for the data; nevertheless, linear regression is not the most 
-appropriate choice for this data:
-\index{model}
-\index{fitted values}
+{\tt PlotFittedValues}은 데이터 점을 산점도로, 적합값을 선형 플롯 그림으로 만든다. 그림~\ref{timeseries2}에는 고품질 대마초에 대해 플롯을 그린 결과가 있다. 모형이 데이터에 대한 좋은 선형 적합처럼 보인다; 하지만, 선형회귀는 이러한 데이터에 대해서 가장 적절한 선택은 아니다.
+\index{모형 (model)}
+\index{적합값 (fitted values)}
 
 \begin{itemize}
 
-\item First, there is no reason to expect the long-term trend to be a
-  line or any other simple function.  In general, prices are
-  determined by supply and demand, both of which vary over time in
-  unpredictable ways.
-\index{trend}
+\item 첫째로, 장기 추세를 선형 혹은 다른 간단한 함수로 예측할 이유가 없다.
+일반적으로, 가격은 수요와 공급에 의해 결정된다. 모두 시간에 따라 예측불가한 방향으로 변화한다.
+\index{추세 (trend)}
 
-\item Second, the linear regression model gives equal weight to all
-  data, recent and past.  For purposes of prediction, we should
-  probably give more weight to recent data.
-\index{weight}
+\item 둘째, 선형회귀모형은 모든 데이터 (최근 혹은 과거)에 대해 동일한 가중치를 둔다. 예측 목적으로, 아마도 최근 데이터에 더 많은 가중치를 두어야 한다.
+\index{가중치 (weight)}
 
-\item Finally, one of the assumptions of linear regression is that the
-  residuals are uncorrelated noise.  With time series data, this
-  assumption is often false because successive values are correlated.
-\index{residuals}
+\item 마지막으로, 선형회귀 가정중의 하나는 잔차가 상관되지 않는 잡음이라는 것이다. 시계열 데이터에서 연속된 값이 상관되기 때문에 종종 이런 가정은 틀리다. 
+\index{잔차 (residuals)}
 
 \end{itemize}
 
-The next section presents an alternative that is more appropriate
-for time series data.
+다음 절에서 대안을 제시하는 시계열 데이터에 대해서 더 적절하다.
 
+\section{이동 평균 (Moving averages)}
 
-\section{Moving averages}
+대부분 시계열 분석은 관측된 계열이 다음 세가지 요소 합이라는 모형화 가정에 기반한다.
 
-Most time series analysis is based on the modeling assumption that the
-observed series is the sum of three components:
-\index{model}
-\index{moving average}
+\index{모형 (model)}
+\index{이동 평균 (moving average)}
 
 \begin{itemize}
 
-\item Trend: A smooth function that captures persistent changes.
-\index{trend}
+\item 추세 (Trend): 지속되는 변경사항을 잡아내는 평활 함수 (smooth function).
+\index{추세 (trend)}
 
-\item Seasonality: Periodic variation, possibly including daily,
-weekly, monthly, or yearly cycles.
-\index{seasonality}
+\item 계절성 (Seasonality): 주기적 변동, 아마도 일별, 주별, 월별, 혹은 년별 사이클.
+\index{계절성 (seasonality)}
 
-\item Noise: Random variation around the long-term trend.
-\index{noise}
+\item 잡음 (Noise): 장기 추세 주위 확률 변동.
+\index{잡음 (noise)}
 
 \end{itemize}
 
-Regression is one way to extract the trend from a series, as we
-saw in the previous section.  But if the trend is not a simple
-function, a good alternative is a {\bf moving average}.  A moving
-average divides the series into overlapping regions, called {\bf windows},
-and computes the average of the values in each window.
-\index{window}
+앞절에서 살펴봤듯이, 회귀는 계열에서 추세를 뽑아내는 한 방법이다. 하지만, 추세는 단순한 함수가 아니다. 훌륭한 대안은 {\bf 이동평균(moving average)}이다. 이동평균은 계열을 {\bf 윈도우(windows)}로 불리는 겹치지 않는 지역으로 나누고 각 윈도우에 있는 값을 평균낸다.
+\index{윈도우 (window)}
 
-One of the simplest moving averages is the {\bf rolling mean}, which
-computes the mean of the values in each window.  For example, if
-the window size is 3, the rolling mean computes the mean of
-values 0 through 2, 1 through 3, 2 through 4, etc.
-\index{rolling mean}
-\index{mean!rolling}
+가장 단순한 이동평균 중의 하나는 {\bf 이동평균 (rolling mean)}이다. 각 윈도우에 있는 값을 평균낸다. 예를 들어, 만약 윈도우 크기가 3이라면, 이동 평균은 0에서 2까지, 1에서 3까지, 2에서 4까지 등등 사이에 있는 값을 평균낸다.
 
-pandas provides \verb"rolling_mean", which takes a Series and a
-window size and returns a new Series.
-\index{pandas}
-\index{Series}
+\index{이동평균 (rolling mean)}
+\index{평균 (mean)!이동 (rolling)}
+
+판다스는에는 \verb"rolling_mean"가 있는데, 시리즈와 윈도우 크기를 인자로 받아 새로운 시리즈를 반환한다.
+\index{판다스 (pandas)}
+\index{시리즈 (Series)}
 
 \begin{verbatim}
 >>> series = np.arange(10)
@@ -324,22 +294,15 @@ array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 array([ nan,  nan,   1,   2,   3,   4,   5,   6,   7,   8])
 \end{verbatim}
 
-The first two values are {\tt nan}; the next value is the mean of
-the first three elements, 0, 1, and 2.  The next value is the mean
-of 1, 2, and 3.  And so on.
+첫 두값은 {\tt nan}이다; 다음 값은 첫 세 요소(0,1,2) 평균이다.
+다음 값은 1,2,3의 평균. 등등
 
-Before we can apply \verb"rolling_mean" to the cannabis data, we
-have to deal with missing values.  There are a few days in the
-observed interval with no reported transactions for one or more
-quality categories, and a period in 2013 when data collection was
-not active.
-\index{missing values}
+대마초 데이터에 \verb"rolling_mean"을 적용하기 전에, 결측값을 다루어야 한다. 하나 혹은 그 이상 대마초 품질 범주에 대해서, 관측 구간에 보고되지 않은 거래가 있는 몇일이 있고 데이터 수집이 활성화되지 않은 2013년 특정 기간이 있다.
 
-In the DataFrames we have used so far, these dates are absent;
-the index skips days with no data.  For the analysis that follows,
-we need to represent this missing data explicitly.  We can do
-that by ``reindexing'' the DataFrame:
- \index{DataFrame}
+\index{결측값 (missing values)}
+
+지금까지 사용한 데이터프레임에 상기 날짜는 비워져있다; 인덱스는 데이터에 없는 날은 건너뛴다. 다음 분석에 대해서, 결측 데이터를 명시적으로 표기할 필요가 있다. 데이터프레임을 ``다시 인덱싱(reindexing)''해서 이 작업을 수행한다.
+ \index{데이터프레임 (DataFrame)}
 \index{reindex}
 
 \begin{verbatim}
@@ -347,24 +310,22 @@ that by ``reindexing'' the DataFrame:
     reindexed = daily.reindex(dates)
 \end{verbatim}
 
-The first line computes a date range that includes every day from the
-beginning to the end of the observed interval.  The second line
-creates a new DataFrame with all of the data from {\tt daily}, but
-including rows for all dates, filled with {\tt nan}.
-\index{interval}
-\index{date range}
+첫번째 행은 관측 구간 처음부터 끝까지 모든 날을 포함하는 날짜 범위를 계산한다. 두번째 행은 {\tt daily}로부터 모든 데이터를 갖는 새로운 데이터프레임을 생성하지만, {\tt nan}으로 채워진 모든 날째 행 열을 포함한다.
 
-Now we can plot the rolling mean like this:
+\index{구간 (interval)}
+\index{날짜 범위 (date range)}
+
+이제, 다음과 같이 이동평균 플롯을 그릴 수 있다.
 
 \begin{verbatim}
     roll_mean = pandas.rolling_mean(reindexed.ppg, 30)
     thinkplot.Plot(roll_mean.index, roll_mean)
 \end{verbatim}
 
-The window size is 30, so each value in \verb"roll_mean" is
-the mean of 30 values from {\tt reindexed.ppg}.  
-\index{pandas}
-\index{window}
+윈도우 크기는 30이고, \verb"roll_mean"에 있는 각 값은 {\tt reindexed.ppg}으로부터 30 개값의 평균이다.
+
+\index{판다스 (pandas)}
+\index{윈도우 (window)}
 
 \begin{figure}
 % timeseries.py
@@ -374,24 +335,16 @@ moving average (right).}
 \label{timeseries10}
 \end{figure}
 
-Figure~\ref{timeseries10} (left)
-shows the result. 
-The rolling mean seems to do a good job of smoothing out the noise and
-extracting the trend.  The first 29 values are {\tt nan}, and wherever
-there's a missing value, it's followed by another 29 {\tt nan}s.
-There are ways to fill in these gaps, but they are a minor nuisance.
-\index{missing values}
-\index{noise}
-\index{smoothing}
+그림~\ref{timeseries10} (왼편)에 결과가 그려져 있다.
+이동평균은 잡음을 평활하고 추세를 추출하는 작업을 잘 하는 것처럼 보인다. 
+첫 29개 값은 {\tt nan} 이고, 결측값이 있는 곳에, 또다른 {\tt nan} 29개가 다음에 있다. 이런 틈을 매울 수 있는 방법이 몇개 있지만, 성가신 작은 일이다.
+\index{결측값 (missing values)}
+\index{잡음 (noise)}
+\index{평활 (smoothing)}
 
-An alternative is the {\bf exponentially-weighted moving average} (EWMA),
-which has two advantages.  First, as the name suggests, it computes
-a weighted average where the most recent value has the highest weight
-and the weights for previous values drop off exponentially.
-Second, the pandas implementation of EWMA handles missing values
-better.
+대안은 {\bf 지수가중 이동평균 (exponentially-weighted moving average)}으로 두가지 장점이 있다. 첫째, 이름에서 암시하듯이, 가중평균을 계산하는데 가장 최근 값에 가장 높은 가중치를 두고 이전 값의 가중치는 지수적으로 하락한다. 두번째, EWMA 판다스 구현이 결측값을 더 잘 처리한다.
 \index{reindex}
-\index{exponentially-weighted moving average}
+\index{지수가중 이동평균 (exponentially-weighted moving average)}
 \index{EWMA}
 
 \begin{verbatim}
@@ -399,19 +352,12 @@ better.
     thinkplot.Plot(ewma.index, ewma)
 \end{verbatim}
 
-The {\bf span} parameter corresponds roughly to the window size of
-a moving average; it controls how fast the weights drop off, so it
-determines the number of points that make a non-negligible contribution
-to each average.
+{\bf span} 모수는 대략 이동평균 윈도우 크기에 상응한다; 가중치가 얼마나 빨리 감쇄하는지 제어한다. 그래서 각 평균값에 무시못할 기여를 하는 점의 갯수를 결정한다.
 \index{span}
-\index{window}
+\index{윈도우 (window)}
 
-Figure~\ref{timeseries10} (right) shows the EWMA for the same data.
-It is similar to the rolling mean, where they are both defined,
-but it has no missing values, which makes it easier to work with.  The
-values are noisy at the beginning of the time series, because they are
-based on fewer data points.
-\index{missing values}
+그림~\ref{timeseries10} (오른편)에 동일한 데이터에 대한 EWMA가 그려져 있다. 둘다 정의된 지점에서는 이동평균과 비슷하다. 하지만, 결측값이 없는데 작업하기 더 수월하게 한다. 시계열 시작부근에서 값들이 잡음이 있어 보이는데, 좀더 적은 데이터 점에 모형이 기반하기 때문이다.
+\index{결측값 (missing values)}
 
 
 \section{Missing values}
