@@ -794,11 +794,11 @@ NSFG 데이터에는 여아보다 남아가 더 많다. 그래서 기본 전략�
     true_neg = (1 - predict) * (1 - actual)
 \end{verbatim}
 
-{\tt results.predict}는 확률 넘파이(NumPy) 배열을 반환하는데, 0 혹은 1로 반올림한다. {\tt actual}을 곱해서 만약 남아를 예측하고 맞다면 1, 그렇지 않다면 0 을 산출한다. 그래서 \verb"true_pos" 는 ``적중률(true positives)''을 나타낸다.
+{\tt results.predict}는 확률 넘파이(NumPy) 배열을 반환하는데, 0 혹은 1로 반올림한다. {\tt actual}을 곱해서 만약 남아를 예측하고 맞다면 1, 그렇지 않다면 0 을 산출한다. 그래서 \verb"true_pos" 는 ``참양성(true positives)''을 나타낸다.
 \index{넘파이 (NumPy)}
-\index{적중률 (true positive)}
-\index{오탐률 (true negative)}
-% 새로 용어정의해야함... true positive, true negative, false positive, false naegative 
+\index{참양성 (true positive)}
+\index{참음성 (true negative)}
+% 새로 용어정의해야함... true positive, true negative, false positive(거짓 양성), false naegative 
 
 마찬가지로 \verb"true_neg"는 ``여아''라고 추측하고 맞춘 경우를 나타낸다. 정밀도는 추측이 적중한 비율이다.
 
