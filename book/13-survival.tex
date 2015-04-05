@@ -49,7 +49,7 @@
 
 \begin{figure}
 % survival.py
-\centerline{\includegraphics[height=3.0in]{figs/survival1.pdf}}
+%\centerline{\includegraphics[height=3.0in]{figs/survival1.pdf}}
 \caption{Cdf and survival function for pregnancy length (top),
 hazard function (bottom).}
 \label{survival1}
@@ -123,22 +123,19 @@ class SurvivalFunction(object):
 \index{임신기간 (pregnancy length)}
 
 
-\section{Hazard function}
+\section{위험 함수 (Hazard function)}
 \label{hazard}
 
-From the survival function we can derive the {\bf hazard function};
-for pregnancy lengths, the hazard function maps from a time, $t$, to
-the fraction of pregnancies that continue until $t$ and then end at
-$t$.  To be more precise:
+생존함수에서 {\bf 위험함수(hazard function)}를 도출할 수 있다; 임신기간에 대해서, 위험함수는 시간 $t$에서 t까지 계속되고 나서 t에서 끝나는 임신 비율이다. 좀더 정확하게는 다음과 같다.
+
 %
 \[ \lambda(t) = \frac{S(t) - S(t+1)}{S(t)} \]
 %
-The numerator is the fraction of lifetimes that end at $t$, which
-is also $\PMF(t)$.
-\index{hazard function}
 
-{\tt SurvivalFunction} provides {\tt MakeHazard}, which calculates
-the hazard function:
+분자는 $\PMF(t)$로 $t$에서 끝나는 수명 비율이다.
+\index{위험함수 (hazard function)}
+
+{\tt SurvivalFunction}는 {\tt MakeHazard} 함수를 제공하는데, 위험 함수를 계산한다.
 
 \begin{verbatim}
 # class SurvivalFunction
@@ -153,11 +150,10 @@ the hazard function:
         return HazardFunction(lams, label=label)
 \end{verbatim}
 
-The {\tt HazardFunction} object is a wrapper for a pandas
-Series:
-\index{pandas}
-\index{Series}
-\index{wrapper}
+{\tt HazardFunction} 객체는 판다스 시리즈 에 대한 랩퍼다. 
+\index{판다스 (pandas)}
+\index{시리즈 (Series)}
+\index{랩퍼 (wrapper)}
 
 \begin{verbatim}
 class HazardFunction(object):
@@ -167,13 +163,10 @@ class HazardFunction(object):
         self.label = label
 \end{verbatim}
 
-{\tt d} can be a dictionary or any other type that can initialize
-a Series, including another Series.  {\tt label} is a string used
-to identify the HazardFunction when plotted.
+{\tt d}는 딕셔너리 혹은 또다른 시리즈를 포함해서 시리즈를 초기화할 수 있는 다른 어떤 자료형도 될 수 있다. {\tt label}은 플롯으로 그림을 그렸을 때, {\tt HazardFunction}을 식별하는데 사용되는 문자열이다.
 \index{HazardFunction}
 
-{\tt HazardFunction} provides \verb"__getitem__", so we can evaluate
-it like this:
+{\tt HazardFunction}은 \verb"__getitem__"을 제공해서, 다음과 같이 평가할 수 있다.
 
 \begin{verbatim}
 >>> hf = sf.MakeHazard()
@@ -184,82 +177,51 @@ it like this:
 So of all pregnancies that proceed until week 39, about
 50\% end in week 39.
 
-Figure~\ref{survival1} (bottom) shows the hazard function for
-pregnancy lengths.  For times after week 42, the hazard function
-is erratic because it is based on a small number of cases.
-Other than that the shape of the curve is as expected: it is
-highest around 39 weeks, and a little higher in the first
-trimester than in the second.
-\index{pregnancy length}
+그림~\ref{survival1} (아래)에 임신 기간에 대한 위험함수가 보여진다.
+임신 42주차 이후 시간에 대해, 위험함수가 불규칙한데, 적은 사례에 기초하기 때문이다. 그 부분을 제외하고, 곡선 모양은 예상한 것과 같다; 약 39주차에 가장 높고, 임신 중기보다 초기에 약간 더 높다.
 
-The hazard function is useful in its own right, but it is also an
-important tool for estimating survival curves, as we'll see in the
-next section.
+\index{임신기간 (pregnancy length)}
 
+위험함수는 그자체로 유용하지만, 또한 다음 절에서 살펴보듯이, 생존곡선을 추정하는데 중요한 도구가 된다.
 
-\section{Estimating survival curves}
+\section{생존곡선 추정하기}
 
-If someone gives you the CDF of lifetimes, it is easy to compute the
-survival and hazard functions.  But in many real-world
-scenarios, we can't measure the distribution of lifetimes directly.
-We have to infer it.
-\index{survival curve}
+만약 누군가 여러분에게 수명 CDF를 준다면, 생존함수와 위험함수를 계산하기는 쉽다. 하지만, 많은 현실 시나리오에서, 직접 수명분포를 측정할 수는 없다.
+유추해야만 한다.
+\index{생존곡선 (survival curve)}
 \index{CDF}
 
-For example, suppose you are following a group of patients to see how
-long they survive after diagnosis.  Not all patients are diagnosed on
-the same day, so at any point in time, some patients have survived
-longer than others.  If some patients have died, we know their
-survival times.  For patients who are still alive, we don't know
-survival times, but we have a lower bound.
-\index{diagnosis}
+예를 들어, 진단뒤에 얼마나 오랜기간동안 환자가 생존하는지 살펴보기 위해서 한 환자집단을 추적조사한다고 가정하자.
+모든 환자가 동일한 날에 진단받은 것은 아니다. 그래서 시점 아무때나 일부 환자가 다른 환자보다도 더 오래 생존한다. 만약 환자 일부가 죽는다면, 죽은 환자 생존시간을 알게된다. 여전히 살아 있는 환자에 대해서, 생존시간을 알지 못하지만, 생존시간 하한에 대한 정보는 갖게 된다.
+\index{진단 (diagnosis)}
 
-If we wait until all patients are dead, we can compute the survival
-curve, but if we are evaluating the effectiveness of a new treatment,
-we can't wait that long!  We need a way to estimate survival curves
-using incomplete information.
-\index{incomplete information}
+만약 모든 환자가 죽을 때까지 기다린다면, 생존곡선을 계산할 수 있다.
+하지만, 새로운 처리(treatment)에 대한 효과성을 평가한다면, 그렇게 오래 기다릴 수는 없다. 불완전한 정보 (incomplete information)를 사용해서 생존곡선을 추정할 방법이 필요하다.
+\index{불완전 정보 (incomplete information)}
 
-As a more cheerful example, I will use NSFG data to quantify how
-long respondents ``survive'' until they get married for the
-first time.  The range of respondents' ages is 14 to 44 years, so
-the dataset provides a snapshot of women at different stages in their
-lives.
-\index{marital status}
+좀더 명량한 예제로, NSFG 데이터를 사용해서 응답자가 초혼 때까지 얼마나 오래 ``생존(survive)''하는지 정량화할 것이다. 
+응답자 연령 범위는 14세에서 44세까지다. 그래서, 데이터셋이 일생에서 서로다른 단계에 있는 여성의 스탭샷(snapshot) 정보를 제공한다. 
 
-For women who have been married, the dataset includes the date
-of their first marriage and their age at the time.
-For women who have not been married, we know their age when interviewed,
-but have no way of knowing when or if they will get married.
-\index{age}
+\index{결혼상태 (marital status)}
 
-Since we know the age at first marriage for {\em some} women, it
-might be tempting to exclude the rest and compute the CDF of
-the known data.  That is a bad idea.  The result would
-be doubly misleading: (1) older women would be overrepresented,
-because they are more likely to be married when interviewed,
-and (2) married women would be overrepresented!  In fact, this
-analysis would lead to the conclusion that all women get married,
-which is obviously incorrect.
+결혼한 여성에 대해서, 데이터셋에는 초혼 날짜와 그 당시 연령 정보가 포함되어 있다. 결혼하지 않은 여성에 대해서는 인터뷰했을 당시 연령정보가 있지만, 언제 혹은 결혼을 할 것인지 알 수 있는 방법이 없다.
+
+\index{연령 (age)}
+
+{\em 몇몇} 여성에 대한 초혼 연령을 알고 있기 때문에, 나머지를 제외하고 정보가 있는 데이터 CDF를 계산하고 싶은 유혹이 있다. 이것은 매우 바람직하지 못하다. 결과가 두가지 방향에서 잘못 도출될 수 있다; (1) 좀더 나이가 많은 여성이 더 많이 대표 표본으로 되는데, 인터뷰 당시 좀더 결혼할 것 같기 때문이다. (2) 결혼한 여성이 더 많이 대표 표본이 될 것이다. 사실, 분석 결과 모든 여성은 결혼한다는 결론이 도출될 것이다. 하지만 분명하게 틀렸다.
 
 
-\section{Kaplan-Meier estimation}
+\section{캐플란-마이어 추정 (Kaplan-Meier estimation)}
 
-In this example it is not only desirable but necessary to include
-observations of unmarried women, which brings us to one of the central
-algorithms in survival analysis, {\bf Kaplan-Meier estimation}.
-\index{Kaplan-Meier estimation}
+이번 예제에서, 결혼하지 않은 여성 관측정보를 포함하는 것은 바람직할 뿐만 아니라 필요한데 이유는 생존분석에서 중심적인 알고리즘 중의 하나인 {\bf 캐플란-마이어 추정(Kaplan-Meier estimation)}과 연결되기 때문이다.
+\index{캐플란-마이어 추정 (Kaplan-Meier estimation)}
 
-The general idea is that we can use the data to estimate the hazard
-function, then convert the hazard function to a survival function.
-To estimate the hazard function, we consider, for each age,
-(1) the number of women who got married at that age and (2) the number
-of women ``at risk'' of getting married, which includes all women
-who were not married at an earlier age.
-\index{hazard function}
-\index{at risk}
+일반적인 생각은 데이터를 사용해서, 위험함수를 추정하고 나서, 위험함수를 생존함수로 전환한다. 위험함수를 추정하기 위해서, 각 연령별로 다음을 고려한다. (1) 그 연령에 결혼한 여성 숫자, (2) 결혼 ``위험 상태(at risk)''에 있는 여성 숫자로 이전 연령에서 결혼하지 않은 모든 여성이 포함된다.
 
-Here's the code:
+\index{위험함수 (hazard function)}
+\index{위험 상태(at risk)}
+
+다음에 코드가 있다.
 
 \begin{verbatim}
 def EstimateHazardFunction(complete, ongoing, label=''):
@@ -279,83 +241,64 @@ def EstimateHazardFunction(complete, ongoing, label=''):
     return HazardFunction(lams, label=label)
 \end{verbatim}
 
-{\tt complete} is the set of complete observations; in this case,
-the ages when respondents got married.  {\tt ongoing} is the set
-of incomplete observations; that is, the ages of unmarried women
-when they were interviewed.
+{\tt complete}는 완벽한 관측 집단이다; 이 경우에 응답자가 결혼했을 때 연령이 된다. {\tt ongoing}은 완벽하지 못한 관측 집단이다; 이 경우에 인터뷰를 했을 때 미혼인 여성 연령이 된다.
 
-First, we precompute \verb"hist_complete", which is the Hist
-of ages when women were married, \verb"sf_complete", the
-survival function for married women, and \verb"sf_ongoing",
-the survival function for unmarried women.
+먼저, 응답자가 결혼했을 때 연령 Hist인 \verb"hist_complete",
+결혼한 여성에 대한 생존함수, \verb"sf_complete", 미혼 여성에 대한 생존함수 \verb"sf_ongoing"를 미리 계산한다.
 \index{Hist}
-\index{survival function}
+\index{생존함수 (survival function)}
 
-The loop iterates through the ages when respondents got married.
-For each value of {\tt t}, we have {\tt ended}, which is the number
-of women who got married at age {\tt t}.  Then we compute
-the number of women ``at risk'', which is the sum of:
+응답자가 결혼했을 때 루프는 연령을 반복한다. 
+{\tt t} 각 값에 대해, {\tt t} 연령에서 결혼한 여성 숫자인 {\tt ended}가 있다. 그리고 나서 다음의 합으로 ``위험 상태(at risk)'' 여성 숫자를 계산한다.
 
 \begin{itemize}
 
-\item {\tt ended}, the number of respondents married at age {\tt t},
+\item {\tt ended}, 연령 {\tt t}에서 결혼한 응답자 숫자.
 
-\item \verb"n * sf_complete[t]", the number of respondents
-married after age {\tt t}.
+\item \verb"n * sf_complete[t]", 연령 {\tt t} 뒤에 결혼한 응답자 숫자.
 
-\item \verb"m * sf_ongoing[t]", the number of unmarried respondents
-interviewed after {\tt t}, and therefore known not to
-have been married at or before {\tt t}.
+\item \verb"m * sf_ongoing[t]", 연령 {\tt t} 후에 인터뷰한 미혼 응답자 숫자, 그러므로 {\tt t} 시점 혹은 이전에 결혼했는지 알려지지 않았다.
 
 \end{itemize}
 
-The estimated value of the hazard function at {\tt t} is the ratio of
-{\tt ended} to \verb"at_risk".
+시점 {\tt t}에 위험함수 추정값은 \verb"at_risk"에 대한 {\tt ended}의 비율이다.
 
-{\tt lams} is a dictionary that maps
-from $t$ to $\lambda(t)$.  The result is a {\tt HazardFunction}
-object.
+{\tt lams}은 딕셔너리로 $t$에서 $\lambda(t)$으로 매핑한다. 
+결과는 {\tt HazardFunction} 객체다.
 \index{HazardFunction}
 
 
-\section{The marriage curve}
+\section{결혼 곡선 (marriage curve)}
 
-To test this function, we have to do some data cleaning and
-transformation.  The NSFG variables we need are:
-\index{marital status}
+이 함수를 검정하기 위해서, 데이터 정제와 변환을 수행해야 한다.
+필요한 NSFG 변수는 다음과 같다.
+
+\index{결혼상태 (marital status)}
 
 \begin{itemize}
 
-\item {\tt cmbirth}: The respondent's date of birth, known for
-all respondents.
-\index{date of birth}
+\item {\tt cmbirth}: 모든 응답자에 대해서 알려진, 응답자 생년월일.
+\index{생년월일 (date of birth)}
 
-\item {\tt cmintvw}: The date the respondent was interviewed,
-known for all respondents.
+\item {\tt cmintvw}: 모든 응답자에 대해 알려진, 응답자가 인터뷰한 날짜.
 
-\item {\tt cmmarrhx}: The date the respondent was first married,
-if applicable and known.
+\item {\tt cmmarrhx}: 알려져있고 해당되면, 응답자가 첫 혼인한 날짜.
 
-\item {\tt evrmarry}: 1 if the respondent had been
-married prior to the date of interview, 0 otherwise.
+\item {\tt evrmarry}: 만약 인터뷰 날짜 이전에 결혼했다면 1, 그렇지 않으면 0.
 
 \end{itemize}
 
-The first three variables are encoded in ``century-months''; that is, the
-integer number of months since December 1899.  So century-month
-1 is January 1900.
-\index{century month}
+첫 변수 세개는 ``세기-월(century-months)'' 방식으로 부호화되었다; 즉, 1899년 12월 이후 정수형 개월 숫자. 그래서, 세기-월(century-month) 1은 1900년 1월이 된다.
+\index{세기 월 (century month)}
 
-First, we read the respondent file and replace invalid values of
-{\tt cmmarrhx}:
+첫째, 응답자 파일을 읽고, {\tt cmmarrhx}에 있는 타당하지 않는 값 (invalid value)을 교체한다.
 
 \begin{verbatim}
     resp = chap01soln.ReadFemResp()
     resp.cmmarrhx.replace([9997, 9998, 9999], np.nan, inplace=True)
 \end{verbatim}
 
-Then we compute each respondent's age when married and age when
-interviewed:
+그리고 나서, 혼인 당시에 각 응답자 연령과 인터뷰 당시 연령을 계산한다.
 \index{NaN}
 
 \begin{verbatim}
@@ -363,47 +306,36 @@ interviewed:
     resp['age'] = (resp.cmintvw - resp.cmbirth) / 12.0
 \end{verbatim}
 
-Next
-we extract {\tt complete}, which is the age at marriage for
-women who have been married, and {\tt ongoing}, which is the
-age at interview for women who have not:
-\index{age}
+다음에, {\tt complete} 변수에 결혼한 여성에 대해서 결혼 당시 연령 정보를 뽑아낸다. 그리고, {\tt ongoing} 변수에 결혼하지 않은 여성에 대한 인터뷰 당시 연령 정보를 대입한다.
+\index{연령 (age)}
 
 \begin{verbatim}
     complete = resp[resp.evrmarry==1].agemarry
     ongoing = resp[resp.evrmarry==0].age
 \end{verbatim}
 
-Finally we compute the
-hazard function.
-\index{hazard function}
+마지막으로, 위험함수를 계산한다.
+\index{위험함수 (hazard function)}
 
 \begin{verbatim}
     hf = EstimateHazardFunction(complete, ongoing)
 \end{verbatim}
 
-Figure~\ref{survival2} (top) shows the estimated hazard function;
-it is low in the teens,
-higher in the 20s, and declining in the 30s.  It increases again in
-the 40s, but that is an artifact of the estimation process; as the
-number of respondents ``at risk'' decreases, a small number of
-women getting married yields a large estimated hazard.  The survival
-function will smooth out this noise.
-\index{noise}
+그림~\ref{survival2} (위)에 추정 위험함수가 그려져 있다; 10대에는 낮고, 20대에는 더 높고, 30대에는 감소한다. 40대에 다시 증가한다. 하지만, 이것은 추정 과정의 산출물이다; ``위험 상황(at risk)'' 응답자 숫자가 감소함에 따라, 혼인한 적은 여성이 높은 추정 위험을 산출한다. 생존함수는 이러한 잡음을 부드럽게 평활한다.
+\index{잡음 (noise)}
 
 
-\section{Estimating the survival function}
+\section{생존함수 추정하기}
 
-Once we have the hazard function, we can estimate the survival function.
-The chance of surviving past time {\tt t} is the chance of surviving
-all times up through {\tt t}, which is the cumulative product of
-the complementary hazard function:
+위험함수를 갖게 되면, 생존함수를 추정할 수 있다.
+{\tt t} 시점을 지나 생존할 가망성은 줄곤 살아서 {\tt t} 시점까지 생존할 가망성이 되는데, 보수 위험함수(complementary hazard function)의 누적 곱이 된다.
+
 %
 \[ [1-\lambda(0)] [1-\lambda(1)] ... [1-\lambda(t)] \]
 %
-The {\tt HazardFunction} class provides {\tt MakeSurvival}, which
-computes this product:
-\index{cumulative product}
+
+{\tt HazardFunction} 클래스는 상기 누적곱을 계산하는 {\tt MakeSurvival} 함수를 제공한다.
+\index{누적곱 (cumulative product)}
 \index{SurvivalFunction}
 
 \begin{verbatim}
@@ -417,66 +349,46 @@ computes this product:
         return sf
 \end{verbatim}
 
-{\tt ts} is the sequence of times where the hazard function is
-estimated.  {\tt ss} is the cumulative product of the complementary
-hazard function, so it is the survival function.
+{\tt ts}는 위험 함수가 추정되는 시점 시퀀스다.
+{\tt ss}는 보수 위험함수 누적곱이다. 따라서, 생존함수가 된다.
 
-Because of the way {\tt SurvivalFunction} is implemented, we have
-to compute the complement of {\tt ss}, make a Cdf, and then instantiate
-a SurvivalFunction object.
+{\tt SurvivalFunction}가 구현되는 방식 때문에, {\tt ss} 보수를 계산하고, Cdf를 만들고 나서, SurvivalFunction 객체를 인스턴스화 한다.
 \index{Cdf}
-\index{complementary CDF}
+\index{보수CDF (complementary CDF)}
 
 
 \begin{figure}
 % survival.py
-\centerline{\includegraphics[height=2.5in]{figs/survival2.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/survival2.pdf}}
 \caption{Hazard function for age at first marriage (top) and
 survival function (bottom).}
 \label{survival2}
 \end{figure}
 
-Figure~\ref{survival2} (bottom) shows the result.  The survival
-curve is steepest between 25 and 35, when most women get married.
-Between 35 and 45,
-the curve is nearly flat, indicating that women who do not marry
-before age 35 are unlikely to get married.
+그림~\ref{survival2} (아래) 에 결과가 그려져 있다.
+생존곡선은 대부분의 여성이 결혼하는 25세에서 35세 사이가 가장 가파르다.
+35세에서 45세 사이는 거의 평평하다. 35세 전에 결혼하지 않은 여성이 혼일할 것 같지 않다는 것을 나타낸다.
 
-A curve like this was the basis of a famous magazine article in 1986;
-{\it Newsweek} reported that a 40-year old unmarried woman was ``more
-likely to be killed by a terrorist'' than get married.  These
-statistics were widely reported and became part of popular culture,
-but they were wrong then (because they were based on faulty analysis)
-and turned out to be even more wrong (because of cultural changes that
-were already in progress and continued).  In 2006, {\it Newsweek} ran
-an another article admitting that they were wrong.
-\index{Newsweek}
+이와 같은 곡선이 1986년 유명한 잡지기사의 기초가 된다; {\it 뉴스위크(Newsweek)}에 따르면, 40세된 미혼 여성이 혼인보다도 ``테러리스트에 의해 더 살해될 가능성''이 있다. 이러한 통계량은 널리 보도되고 대중적인 문화 일부분이 되었다. 하지만, 그러고 나서 잘못되었다(왜냐하면, 오류가 있는 분석에 기반했기 때문이다) 그리고, 심지어 더 잘못된 것으로 밝혀졌다(이미 진행중이고, 지속되는 문화 변화 때문이다). 2006년 {\it 뉴스위크(Newsweek)}는 보도가 잘못되었다고 시인하는 또다른 기사를 실었다.
+\index{뉴스위크 (Newsweek)}
 
-I encourage you to read more about this article, the statistics it was
-based on, and the reaction.  It should remind you of the ethical
-obligation to perform statistical analysis with care, interpret the
-results with appropriate skepticism, and present them to the public
-accurately and honestly.
-\index{ethics}
+이 기사, 기사의 기반이 된 통계량, 그리고 반응에 관해 더 읽어보기를 격려한다. 신중히 통계분석을 수행하고, 적절한 의심(appropriate skepticism)를 가지고 결과를 해석하고, 공공에게 정확하고 정직하게 제시하는데 있어, 윤리적 책임의 중요성을 상기시켰으면 한다.
+\index{윤리 (ethics)}
 
 
-\section{Confidence intervals}
+\section{신뢰구간 (Confidence intervals)}
 
-Kaplan-Meier analysis yields a single estimate of the survival curve,
-but it is also important to quantify the uncertainty of the estimate.
-As usual, there are three possible sources of error: measurement
-error, sampling error, and modeling error.
-\index{confidence interval}
-\index{modeling error}
-\index{sampling error}
+캐플란-마이어 분석(Kaplan-Meier analysis)은 생존곡선에 대한 단 하나의 추정값을 산출한다. 하지만, 추정값의 불확실성을 정량화하는 것도 또한 중요하다. 늘 그렇듯이, 세가지 오차 원천이 있다; 측정오차, 표집오차, 모형화 오차.
 
-In this example, measurement error is probably small.  People
-generally know when they were born, whether they've been married, and
-when.  And they can be expected to report this information accurately.
-\index{measurement error}
+\index{신뢰구간 (confidence interval)}
+\index{모형화 오차 (modeling error)}
+\index{표집오차 (sampling error)}
 
-We can quantify sampling error by resampling.  Here's the code:
-\index{resampling}
+이번 예제에서, 측정오차는 대략 작다. 일반적으로, 사람의 출생년월, 혼인여부, 혼인 시점은 알고 있다. 그리고, 이러한 정보를 정확하게 보고할 것으로 예상할 수 있다.
+\index{측정 오차 (measurement error)}
+
+재표본추출(resampling)을 통해서 표집오차를 정량화할 수 있다. 다음에 코드가 있다.
+\index{재표본추출 (resampling)}
 
 \begin{verbatim}
 def ResampleSurvival(resp, iters=101):
@@ -493,75 +405,52 @@ def ResampleSurvival(resp, iters=101):
     thinkplot.FillBetween(ts, low, high)
 \end{verbatim}
 
-{\tt ResampleSurvival} takes {\tt resp}, a DataFrame of respondents,
-and {\tt iters}, the number of times to resample.  It computes {\tt
-  ts}, which is the sequence of ages where we will evaluate the survival
-functions.
-\index{DataFrame}
+{\tt ResampleSurvival} 함수는 응답자 데이터프레임 {\tt resp}와
+재표본추출 횟수 {\tt iters}을 인자로 받는다.
+{\tt ts}를 계산하는데 생존함수를 평가하는 연령 시퀀스다.
+\index{데이터프레임 (DataFrame)}
 
-Inside the loop, {\tt ResampleSurvival}:
+루프 내부에, {\tt ResampleSurvival}는 다음과 같다:
 
 \begin{itemize}
 
-\item Resamples the respondents using {\tt ResampleRowsWeighted},
-which we saw in Section~\ref{weighted}.
-\index{weighted resampling}
+\item ~\ref{weighted}절에서 살펴본 {\tt ResampleRowsWeighted}을 사용해서 응답자를 재표본추출한다.
+\index{가중 재표본추출 (weighted resampling)}
 
-\item Calls {\tt EstimateSurvival}, which uses the process in the
-previous sections to estimate the hazard and survival curves, and
+\item {\tt EstimateSurvival} 호출하는데, 위험곡선과 생존곡선을 추정하는데 앞절 과정을 사용한다.
 
-\item Evaluates the survival curve at each age in {\tt ts}.
+\item {\tt ts}에 각 연령별로 생존곡선을 평가한다.
 
 \end{itemize}
 
-\verb"ss_seq" is a sequence of evaluated survival curves.
-{\tt PercentileRows} takes this sequence and computes the 5th and 95th
-percentiles, returning a 90\% confidence interval for the survival
-curve.
+\verb"ss_seq"는 평가된 생존곡선 시퀀스다. 
+{\tt PercentileRows}는 이 시퀀스를 받아 5번째와 95번째 백분위수를 계산하고, 생존곡선 90\% 신뢰구간을 반환한다.
 \index{FillBetween}
 
 \begin{figure}
 % survival.py
-\centerline{\includegraphics[height=2.5in]{figs/survival3.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/survival3.pdf}}
 \caption{Survival function for age at first marriage and a 90\%
 confidence interval based on weighted resampling.}
 \label{survival3}
 \end{figure}
 
-Figure~\ref{survival3} shows the result along with the survival
-function we estimated in the previous section.  The confidence
-interval takes into account the sampling weights, unlike the estimated
-curve.  The discrepancy between them indicates that the sampling
-weights have a substantial effect on the estimate---we will have
-to keep that in mind.
-\index{confidence interval}
-\index{sampling weight}
+그림~\ref{survival3}에 앞절에서 추정한 생존함수와 함께 결과가 나와 있다.
+신뢰구간은 추정곡선과 달리 표집 가중치(sampling weight)를 고려한다. 둘 사이에 불일치는 표집 가중치가 추정값에 상당한 효과가 있음을 나타낸다---이 사실을 유념해야 한다.
+\index{신뢰구간 (confidence interval)}
+\index{표집 가중치 (sampling weight)}
 
 
-\section{Cohort effects}
+\section{코호트 효과 (Cohort effects)}
 
-One of the challenges of survival analysis is that different parts
-of the estimated curve are based on different groups of respondents.
-The part of the curve at time {\tt t} is based on respondents
-whose age was at least {\tt t} when they were interviewed.
-So the leftmost part of the curve includes data from all respondents,
-but the rightmost part includes only the oldest respondents.
+생존분석 도전중의 하나는 추정 곡선의 다른 부분이 응답자의 다른 집단에 기반한다는 것이다. 시점 {\tt t}에 곡선 부분은 인터뷰 당시에 적어도 응답자 연령이 적어도 {\tt t}인 응답자에 기반한다. 그래서, 곡선의 가장 왼쪽 부분은 모든 응답자로부터 데이터가 포함되어 있고, 가장 오른쪽에는 가장 나이든 응답자만 포함된다.
 
-If the relevant characteristics of the respondents are not changing
-over time, that's fine, but in this case it seems likely that marriage
-patterns are different for women born in different generations.
-We can investigate this effect by grouping respondents according
-to their decade of birth.  Groups like this, defined by date of
-birth or similar events, are called {\bf cohorts}, and differences
-between the groups are called {\bf cohort effects}.
-\index{cohort}
-\index{cohort effect}
+만약 응답자의 관련 특성이 시간에 따라 변화하지 않는다면, 문제가 되지 않고 좋다. 하지만, 이 경우에  다른 세대에 태어난 여성에 대해서 혼인 패턴은 다를 것 같다. 출생별 10년을 단위로 응답자를 집단화해서 효과를 조사할 수있다.
+출생 혹은 비슷한 사건으로 정의되는 이와 같은 집단을 {\bf 코호트(cohorts)}라고 부른다. 그리고, 집단 간 차이를 {\bf 코호트 효과 (cohort effects)}라고 부른다.
+\index{코호트 (cohort)}
+\index{코호트 효과 (cohort effect)}
 
-To investigate cohort effects in the NSFG marriage data, I gathered
-the Cycle 6 data from 2002 used throughout this book;
-the Cycle 7 data from 2006--2010 used in Section~\ref{replication};
-and the Cycle 5 data from 1995.  In total these datasets include
-30,769 respondents.
+NSFG 혼인 데이터에서 코호트 효과를 조사하기 위해서, 이책 전체적으로 사용된 2002년 조사 사이클 6 데이터; ~\ref{replication}절에서 사용된 2006--2010 조사 사이클 6 데이터; 1995년 사이클 5 데이터를 수집했다. 모두 합쳐 데이터셋에는 30,769 응답자가 있다.
 
 \begin{verbatim}
     resp5 = ReadFemResp1995()
@@ -570,10 +459,9 @@ and the Cycle 5 data from 1995.  In total these datasets include
     resps = [resp5, resp6, resp7]
 \end{verbatim}
 
-For each DataFrame, {\tt resp}, I use {\tt cmbirth} to compute the
-decade of birth for each respondent:
-\index{pandas}
-\index{DataFrame}
+{\tt resp} 각 데이터프레임에 대해서, {\tt cmbirth}를 사용해서 각 응답자에 대한 출생 십년을 계산한다.
+\index{판다스 (pandas)}
+\index{데이터프레임 (DataFrame)}
 
 \begin{verbatim}
     month0 = pandas.to_datetime('1899-12-15')
@@ -582,22 +470,15 @@ decade of birth for each respondent:
     resp['decade'] = (pandas.DatetimeIndex(dates).year - 1900) // 10
 \end{verbatim}
 
-{\tt cmbirth} is encoded as the integer number of months since
-December 1899; {\tt month0} represents that date as a Timestamp
-object.  For each birth date, we instantiate a {\tt DateOffset} that
-contains the century-month and add it to {\tt month0}; the result
-is a sequence of Timestamps, which is converted to a {\tt
-  DateTimeIndex}.  Finally, we extract {\tt year} and compute
-decades.
+{\tt cmbirth}은 1899년 12월 이후 정수형 개월수로 부호화된다; {\tt month0}는 Timestamp 객체로 날짜를 표현한다. 각 출생일에 대해 {\tt DateOffset}를 인스턴스화하고, 세기-월을 포함하고 {\tt month0}에 더한다; 결과는 
+Timestamps 시퀀스로 {\tt DateTimeIndex}로 전환된다. 마지막으로 {\tt year}를 추출하고 십년단위로 계산한다.
 \index{DateTimeIndex}
-\index{Index}
-\index{century month}
+\index{인덱스 (Index)}
+\index{세기 월 (century month)}
 
-To take into account the sampling weights, and also to show
-variability due to sampling error, I resample the data,
-group respondents by decade, and plot survival curves:
-\index{resampling}
-\index{sampling error}
+표집 가중치를 고려하고, 표집오차 때문에 변동성을 보여주기 위해, 데이터를 재표본추출하고, 십년 단위로 응답자를 집단화하고, 생존곡선을 플롯으로 그린다.
+\index{재표본추출 (resampling)}
+\index{표집오차 (sampling error)}
 
 \begin{verbatim}
     for i in range(iters):
@@ -609,16 +490,13 @@ group respondents by decade, and plot survival curves:
         EstimateSurvivalByDecade(groups, alpha=0.2)
 \end{verbatim}
 
-Data from the three NSFG cycles use different sampling weights,
-so I resample them separately and then use {\tt concat}
-to merge them into a single DataFrame.  The parameter \verb"ignore_index"
-tells {\tt concat} not to match up respondents by index; instead
-it creates a new index from 0 to 30768.
-\index{pandas}
-\index{DataFrame}
+세개 NSFG 시이클 데이터는 서로 다른 표집 가중치를 사용한다. 그래서, 개별적으로 재표본추출하고 나서, {\tt concat}를 사용해서, 하나의 데이터프레임으로 병합한다. 모수 \verb"ignore_index"는 {\tt concat}에게
+인덱스로 응답자를 매칭하지 못하게 한다; 대신에 0에서 30768까지 새로운 인덱스를 생성한다.
+\index{판다스 (pandas)}
+\index{데이터프레임 (DataFrame)}
 \index{groupby}
 
-{\tt EstimateSurvivalByDecade} plots survival curves for each cohort:
+{\tt EstimateSurvivalByDecade}는 각 코호트에 대해서 생존곡선을 플롯으로 그린다.
 
 \begin{verbatim}
 def EstimateSurvivalByDecade(resp):
@@ -629,58 +507,44 @@ def EstimateSurvivalByDecade(resp):
 
 \begin{figure}
 % survival.py
-\centerline{\includegraphics[height=2.5in]{figs/survival4.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/survival4.pdf}}
 \caption{Survival functions for respondents born during different decades.}
 \label{survival4}
 \end{figure}
 
-Figure~\ref{survival4} shows the results.  Several patterns are
-visible:
+그림~\ref{survival4}에 결과가 나와있다.
+패턴 몇개가 눈에 보인다.
 
 \begin{itemize}
 
-\item Women born in the 50s married earliest, with successive
-  cohorts marrying later and later, at least until age 30 or so.
+\item 50년대 여성이 가장 일찍 결혼했고, 연속 코호트 혼인은 점점 늦어지고, 적어도 30대 연령까지 그렇다.
 
-\item Women born in the 60s follow a surprising pattern.  Prior
-to age 25, they were marrying at slower rates than their predecessors.
-After age 25, they were marrying faster.  By age 32 they had overtaken
-the 50s cohort, and at age 44 they are substantially more likely to
-have married.
-\index{marital status}
+\item 60년에 태어난 여성에는 놀라운 패턴이 있다.
+25세 이전에 그전 세대보다 혼인 속도가 더 늦었다. 25세 이후에는 혼인 속도가 더 빠르다. 32세경에는 50년대 코호트를 따라잡고, 44세경에는 상당히 더 결혼상태에 있을 것 같다.
+\index{혼인상태 (marital status)}
 
-Women born in the 60s turned 25 between 1985 and 1995.  Remembering
-that the {\it Newsweek} article I mentioned was published in 1986, it
-is tempting to imagine that the article triggered a marriage boom.
-That explanation would be too pat, but it is possible that the article
-and the reaction to it were indicative of a mood that affected the
-behavior of this cohort.
-\index{Newsweek}
+60년대 태어난 여성은 1985년에서 1995년 사이 25세를 넘어선다.
+앞서 언급한 {\it 뉴스위크 (Newsweek)} 기사가 1986년에 보도된 것을 기억하면, 이 기사가 결혼붐에 단초를 제공했다고 상상할 마음이 생긴다. 
+이런 설명이 너무 쉬운 것이지만, 기사와 기사에 대응이 이 코호트 행동에 영향을 주었다는 기분을 나타낸다는 것도 가능하다.
+\index{뉴스위크 (Newsweek)}
 
-\item The pattern of the 70s cohort is similar.  They are less
-likely than their predecessors to be married before age 25, but
-at age 35 they have caught up with both of the previous cohorts.
+\item 70년대 패턴도 비슷하다. 25세 이전에 혼인하는 것이 그 전세대만 못하다. 하지만, 35세경에 이전 두세대 코호트를 모두 따라잡는다.
 
-\item Women born in the 80s are even less likely to marry before
-age 25.  What happens after that is not clear; for more data, we
-have to wait for the next cycle of the NSFG.
+\item 80년생 여성은 25세전에 훨씬 덜 혼인할 것 같다. 이후에 일어난 것은 명분명하지 않다; NSFG 다음 사이틀 데이터를 기다려야만 한다.
 
 \end{itemize}
 
-In the meantime we can make some predictions.
-\index{prediction}
+그동안 예측도 할 수 있다.
+\index{예측 (prediction)}
 
 
-\section{Extrapolation}
+\section{외삽법 (Extrapolation)}
 
-The survival curve for the 70s cohort ends at about age 38;
-for the 80s cohort it ends at age 28, and for the 90s cohort
-we hardly have any data at all.
-\index{extrapolation}
+70년대생 코호트 생존곡선은 약 38세에서 끝난다; 80년대생 코호트는 약 28세에서 끝나고, 90년대생 코호트는 거의 어떤 자료도 없다.
+\index{외삽법 (extrapolation)}
 
-We can extrapolate these curves by ``borrowing'' data from the
-previous cohort.  HazardFunction provides a method, {\tt Extend}, that
-copies the tail from another longer HazardFunction:
+이전 코호트에서 데이터를 ``빌려옴(borrowing)''으로써 이들 곡선을 외삽(extrapolate)할 수 있다. 
+HazardFunction에는 {\tt Extend} 메쏘드를 제공하는데, 또다른 더 긴 HazardFunction에서 꼬리를 복사한다.
 \index{HazardFunction}
 
 \begin{verbatim}
@@ -692,16 +556,11 @@ copies the tail from another longer HazardFunction:
         self.series = pandas.concat([self.series, more])
 \end{verbatim}
 
-As we saw in Section~\ref{hazard}, the HazardFunction contains a Series
-that maps from $t$ to $\lambda(t)$.  {\tt Extend} finds {\tt last},
-which is the last index in {\tt self.series}, selects values from
-{\tt other} that come later than {\tt last}, and appends them
-onto {\tt self.series}.
-\index{pandas}
-\index{Series}
+~\ref{hazard}절에서 살펴봤듯이, HazardFunction은 $t$에서 $\lambda(t)$로 매핑하는 시리즈를 담고 있다. {\tt Extend}는 {\tt self.series}에 마지막 인덱스인 {\tt last}를 찾고, {\tt last} 다음에 오는 값을 {\tt other}에서 선택하고, {\tt self.series}에 덧붙인다.
+\index{판다스 (pandas)}
+\index{시리즈 (Series)}
 
-Now we can extend the HazardFunction for each cohort, using values
-from the predecessor:
+이제 각 코호트에 대해서 이전 것에서 가져온 값을 사용해서 HazardFunction을 연장할 수 있다.
 
 \begin{verbatim}
 def PlotPredictionsByDecade(groups):
@@ -718,40 +577,32 @@ def PlotPredictionsByDecade(groups):
         thinkplot.Plot(sf)
 \end{verbatim}
 
-{\tt groups} is a GroupBy object with respondents grouped by decade of
-birth.  The first loop computes the HazardFunction for each group.
+{\tt groups}는 출생을 십년 단위로 나눈 응답자를 갖는 GroupBy 객체다.
+첫번째 루프가 각 집단에 대한 HazardFunction을 계산한다.
 \index{groupby}
 
-The second loop extends each HazardFunction with values from
-its predecessor, which might contain values from the previous
-group, and so on.  Then it converts each HazardFunction to
-a SurvivalFunction and plots it.
+두번째 루프가 이전 세대로부터 값(이전 집단으로부터 값을 포함할 수 있다)으로 각 HazardFunction를 연장한다.
+그리고 나서, 각 HazardFunction을 SurvivalFunction로 전환하고 플롯을 그린다.
 
 \begin{figure}
 % survival.py
-\centerline{\includegraphics[height=2.5in]{figs/survival5.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/survival5.pdf}}
 \caption{Survival functions for respondents born during different decades,
 with predictions for the later cohorts.}
 \label{survival5}
 \end{figure}
 
-Figure~\ref{survival5} shows the results; I've removed the 50s cohort
-to make the predictions more visible.  These results suggest that by
-age 40, the most recent cohorts will converge with the 60s cohort,
-with fewer than 20\% never married.
-\index{visualization}
+그림~\ref{survival5}에 결과가 나와있다; 50년대생 코호트를 제거해서 예측값을 좀더 가시적으로 만들었다. 이 결과가 시사하는 바는, 40세경에 가장 최신 코호트는 60대 코호트에 수렴하는데, 결코 혼인하지 않는 비율은 20\% 보다 적다.
+\index{시각화 (visualization)}
 
 
-\section{Expected remaining lifetime}
+\section{기대 잔존 수명}
 
-Given a survival curve, we can compute the expected remaining
-lifetime as a function of current age.  For example, given the
-survival function of pregnancy length from Section~\ref{survival},
-we can compute the expected time until delivery.
-\index{pregnancy length}
+생존곡선이 주어지면, 현재 연령 함수로 기대잔존수명을 계산할 수 있다.
+예를 들어, ~\ref{survival}절에서 임신기간 생존함수가 주어지면 출산까지 예상시간을 계산할 수 있다.
+\index{임신기간 (pregnancy length)}
 
-The first step is to extract the PMF of lifetimes.  {\tt SurvivalFunction}
-provides a method that does that:
+첫단계는 수명 PMF를 추출한다. {\tt SurvivalFunction}가 이를 수행하는 메쏘드를 제공한다.
 
 \begin{verbatim}
 # class SurvivalFunction
@@ -768,25 +619,18 @@ provides a method that does that:
         return pmf
 \end{verbatim}
 
-Remember that the SurvivalFunction contains the Cdf of lifetimes.
-The loop copies the values and probabilities from the Cdf into
-a Pmf.
+SurvivalFunction는 수명 Cdf를 담고 있다는 것을 기억하라. 루프가 Cdf에서 Pmf로 값과 확률을 복사한다.
 \index{Pmf}
 \index{Cdf}
 
-{\tt cutoff} is the highest probability in the Cdf, which is 1
-if the Cdf is complete, and otherwise less than 1.  
-If the Cdf is incomplete, we plug in the provided value, {\tt filler},
-to cap it off.
+{\tt cutoff}는 Cdf에 가장 높은 확률로, 만약 Cdf가 완전하다면 1이고, 그렇지 않다면 1보다 작다. 만약 Cdf가 불완전하다면, 완료하기 위해 제공되는 값 {\tt filler}를 꽂아 넣는다,
 
-The Cdf of pregnancy lengths is complete, so we don't have to worry
-about this detail yet.
-\index{pregnancy length}
+임신기간 Cdf는 완전하기 때문에, 아직은 이러한 세부사항까지 걱정할 필요는 없다.
+\index{임신기간 (pregnancy length)}
 
-The next step is to compute the expected remaining lifetime, where
-``expected'' means average.  {\tt SurvivalFunction}
-provides a method that does that, too:
-\index{expected remaining lifetime}
+다음 단계는 기대잔존수명을 계산하는데, 여기서 ``기대(expected)''는 평균을 의미한다.
+{\tt SurvivalFunction}은 또한 이것을 수행하는 메쏘드를 제공한다.
+\index{기대잔존수명 (expected remaining lifetime)}
 
 \begin{verbatim}
 # class SurvivalFunction
@@ -802,92 +646,61 @@ provides a method that does that, too:
         return pandas.Series(d)
 \end{verbatim}
 
-{\tt RemainingLifetime} takes {\tt filler}, which is passed along
-to {\tt MakePmf}, and {\tt func} which is the function used to
-summarize the distribution of remaining lifetimes.
+{\tt RemainingLifetime}는 인자로 {\tt MakePmf}에 전달되는 {\tt filler}와, 
+잔존수명 분포를 요약하는데 사용되는 함수 {\tt func}을 인자로 받는다.
 
-{\tt pmf} is the Pmf of lifetimes extracted from the SurvivalFunction.
-{\tt d} is a dictionary that contains the results, a map from
-current age, {\tt t}, to expected remaining lifetime.
+{\tt pmf}는 SurvivalFunction에서 추출된 수명 Pmf다.
+{\tt d}는  현재 연령 {\tt t}에서 기대잔존수명으로 매핑 결과를 담고 있다.
 \index{Pmf}
 
-The loop iterates through the values in the Pmf.  For each value
-of {\tt t} it computes the conditional distribution of lifetimes,
-given that the lifetime exceeds {\tt t}.  It does that by removing
-values from the Pmf one at a time and renormalizing the remaining
-values.
+루프가 Pmf에 값을 반복 돌린다. {\tt t} 각 값에 대해, 수명이 {\tt t}를 초과한 것을 둔 상태에서, 수명 조건부분포를 계산한다.
+Pmf에서 값을 한번에 하나씩 제거하고, 남은 값을 다시 정규화함으로써 이것을 수행한다.
 
-Then it uses {\tt func} to summarize the conditional distribution.
-In this example the result is the mean pregnancy length, given that
-the length exceeds {\tt t}.  By subtracting {\tt t} we get the
-mean remaining pregnancy length.
-\index{pregnancy length}
+그리고 나서, {\tt func}를 사용해서, 조건부분포를 요약한다.
+상기 예제에서, 기간이 {\tt t}를 초과했을 때 결과는 평균임신기간이 된다.
+{\tt t}를 빼서, 평균잔존임신기간을 얻는다.
+\index{임신기간 (pregnancy length)}
 
 \begin{figure}
 % survival.py
-\centerline{\includegraphics[height=2.5in]{figs/survival6.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/survival6.pdf}}
 \caption{Expected remaining lifetime for pregnancy length (left) and
 years until first marriage (right).}
 \label{survival6}
 \end{figure}
 
-Figure~\ref{survival6} (left) shows the expected remaining pregnancy
-length as a function of the current duration.  For example, during
-Week 0, the expected remaining duration is about 34 weeks.  That's
-less than full term (39 weeks) because terminations of pregnancy
-in the first trimester bring the average down.
-\index{pregnancy length}
+그림~\ref{survival6} (왼편)에 현재 지속기간의 함수로 기대잔존임신기간이 나와 있다. 예를 들어, 0주차에는 기대잔존기간이 약 34주가 된다.
+이것이 만삭(39주)보다 짧은데 이유는 임신 초기에 임신중절이 평균을 낮추기 때문이다. 
+\index{임신기간 (pregnancy length)}
 
-The curve drops slowly during the first trimester.  After 13 weeks,
-the expected remaining lifetime has dropped by only 9 weeks, to
-25.  After that the curve drops faster, by about a week per week.
+임신초기 기간에 곡선이 천천히 떨어진다. 13주차 뒤에는 기대잔존수명이 25주로 단지 9주만  떨어진다. 그 후에, 곡선은 주마다 약 1주씩 더 빨리 떨어진다. 
 
-Between Week 37 and 42, the curve levels off between 1 and 2 weeks.
-At any time during this period, the expected remaining lifetime is the
-same; with each week that passes, the destination gets no closer.
-Processes with this property are called {\bf memoryless} because
-the past has no effect on the predictions.
-This behavior is the mathematical basis of the infuriating mantra
-of obstetrics nurses: ``any day now.''
-\index{memoryless}
+37주에서 42주 사이, 곡선은 1주와 2주 사이 수평을 유지한다. 이 기간동안 아무 시점이나 평균잔존기대수명은 같다; 매주 지나감에 따라 목표가 더이상 가까와지지 않는다. 이와 같은 특성을 가진 과정을 {\bf 무기억성(memoryless)}이라고 부른다. 이유는 과거가 예측에 아무런 효과가 없기 때문이다. 
+ㅇ 행동이 산부인과 간호사의 격노하는 만트라의 수학적 기반이 된다: ``곧 지금이라도 (any day now)''
+\index{무기억성 (memoryless)}
 
-Figure~\ref{survival6} (right) shows the median remaining time until
-first marriage, as a function of age.  For an 11 year-old girl, the
-median time until first marriage is about 14 years.  The curve decreases
-until age 22 when the median remaining time is about 7 years.
-After that it increases again: by age 30 it is back where it started,
-at 14 years.
+그림 ~\ref{survival6} (오른쪽)에는 연령의 함수로 초혼까지 중위수 잔존시간이 나와있다. 11살 소녀에게 초혼까지 중위수 시간은 약 14년이다. 곡선은 중위수 잔존시간이 약 7년일때 22세까지 감소한다.
+그 후에 다시 올라간다: 나이 30에 시작한 연령 14년으로 다시 증가한다.
 
-Based on this data, young women have decreasing remaining
-"lifetimes".  Mechanical components with this property are called {\bf NBUE}
-for "new better than used in expectation," meaning that a new part is
-expected to last longer.
+이 데이터에 기반해서, 젊은 여성은 감소하는 잔존 ``수명''을 갖는다.
+이와 같은 성질을 가진 기계부품을 {\bf NBUE}(``new better than used in expectation")로 부른다. 새부품이 더 오래 갈 것으로 예상된다는 의미다.
 \index{NBUE}
 
-Women older than 22 have increasing remaining time until first
-marriage.  Components with this property are called {\bf UBNE} for
-"used better than new in expectation."  That is, the older the part,
-the longer it is expected to last.  Newborns and cancer patients are
-also UBNE; their life expectancy increases the longer they live.
+22세 이상되는 여성은 초혼까지 증가하는 잔존시간을 갖는다.
+이와 같은 성질을 갖는 부품을 {\bf UBNE}(``used better than new in expectation'')로 부른다. 즉, 부품이 오래될수록, 더 오래 갈 것으로 예상된다. 신생아와 암환자가 또한 UBNE다; 더 오래 살수록 이들의 기대수명은 증가한다.
 \index{UBNE}
 
-For this example I computed median, rather than mean, because the
-Cdf is incomplete; the survival curve projects that about 20\%
-of respondents will not marry before age 44.  The age of
-first marriage for these women is unknown, and might be non-existent,
-so we can't compute a mean.
-\index{Cdf}
-\index{median}
+이 예제에서 Cdf가 불와전해서, 평균대신에 중위수를 계산했다; 
+생존곡선이 약 20\% 응답자가 44세 이전에 결혼하지 않을 것으로 추산한다. 이 여성에 대한 초혼 연령은 알려져있지 않고, 존재하지 않을지도 모른다. 그래서 평균을 계산할 수 없다.
 
-I deal with these unknown values by replacing them with {\tt np.inf},
-a special value that represents infinity.  That makes the mean
-infinity for all ages, but the median is well-defined as long as
-more than 50\% of the remaining lifetimes are finite, which is true
-until age 30.  After that it is hard to define a meaningful
-expected remaining lifetime.
+\index{Cdf}
+\index{중위수 (median)}
+
+미지값(unknown value)을 무한대를 나타내는 특수값 {\tt np.inf}로 바꿔서 미지값을 처리한다. 이렇게 하면 모든 연령에 대해서 평균이 무한대가 된다.
+하지만, 잔존수명 50\% 이상이 유한(연령 30세까지 사실이다)하기만 하면 중위수는 잘 정의된다. 이후에 유의미한 기대잔존수명을 정의하는 것은 어렵다.
 \index{inf}
 
-Here's the code that computes and plots these functions:
+다음에 이들 함수를 계산하고 플롯으로 그리는 코드가 있다.
 
 \begin{verbatim}
     rem_life1 = sf1.RemainingLifetime()
@@ -898,17 +711,16 @@ Here's the code that computes and plots these functions:
     thinkplot.Plot(rem_life2)
 \end{verbatim}
 
-{\tt sf1} is the survival function for pregnancy length;
-in this case we can use the default values for {\tt RemainingLifetime}.
-\index{pregnancy length}
+{\tt sf1}는 임신 기간에 대한 생존함수다;
+이 경우에 {\tt RemainingLifetime}에 초기설정값을 사용할 수 있다.
+\index{임신기간 (pregnancy length)}
 
-{\tt sf2} is the survival function for age at first marriage;
-{\tt func} is a function that takes a Pmf and computes its
-median (50th percentile).
+{\tt sf2}는 초혼 연령에 대한 생존함수다;
+{\tt func}는 Pmf를 인자로 받아 중위수(50번째 백분위수)를 계산하는 함수다.
 \index{Pmf}
 
 
-\section{Exercises}
+\section{연습문제}
 
 My solution to this exercise is in \verb"chap13soln.py".
 
@@ -934,39 +746,32 @@ and possibly by age at first marriage.
 \end{exercise}
 
 
-\section{Glossary}
+\section{용어 사전}
 
 \begin{itemize}
 
-\item survival analysis: A set of methods for describing and
-  predicting lifetimes, or more generally time until an event occurs.
-\index{survival analysis}
+\item 생존분석 (survival analysis): 수명, 좀더 일반적으로 사건이 일어나기까지 시간을 기술하고 예측하는 방법론 집합.
+\index{생존분석 (survival analysis)}
 
-\item survival curve: A function that maps from a time, $t$, to the
-  probability of surviving past $t$.
-\index{survival curve}
+\item 생존곡선 (survival curve): 시점 $t$에 $t$를 지나 생존 확률로 매핑하는 함수.
+\index{생존곡선 (survival curve)}
 
-\item hazard function: A function that maps from $t$ to the fraction
-of people alive until $t$ who die at $t$.
-\index{hazard function}
+\item 위험함수 (hazard function): 시점 $t$ 에 $t$ 시점까지 생존한 사람이 $t$ 시점에 사망한 비율을 매핑하는 함수.
+\index{위험함수 (hazard function)}
 
-\item Kaplan-Meier estimation: An algorithm for estimating hazard and
-survival functions.
-\index{Kaplan-Meier estimation}
+\item 캐플란-마이어 추정 (Kaplan-Meier estimation): 위험함수와 생존함수를 추정하는 알고리즘.
+\index{캐플란-마이어 추정 (Kaplan-Meier estimation)}
 
-\item cohort: a group of subjects defined by an event, like date of
-birth, in a particular interval of time.
-\index{cohort}
+\item 코호트 (cohort): 특정 시간 구간에 생년월일 같은 사건으로 정의된 개체 집단.
+\index{코호트 (cohort)}
 
-\item cohort effect: a difference between cohorts.
-\index{cohort effect}
+\item 코호트 효과 (cohort effect): 코호트 사이 차이.
+\index{코호트 효과 (cohort effect)}
 
-\item NBUE: A property of expected remaining lifetime, ``New
-better than used in expectation.''
+\item NBUE: 기대잔존수명 성질, ``새 것이 예상하기에 오래된 것보다 좋은 것(New better than used in expectation)''
 \index{NBUE}
 
-\item UBNE: A property of expected remaining lifetime, ``Used
-better than new in expectation.''
+\item UBNE: 기대잔존수명 성질, ``오래된 부품이 예상하기에 새 것보다 좋은 것(Used better than new in expectation)''
 \index{UBNE}
 
 \end{itemize}
