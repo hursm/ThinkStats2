@@ -1,42 +1,37 @@
 
-\chapter{Survival analysis}
+\chapter{생존분석}
 
-{\bf Survival analysis} is a way to describe how long things last.
-It is often used to study human lifetimes, but it
-also applies to ``survival'' of mechanical and electronic components, or
-more generally to intervals in time before an event.
-\index{survival analysis}
-\index{mechanical component}
-\index{electrical component}
+{\bf 생존분석(Survival analysis)}은 무언가 얼마나 지속하는지를 기술하는 방법이다. 종종 사람 생명 연구에 사용되지만, 또한 기계나 전자 부품의 ``생존(survial)'' 혹은 좀더 일반적으로 사건 전 시간 간격에도 적용된다.
+\index{생존분석 (survival analysis)}
+\index{기계 부품 (mechanical component)}
+\index{전자 부품 (electrical component)}
 
-If someone you know has been diagnosed with a life-threatening
-disease, you might have seen a ``5-year survival rate,'' which
-is the probability of surviving five years after diagnosis.  That
-estimate and related statistics are the result of survival analysis.
-\index{survival rate}
+만약 여러분이 알고 있는 누군가 생명을 위협하는 질병을 진단받았다면, ``5년 생존율 (5-year survival rate)''을 들어봤을지도 모른다. 진단 후에 5년을 생존할 확률이다. 이 추정값과 관련된 통계량이 생존분석 결과다.
+\index{생존율 (survival rate)}
 
-The code in this chapter is in {\tt survival.py}.  For information
-about downloading and working with this code, see Section~\ref{code}.
+이번 장에서 사용되는 코드는 {\tt survival.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
 
-\section{Survival curves}
+\section{생존곡선 (Survival curves)}
 \label{survival}
 
-The fundamental concept in survival analysis is the {\bf survival
-  curve}, $S(t)$, which is a function that maps from a duration, $t$, to the
-probability of surviving longer than $t$.  If you know the distribution
-of durations, or ``lifetimes'', finding the survival curve is easy;
-it's just the complement of the CDF: \index{survival curve}
+생존분석에 기본 개념은 {\bf 생존곡선 (survival curve)} $S(t)$로,
+존속 $t$를 $t$보다 더 오래 생존할 확률로 매핑하는 함수다.
+만약 존속(duration) 분포 즉, ``수명(lifetimes)''을 알고 있다면,
+생존곡선을 찾는 것은 쉽다; CDF의 여분포(complement)가 된다.
+\index{생존곡선 (survival curve)}
 %
 \[ S(t) = 1 - \CDF(t) \]
 %
-where $CDF(t)$ is the probability of a lifetime less than or equal
-to $t$.
-\index{complementary CDF} \index{CDF!complementary} \index{CCDF}
+여기서, $CDF(t)$는 $t$보다 적거나 같은 수명 확률이다.
+\index{상보 CDF (complementary CDF)} 
+\index{CDF!상보(complementary)} 
+\index{CCDF}
 
-For example, in the NSFG dataset, we know the duration of 11189
-complete pregnancies.  We can read this data and compute the CDF:
-\index{pregnancy length}
+예를 드어, NSFG 데이터셋에서 11189 출산 존속기간을 알고 있다.
+이 데이터를 읽어서 CDF를 계산할 수 있다.
+\index{임신기간 (pregnancy length)}
 
 \begin{verbatim}
     preg = nsfg.ReadFemPreg()
@@ -44,16 +39,13 @@ complete pregnancies.  We can read this data and compute the CDF:
     cdf = thinkstats2.Cdf(complete, label='cdf')
 \end{verbatim}
 
-The outcome codes {\tt 1, 3, 4} indicate live birth, stillbirth,
-and miscarriage.  For this analysis I am excluding induced abortions,
-ectopic pregnancies, and pregnancies that were in progress when
-the respondent was interviewed.
+결과 코드(outcome code) {\tt 1, 3, 4}은 정상출산, 사산, 유산을 각각 나타낸다.
+분석을 위해서 유발유산(induced abortion), 자궁외 임신(ectopic pregnancy), 그리고 응답자와 인터뷰중에 임신상태인 경우는 제외한다.
 
-The DataFrame method {\tt query} takes a boolean expression and
-evaluates it for each row, selecting the rows that yield True.
-\index{DataFrame}
-\index{boolean}
-\index{query}
+데이터프레임 메쏘드 {\tt query}는 부울 표현식을 인자로 받아서 각 행마다 평가하고 참(True)을 산출하는 행을 선택한다.
+\index{데이터프레임 (DataFrame)}
+\index{부울 (boolean)}
+\index{쿼리 (query)}
 
 \begin{figure}
 % survival.py
@@ -63,12 +55,9 @@ hazard function (bottom).}
 \label{survival1}
 \end{figure}
 
-Figure~\ref{survival1} (top) shows the CDF of pregnancy length
-and its complement, the survival function.  To represent the
-survival function, I define an object that wraps a Cdf and 
-adapts the interface:
+그림~\ref{survival1} (상단)에 임신기간 CDF와 생존함수인 상보 CDF가 보여진다. 생존함수를 표현하기 위해서, 객체를 정의해서 Cdf를 래핑(wrapping) 인터페이스를 조정하여 맞춘다(adapt).
 \index{Cdf}
-\index{pregnancy length}
+\index{임신기간 (pregnancy length)}
 \index{SurvivalFunction}
 
 \begin{verbatim}
@@ -86,21 +75,17 @@ class SurvivalFunction(object):
         return 1 - self.cdf.ps
 \end{verbatim}
 
-{\tt SurvivalFunction} provides two properties: {\tt ts}, which
-is the sequence of lifetimes, and {\tt ss}, which is the survival
-function.  In Python, a ``property'' is a method that can be
-invoked as if it were a variable.
+{\tt SurvivalFunction}는 프로퍼티(property)를 두개 제공한다; {\tt ts}는 수명 시퀀스고, {\tt ss}는 생존함수다.
+파이썬에서 ``프로퍼티(property)''는 마치 변수처럼 호출할 수 있는 메쏘드다.
 
-We can instantiate a {\tt SurvivalFunction} by passing
-the CDF of lifetimes:
-\index{property}
+수명 CDF를 인자로 넘김으로써 {\tt SurvivalFunction}를 인스터스화할 수 있다.
+\index{프로퍼티 (property)}
 
 \begin{verbatim}
     sf = SurvivalFunction(cdf)
 \end{verbatim}
 
-{\tt SurvivalFunction} also provides \verb"__getitem__" and
-{\tt Prob}, which evaluate the survival function:
+또한 {\tt SurvivalFunction}는 \verb"__getitem__"와 {\tt Prob}을 제공하는데 생존함수를 평가한다.
 
 \begin{verbatim}
 # class SurvivalFunction
@@ -112,9 +97,8 @@ the CDF of lifetimes:
         return 1 - self.cdf.Prob(t)
 \end{verbatim}
 
-For example, {\tt sf[13]} is the fraction of pregnancies that
-proceed past the first trimester:
-\index{trimester}
+예를 들어, {\tt sf[13]} 는 임신초기 3개월을 지난 임신 비율이다.
+\index{임신 3개월 (trimester)}
 
 \begin{verbatim}
 >>> sf[13]
@@ -123,22 +107,20 @@ proceed past the first trimester:
 0.13978
 \end{verbatim}
 
-About 86\% of pregnancies proceed past the first trimester;
-about 14\% do not.
+약 86\% 임신이 첫 3개월을 지났다; 약 14\% 그렇지 못하다.
 
-{\tt SurvivalFunction} provides {\tt Render}, so we can
-plot {\tt sf} using the functions in {\tt thinkplot}:
+{\tt SurvivalFunction}는 {\tt Render} 기능있다. 그래서,
+{\tt thinkplot}에 함수를 사용해서 {\tt sf} 플롯을 그릴 수 있다.
 \index{thinkplot}
 
 \begin{verbatim}
     thinkplot.Plot(sf)
 \end{verbatim}
 
-Figure~\ref{survival1} (top) shows the result.  The curve is nearly
-flat between 13 and 26 weeks, which shows that few pregnancies
-end in the second trimester.  And the curve is steepest around 39
-weeks, which is the most common pregnancy length.
-\index{pregnancy length}
+그림~\ref{survival1} (상단)에 결과가 나와 있다.
+
+곡선은 거의 13주차에서 26주차는 거의 평평해서, 임신 중기에는 임신 몇몇사례만 중단되는 것을 보여준다. 그리고, 곡선이 39주차에 가장 가파른데 가장 흔한 임신기간이다.
+\index{임신기간 (pregnancy length)}
 
 
 \section{Hazard function}
