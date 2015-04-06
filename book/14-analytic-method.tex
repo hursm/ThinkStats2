@@ -101,52 +101,42 @@ $X$의 선형변환은 $X' = a X + b$와 같은 것으로, 여기서 $a$와 $b$�
 %
 \[ Z \sim \normal~(\mu, \sigma^2/n) \]
 %
-using Equation 1 with $a = 1/n$.
 
-The distribution of $Z$ is the sampling distribution of $\xbar$.
-The mean of $Z$ is $\mu$, which shows that $\xbar$ is an unbiased
-estimate of $\mu$.  The variance of the sampling distribution
-is $\sigma^2 / n$.
-\index{biased estimator}
-\index{estimator!biased}
+$Z$ 분포는 $\xbar$의 표집분포가 된다.
+$Z$ 평균은 $\mu$으로, $\xbar$가 $\mu$의 불편 추정값이 된다는 것을 보여준다.
+표집분포 분산은 $\sigma^2 / n$이다.
+\index{편의 추정량 (biased estimator)}
+\index{추정량 (estimator)!편의 (biased)}
 
-So the standard deviation of the sampling distribution, which is the
-standard error of the estimate, is $\sigma / \sqrt{n}$.  In the
-example, $\sigma$ is 7.5 kg and $n$ is 9, so the standard error is 2.5
-kg.  That result is consistent with what we estimated by simulation,
-but much faster to compute!
-\index{standard error}
-\index{standard deviation}
+그래서, 표집분포 표준편차, 즉 추정값의 표준오차는 $\sigma / \sqrt{n}$이 된다. 예제에서, $\sigma$는 7.5 kg 이고, $n$은 9가 되서, 표준오차는 2.5 kg가 된다.
+결과는 모의시험으로 추정한 것과 일치하지만, 계산하기는 훨씬 더 빠르다!
+\index{표준오차 (standard error)}
+\index{표준편차 (standard deviation)}
 
-We can also use the sampling distribution to compute confidence
-intervals.  A 90\% confidence interval for $\xbar$ is the interval
-between the 5th and 95th percentiles of $Z$.  Since $Z$ is normally
-distributed, we can compute percentiles by evaluating the inverse
-CDF.
-\index{inverse CDF}
-\index{CDF, inverse}
-\index{confidence interval}
+또한, 표집분포를 사용해서 신뢰구간도 계산할 수 있다.
+$\xbar$에 대한 90\% 신뢰구간은 $Z$의 5번째와 95번째 백분위수 간격이다.
+$Z$이 정규분포를 따르기 때문에, 역 CDF(inverse CDF)를 평가해서 백분위수를 계산할 수 있다.
+\index{역 CDF (inverse CDF)}
+\index{CDF, 역 (CDF, inverse)}
+\index{신뢰구간 (confidence interval)}
 
-There is no closed form for the CDF of the normal distribution
-or its inverse, but there are fast numerical methods and they
-are implemented in SciPy, as we saw in Section~\ref{normal}.
-{\tt thinkstats2} provides a wrapper function that makes the
-SciPy function a little easier to use:
+정규분포 CDF와 역 CDF에 대한 닫힌 형태(closed form)가 존재하지 않지만, 
+빠른 수치해석 방법이 존재하고 ~\ref{normal}절에서 살펴본 바와 같이 SciPy에 
+구현되어 있다. {\tt thinkstats2}에 SciPy 함수를 좀더 쉽게 사용할 수 있게 하는 랩퍼(wrapper) 함수가 제공된다.
 \index{SciPy}
-\index{normal distribution}
-\index{wrapper}
-\index{closed form}
+\index{정규분포 (normal distribution)}
+\index{랩퍼 (wrapper)}
+\index{닫힌 형태 (closed form)}
 
 \begin{verbatim}
 def EvalNormalCdfInverse(p, mu=0, sigma=1):
     return scipy.stats.norm.ppf(p, loc=mu, scale=sigma)
 \end{verbatim}
 
-Given a probability, {\tt p}, it returns the corresponding
-percentile from a normal distribution with parameters {\tt mu}
-and {\tt sigma}.  For the 90\% confidence interval of $\xbar$,
-we compute the 5th and 95th percentiles like this:
-\index{percentile}
+확률 {\tt p}가 주어졌을 대, 모수 {\tt mu}와 {\tt sigma}를 갖는 정규분포에서 대응되는 백분위수를 반환한다. 
+$\xbar$의 90\% 신뢰구간에 대해서, 
+다음과 같이 5번째와 95번째 백분위수를 계산한다.
+\index{백분위수 (percentile)}
 
 \begin{verbatim}
 >>> thinkstats2.EvalNormalCdfInverse(0.05, mu=90, sigma=2.5)
@@ -156,19 +146,14 @@ we compute the 5th and 95th percentiles like this:
 94.112
 \end{verbatim}
 
-So if we run the experiment many times, we expect the
-estimate, $\xbar$, to fall in the range $(85.9, 94.1)$ about
-90\% of the time.  Again, this is consistent with the result
-we got by simulation.
+그래서, 만약 실험을 많이 반복한다면, 추정값 $\xbar$가 약 90\%로 범위 $(85.9, 94.1)$에 떨어질 것이다. 
+다시 이값은 모의시험으로 얻은 결과와 일치한다.
 \index{simulation}
 
 
-\section{Representing normal distributions}
+\section{정규분포 표현하기}
 
-To make these calculations easier, I have defined a class called
-{\tt Normal} that represents a normal distribution and encodes
-the equations in the previous sections.  Here's what it looks
-like:
+상기 계산을 좀더 쉽게하기 위해서, {\tt Normal} 클래스를 정의하는데 정규분포를 표현하고 앞절 방정식을 부호화한다. 다음에 코드가 있다.
 \index{Normal}
 
 \begin{verbatim}
@@ -182,9 +167,8 @@ class Normal(object):
         return 'N(%g, %g)' % (self.mu, self.sigma2)
 \end{verbatim}
 
-So we can instantiate a Normal that represents the distribution
-of gorilla weights:
-\index{gorilla}
+그래서, 고릴라 체중 분포를 표현하는 Normal을 인스턴스화할 수 있다.
+\index{고릴라 (gorilla)}
 
 \begin{verbatim}
 >>> dist = Normal(90, 7.5**2)
@@ -192,17 +176,14 @@ of gorilla weights:
 N(90, 56.25)
 \end{verbatim}
 
-{\tt Normal} provides {\tt Sum}, which takes a sample size, {\tt n},
-and returns the distribution of the sum of {\tt n} values, using
-Equation 3:
+{\tt Normal} 클래스에는 {\tt Sum} 메쏘드가 제공되는데, 표본크기 {\tt n}을 인다로 받아, 방정식 3을 사용해서 {\tt n}개 값의 합계 분포를 반환한다.
 
 \begin{verbatim}
     def Sum(self, n):
         return Normal(n * self.mu, n * self.sigma2)
 \end{verbatim}
 
-Normal also knows how to multiply and divide using
-Equation 1:
+Normal은 또한 방정식 1을 사용해서 곱셈과 나눗셈도 수행한다.
 
 \begin{verbatim}
     def __mul__(self, factor):
@@ -212,10 +193,9 @@ Equation 1:
         return 1 / divisor * self
 \end{verbatim}
 
-So we can compute the sampling distribution of the mean with sample
-size 9:
-\index{sampling distribution}
-\index{sample size}
+그래서, 표본크기 9를 가지고 평균의 표집분포를 계산할 수 있다.
+\index{표집분포 (sampling distribution)}
+\index{표본크기 (sample size)}
 
 \begin{verbatim}
 >>> dist_xbar = dist.Sum(9) / 9
@@ -223,99 +203,74 @@ size 9:
 2.5
 \end{verbatim}
 
-The standard deviation of the sampling distribution is 2.5 kg, as we
-saw in the previous section.  Finally, Normal provides {\tt
-  Percentile}, which we can use to compute a confidence interval:
-\index{standard deviation}
-\index{confidence interval}
+으로 앞절에서 살펴보았듯이, 표집분포 표준편차는 2.5 kg이다.
+마지막으로, Normal 클래스에는 {\tt Percentile} 메쏘드가 있어서 신뢰구간을 계산하는데 사용할 수 있다.
+\index{표준편차 (standard deviation)}
+\index{신뢰구간 (confidence interval)}
 
 \begin{verbatim}
 >>> dist_xbar.Percentile(5), dist_xbar.Percentile(95)
 85.888 94.113
 \end{verbatim}
 
-And that's the same answer we got before.  We'll use the Normal
-class again later, but before we go on, we need one more bit of
-analysis.
+그리고, 이것은 앞에서 얻은 답과 같다. 나중에 Normal 클래스를 다시 사용할 것이다. 하지만, 더 진도를 나가기 전에, 분석 한가지가 더 필요하다.
 
 
-\section{Central limit theorem}
+\section{중심극한정리 (Central limit theorem)}
 \label{CLT}
 
-As we saw in the previous sections, if we add values drawn from normal
-distributions, the distribution of the sum is normal.
-Most other distributions don't have this property;
-if we add values drawn from other distributions, the sum does not
-generally have an analytic distribution.
-  \index{sum}
-\index{normal distribution} \index{distribution!normal}
-\index{Gaussian distribution} \index{distribution!Gaussian}
+앞절에서 살펴봤듯이, 만약 정규분포에서 추출한 값을 더하면, 합 분포도 정규분포다. 다른 대부분의 분포는 이런 성질을 갖지 못하다; 만약 다른 분포에서 추출한 값을 더한다면, 합은 일반적으로 해석적 분포를 갖지 못한다.
+\index{합(sum)}
+\index{정규분포 (normal distribution)} \index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)} \index{분포 (distribution)!가우스 (Gaussian)}
 
-But if we add up {\tt n} values from
-almost any distribution, the distribution of the sum converges to
-normal as {\tt n} increases.
+하지만, 거의 모든 분포에서 {\tt n} 값을 더하면, 합 분포가 {\tt n}이 증가함에 따라 정규분포로 수렴한다.
 
-More specifically, if the distribution of the values has mean and
-standard deviation $\mu$ and $\sigma$, the distribution of the sum is
-approximately $\normal(n \mu, n \sigma^2)$.
-\index{standard deviation}
+좀더 구체적으로, 만약 값들의 분포가 평균과 표준편차 $\mu$와 $\sigma$를 갖는다면, 합 분포는 근사적으로 $\normal(n \mu, n \sigma^2)$이 된다.
+\index{표준편차 (standard deviation)}
 
-This result is the Central Limit Theorem (CLT).  It is one of the
-most useful tools for statistical analysis, but it comes with
-caveats:
-\index{Central Limit Theorem}
+이 결과가 중심극한정리(Central Limit Theorem, CLT)이다.  
+통계분석을 위한 가장 유용한 도구 중 하나다. 하지만, 몇가지 주의점이 있다.
+\index{중심극한정리 (Central Limit Theorem)}
 \index{CLT}
 
 \begin{itemize}
 
-\item The values have to be drawn independently.  If they are
-correlated, the CLT doesn't apply (although this is seldom a problem
-in practice).
-\index{independent}
+\item 값들이 독립적으로 추출되어야 한다. 만약 상관된다면, CLT을 적용할 수 없다.(설사 이것이 실무에서 문제가 결코되지는 않을지만)
+\index{독립적 (independent)}
 
-\item The values have to come from the same distribution (although
-  this requirement can be relaxed).
-\index{identical}
+\item 값들이 동일한 분포에서 나와야 한다 (설사 이런 요구사항은 완화될 수도 있지만)
+\index{동일한 (identical)}
 
-\item The values have to be drawn
-  from a distribution with finite mean and variance.  So most Pareto
-  distributions are out.
-\index{mean}
-\index{variance}
-\index{Pareto distribution}
-\index{distribution!Pareto}
-\index{exponential distribution}
-\index{distribution!exponential}
+\item 유한 평균과 분산을 갖는 분포에서 값들이 나와야 한다. 그래서 대부분 파레토 분포는 해당되지 않는다.
+\index{평균 (mean)}
+\index{분산 (variance)}
+\index{파레토 분포 (Pareto distribution)}
+\index{분포 (distribution)!파레토 (Pareto)}
+\index{지수분포 (exponential distribution)}
+\index{분포 (distribution)!지수 (exponential)}
 
-\item The rate of convergence depends
-  on the skewness of the distribution.  Sums from an exponential
-  distribution converge for small {\tt n}.  Sums from a
-  lognormal distribution require larger sizes.
-\index{lognormal distribution}
-\index{distribution!lognormal}
-\index{skewness}
+\item 수렴 속도는 분포 왜도에 의존한다. 지수분포에서 나온 값들의 합은 작은 {\tt n}에 대해서 수렴한다. 로그 정규분포에서 나온 값들의 합은 더 커다란 크기가 필요하다.
+\index{로그정규분포 (lognormal distribution)}
+\index{분포 (distribution)!로그정규 (lognormal)}
+\index{왜도 (skewness)}
 
 \end{itemize}
 
-The Central Limit Theorem explains the prevalence
-of normal distributions in the natural world.  Many characteristics of
-living things are affected by genetic
-and environmental factors whose effect is additive.  The characteristics
-we measure are the sum of a large number of small effects, so their
-distribution tends to be normal.
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
-\index{Central Limit Theorem}
+중심극한정리는 자연 세계에 정규분포가 널리 퍼짐을 설명한다.
+생물체의 많은 특징이 유전적 환경적 요인에 영향을 받는데, 이들 효과는 가법(additive)적이다. 측정하는 특징은 많은 작은 효과의 합이다. 그래서, 분포가 정규분포화 되는 경향이 있다.
+
+\index{정규분포 (normal distribution)}
+\index{분포 (distribution)!정규 (normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
+\index{중심극한정리 (Central Limit Theorem)}
 \index{CLT}
 
 
-\section{Testing the CLT}
+\section{CLT 검정}
 
-To see how the Central Limit Theorem works, and when it doesn't,
-let's try some experiments.  First, we'll try
-an exponential distribution:
+중심극한정리가 어떻게 동작하는지와 언제 동작하지 않는지를 살펴보기 위새허, 실험을 몇가지 시도해보자. 먼저, 지수분포로 시도해보자.
 
 \begin{verbatim}
 def MakeExpoSamples(beta=2.0, iters=1000):
@@ -327,26 +282,19 @@ def MakeExpoSamples(beta=2.0, iters=1000):
     return samples
 \end{verbatim}
 
-{\tt MakeExpoSamples} generates samples of sums of exponential values
-(I use ``exponential values'' as shorthand for ``values from an
-exponential distribution'').
-{\tt beta} is the parameter of the distribution; {\tt iters}
-is the number of sums to generate.
 
-To explain this function, I'll start from the inside and work my way
-out.  Each time we call {\tt np.random.exponential}, we get a sequence
-of {\tt n} exponential values and compute its sum.  {\tt sample}
-is a list of these sums, with length {\tt iters}.
-\index{NumPy}
+{\tt MakeExpoSamples}는 지수분포값 합을 생성한다(``지수분포로부터 추출된 값들''을 줄여 ``지수분포값''을 사용한다).
+{\tt beta}는 분포 모수다; {\tt iters}는 생성할 합 갯수다.
 
-It is easy to get {\tt n} and {\tt iters} confused:  {\tt n} is the
-number of terms in each sum;  {\tt iters} is the number of sums we
-compute in order to characterize the distribution of sums.
+상기 함수를 설명하기 위해서, 내부에서 시작해서 밖으로 나가면서 마무리한다.
+{\tt np.random.exponential}을 매번 호출할 때마다, {\tt n}개 지수분포값 시퀀스를 얻어서 합을 계산한다. {\tt sample}은 길이 {\tt iters}를 갖는 합계 리스트가 된다.
+\index{넘파이 (NumPy)}
 
-The return value is a list of {\tt (n, sample)} pairs.  For
-each pair, we make a normal probability plot:
+{\tt n}과 {\tt iters}를 혼동하기 쉽다: {\tt n}은 각 합에 대한 항의 갯수다; {\tt iters}는 합분포를 특성화하기 위해서 계산하는 합 갯수다.
+
+반환되는 값은 {\tt (n, sample)} 쌍(pair) 리스트다. 각 쌍에 대해 정규확률그림을 만들 수 있다.
 \index{thinkplot}
-\index{normal probability plot}
+\index{정규확률그림 (normal probability plot)}
 
 \begin{verbatim}
 def NormalPlotSamples(samples, plot=1, ylabel=''):
@@ -358,69 +306,53 @@ def NormalPlotSamples(samples, plot=1, ylabel=''):
         plot += 1
 \end{verbatim}
 
-{\tt NormalPlotSamples} takes the list of pairs from {\tt
-  MakeExpoSamples} and generates a row of normal probability plots.
-\index{normal probability plot}
+{\tt NormalPlotSamples}은 {\tt MakeExpoSamples}에서 리스트 짝(pair)를 인자로 받아 정규확률그림 행을 생성한다.
+\index{정규확률그림 (normal probability plot)}
 
 \begin{figure}
 % normal.py
-\centerline{\includegraphics[height=3.5in]{figs/normal1.pdf}}
+%\centerline{\includegraphics[height=3.5in]{figs/normal1.pdf}}
 \caption{Distributions of sums of exponential values (top row) and
 lognormal values (bottom row).}
 \label{normal1}
 \end{figure}
 
-Figure~\ref{normal1} (top row) shows
-the results.  With {\tt n=1}, the distribution of the sum is still
-exponential, so the normal probability plot is not a straight line.
-But with {\tt n=10} the distribution of the sum is approximately
-normal, and with {\tt n=100} it is all but indistinguishable from
-normal.
+그림~\ref{normal1} (위쪽 행)에 결과가 나와있다.
+{\tt n=1}일 때, 합분포는 여전히 지수분포라서 정규확률그림은 직선이 아니다.
+하지만, {\tt n=10}일 때, 합분포는 근사 정규분포가 되고,
+{\tt n=100}일 때, 정규분포와 거의 구별되지 않는다.
 
-Figure~\ref{normal1} (bottom row) shows similar results for a
-lognormal distribution.  Lognormal distributions are generally more
-skewed than exponential distributions, so the distribution of sums
-takes longer to converge.  With {\tt n=10} the normal
-probability plot is nowhere near straight, but with {\tt n=100}
-it is approximately normal.
-\index{lognormal distribution}
-\index{distribution!lognormal}
-\index{skewness}
+그림~\ref{normal1} (아래 행)에 로그정규분포에 대한 비슷한 결과가 나와 있다.
+로그정규분포는 일반적으로 지수분포보다 기울어짐이 더 심해서, 합분포는 수렴하는데 더 오래 걸린다. {\tt n=10}일 때, 정규확률그림은 거의 직선인 곳이 없다. 하지만, {\tt n=100}일 때, 근사적으로 정규분포다.
+\index{로그정규 분포 (lognormal distribution)}
+\index{분포 (distribution)!로그정규 (lognormal)}
+\index{왜도 (skewness)}
 
 \begin{figure}
 % normal.py
-\centerline{\includegraphics[height=3.5in]{figs/normal2.pdf}}
+%\centerline{\includegraphics[height=3.5in]{figs/normal2.pdf}}
 \caption{Distributions of sums of Pareto values (top row) and
 correlated exponential values (bottom row).}
 \label{normal2}
 \end{figure}
 
-Pareto distributions are even more skewed than lognormal.  Depending
-on the parameters, many Pareto distributions do not have finite mean
-and variance.  As a result, the Central Limit Theorem does not apply.
-Figure~\ref{normal2} (top row) shows distributions of sums of
-Pareto values.  Even with {\tt n=100} the normal probability plot
-is far from straight.
-\index{Pareto distribution}
-\index{distribution!Pareto}
-\index{Central Limit Theorem}
+파레토 분포는 로그정규분포보다 더 기울어짐이 심하다. 모수에 따라서, 많은 파레토 분포는 유한 평균과 분산을 갖지 못하다. 결과로, 중심극한정리가 적용되지 않는다. 그림~\ref{normal2} (상단 행)에 파레토 값들의 합 분포가 나와 있다. 심지어 {\tt n=100}일 때, 정규확률그림은 직선에서 거리가 멀다.
+\index{파레토 분포 (Pareto distribution)}
+\index{분포 (distribution)!파레토 (Pareto)}
+\index{중심극한정리 (Central Limit Theorem)}
 \index{CLT}
-\index{normal probability plot}
+\index{정규확률그림 (normal probability plot)}
 
-I also mentioned that CLT does not apply if the values are correlated.
-To test that, I generate correlated values from an exponential
-distribution.  The algorithm for generating correlated values is
-(1) generate correlated normal values, (2) use the normal CDF
-to transform the values to uniform, and (3) use the inverse
-exponential CDF to transform the uniform values to exponential.
-\index{inverse CDF}
-\index{CDF, inverse}
-\index{correlation}
-\index{random number}
+또한 CLT는 만약 값들이 상관된다면 적용되지 않는다고 언급했다. 이것을 검정하기 위해서, 지수분포에서 상관된 값들을 생성했다. 
+상관된 값을 재생하는데 사용된 알고리즘은 (1) 상관된 정규분포 값을 발생시킨다. (2) 정규분포 CDF를 사용해서 값을 균등분포로 변환한다. (3) 역 지수분포 CDF를 사용해서 균등분포 값을 지수분포로 변환한다.
 
-{\tt GenerateCorrelated} returns an iterator of {\tt n} normal values
-with serial correlation {\tt rho}:
-\index{iterator}
+\index{역 CDF (inverse CDF)}
+\index{CDF 역 (CDF, inverse)}
+\index{상관 (correlation)}
+\index{난수 (random number)}
+
+{\tt GenerateCorrelated}는 계열상관 {\tt rho}를 갖는 {\tt n}개 정규분포 값 반복자를 반환한다.
+\index{반복자 (iterator)}
 
 \begin{verbatim}
 def GenerateCorrelated(rho, n):
@@ -433,16 +365,12 @@ def GenerateCorrelated(rho, n):
         yield x
 \end{verbatim}
 
-The first value is a standard normal value.  Each subsequent value
-depends on its predecessor: if the previous value is {\tt x}, the mean of
-the next value is {\tt x*rho}, with variance {\tt 1-rho**2}.  Note that {\tt
-  random.gauss} takes the standard deviation as the second argument,
-not variance.
-\index{standard deviation}
-\index{standard normal distribution}
+첫값은 표준정규분포 값이다. 각 후속값은 이전 값에 의존한다: 만약 이전 값이 {\tt x}, 다음값은 평균 {\tt x*rho}, 분산 {\tt 1-rho**2}이다. 
+{\tt random.gauss}는 두번째 인자로 분산이 아닌 표준편차를 받는 것을 주목한다.
+\index{표준편차 (standard deviation)}
+\index{표준정규분포 (standard normal distribution)}
 
-{\tt GenerateExpoCorrelated}
-takes the resulting sequence and transforms it to exponential:
+{\tt GenerateExpoCorrelated}는 결과 시퀀스를 인자로 받아 지수분포 값으로 변환한다.
 
 \begin{verbatim}
 def GenerateExpoCorrelated(rho, n):
@@ -452,39 +380,29 @@ def GenerateExpoCorrelated(rho, n):
     return expo
 \end{verbatim}
 
-{\tt normal} is a list of correlated normal values.  {\tt uniform}
-is a sequence of uniform values between 0 and 1.  {\tt expo} is
-a correlated sequence of exponential values.
-{\tt ppf} stands for ``percent point function,'' which is another
-name for the inverse CDF.
-\index{inverse CDF}
-\index{CDF, inverse}
-\index{percent point function}
+{\tt normal}은 상관된 정규분포 값 리스트다.
+{\tt uniform}은 0과 1사이 균등분포 값 시퀀스다.
+{\tt expo}는 상관된 지수분포 값 시퀀스다.
+{\tt ppf}는 ``퍼센트점 함수 (percent point function)''의 약어로 역CDF에 대한 또다른 이름이다.
 
-Figure~\ref{normal2} (bottom row) shows distributions of sums of
-correlated exponential values with {\tt rho=0.9}.  The correlation
-slows the rate of convergence; nevertheless, with {\tt n=100} the
-normal probability plot is nearly straight.  So even though CLT
-does not strictly apply when the values are correlated, moderate
-correlations are seldom a problem in practice.
-\index{normal probability plot}
-\index{correlation}
+\index{역CDF (inverse CDF)}
+\index{CDF 역 (CDF, inverse)}
+\index{퍼센트점 함수 (percent point function)}
 
-These experiments are meant to show how the Central Limit Theorem
-works, and what happens when it doesn't.  Now let's see how we can
-use it.
+그림~\ref{normal2} (하단 행)에 {\tt rho=0.9} 상관을 갖는 지수분포 값 합의 분포가 나와 있다. 상관된 경우 수렴속도가 느리다; 그럼에도 불구, {\tt n=100}일 때, 정규확률그림은 거의 직선이다. 그래서 값들이 상관되었을 때, CLT가 엄격하게 적용되지는 않지만, 적당한 상관은 실무에서 결코 문제가 되지 않는다.
+\index{정규확률그림 (normal probability plot)}
+\index{상관 (correlation)}
+
+중심극한정리가 어떻게 동작하는지와 중심극한정리가 동작하지 않을 때 무슨일이 발생하는지 보여주기 위해서 이들 실험이 고안되었다. 이제 중심극한정리를 어떻게 사용하는지 살펴보자.
 
 
-\section{Applying the CLT}
+\section{CLT 적용하기}
 \label{usingCLT}
 
-To see why the Central Limit Theorem is useful, let's get back
-to the example in Section~\ref{testdiff}: testing the apparent
-difference in mean pregnancy length for first babies and others.
-As we've seen, the apparent difference is about
-0.078 weeks:
-\index{pregnancy length}
-\index{Central Limit Theorem}
+왜 중심극한정리가 유용한지 살펴보기 위해서, ~\ref{testdiff}절에 예제로 돌아가자: 첫째아이와 첫째가 아닌 아이에 대한 평균 임신기간 외관효과 검정.
+앞에서 살펴봤듯이, 외관 차이는 약 0.078주다.
+\index{임신기간 (pregnancy length)}
+\index{중심극한정리 (Central Limit Theorem)}
 \index{CLT}
 
 \begin{verbatim}
@@ -493,29 +411,20 @@ As we've seen, the apparent difference is about
 0.078
 \end{verbatim}
 
-Remember the logic of hypothesis testing: we compute a p-value, which
-is the probability of the observed difference under the null
-hypothesis; if it is small, we conclude that the observed difference
-is unlikely to be due to chance.
-\index{p-value}
-\index{null hypothesis}
-\index{hypothesis testing}
+가설검정 로직을 기억하라: p-값을 계산하는데, 귀무가설 아래에서 관측 차이 확률이다; 만약 작다면, 관측 차이는 우연에 의한 것이 아닐 것으로 결론낸다.
+\index{p-값 (p-value0}
+\index{귀무가설 (null hypothesis)}
+\index{가설검정 (hypothesis testing)}
 
-In this example, the null hypothesis is that the distribution of
-pregnancy lengths is the same for first babies and others.  
-So we can compute the sampling distribution of the mean
-like this:
-\index{sampling distribution}
+이 예제애서, 귀무가설은 임신기간 분포가 첫째 아이와 첫째가 아닌 아이들에 대해서 같다. 그래서, 다음과 같이 평균 표집분포를 계산할 수 있다.
+\index{표집분포 (sampling distribution)}
 
 \begin{verbatim}
     dist1 = SamplingDistMean(live.prglngth, len(firsts))
     dist2 = SamplingDistMean(live.prglngth, len(others))
 \end{verbatim}
 
-Both sampling distributions are based on the same population, which is
-the pool of all live births.  {\tt SamplingDistMean} takes this
-sequence of values and the sample size, and returns a Normal object
-representing the sampling distribution:
+두 표집분포는 동일 모집단에 기반하는데 모든 정상 출산을 합동(pool)한 것이다. {\tt SamplingDistMean}는 이 값 시퀀스와 표본크기를 인자로 받아 표집분포를 표현하는 Normal 객체를 반환한다.
 
 \begin{verbatim}
 def SamplingDistMean(data, n):
@@ -524,21 +433,15 @@ def SamplingDistMean(data, n):
     return dist.Sum(n) / n
 \end{verbatim}
 
-{\tt mean} and {\tt var} are the mean and variance of
-{\tt data}.  We approximate the distribution of the data with
-a normal distribution, {\tt dist}.  
+{\tt mean}와 {\tt var}는 {\tt data} 평균과 분산이다.
+정규분포 {\tt dist}로 데이터 분포를 근사한다.
 
-In this example, the data are not normally distributed, so this
-approximation is not very good.  But then we compute {\tt dist.Sum(n)
-  / n}, which is the sampling distribution of the mean of {\tt n}
-values.  Even if the data are not normally distributed, the sampling
-distribution of the mean is, by the Central Limit Theorem.
-\index{Central Limit Theorem}
+이 예제애서 데이터는 정규분포되어 있지 않다. 그래서 이러한 근사가 그다지 좋지 않다. 하지만 그리고 나서 {\tt dist.Sum(n) / n}을 계산하는데 {\tt n}개 값 평균의 표집분포다. 데이터가 정규분포되어 있지 않지만, 평균 표집분포는 중심극한정리에 의해서 정규분포된다.
+\index{중심극한정리 (Central Limit Theorem)}
 \index{CLT}
 
-Next, we compute the sampling distribution of the difference
-in the means.  The {\tt Normal} class knows how to perform
-subtraction using Equation 2:
+다음, 평균에 차이 표집분포를 계산한다.
+{\tt Normal} 클래스는 방정식 2를 사용해서 뺄셈을 어떻게 수행하는지 알고 있다.
 \index{Normal}
 
 \begin{verbatim}
@@ -547,78 +450,62 @@ subtraction using Equation 2:
                       self.sigma2 + other.sigma2)
 \end{verbatim}
 
-So we can compute the sampling distribution of the difference like this:
+그래서, 다음과 같이 차이 표집분포를 계산할 수 있다.
 
 \begin{verbatim}
 >>> dist = dist1 - dist2
 N(0, 0.0032)
 \end{verbatim}
 
-The mean is 0, which makes sense because we expect two samples from
-the same distribution to have the same mean, on average.  The variance
-of the sampling distribution is 0.0032.
-\index{sampling distribution}
+평균은 0 인데, 일리가 있다. 왜냐하면 평균적으로 동일 분포에서 추출된 두 표본은 같은 평균을 갖을 것으로 예상하기 때문이다. 표집분포 분산은 0.0032가 된다.
+\index{표집분포 (sampling distribution)}
 
-{\tt Normal} provides {\tt Prob}, which evaluates the normal CDF.
-We can use {\tt Prob} to compute the probability of a
-difference as large as {\tt delta} under the null hypothesis:
-\index{null hypothesis}
+{\tt Normal} 클래스는 {\tt Prob}메쏘드를 제공하는데 정규분포 CDF를 평가한다. {\tt Prob}를 사용해서 귀무가설 아래에서 차이 확률을 {\tt delta} 만큼 계산할 수 있다.
+\index{귀무가설 (null hypothesis)}
 
 \begin{verbatim}
 >>> 1 - dist.Prob(delta)
 0.084
 \end{verbatim}
 
-Which means that the p-value for a one-sided test is 0.84.  For
-a two-sided test we would also compute
-\index{p-value}
-\index{one-sided test}
-\index{two-sided test}
+의미하는 바는 단측검정에 대한 p-값이 0.084다. 양측검정에 대해서 또한 다음과 같이 계산한다.
+\index{p-값 (p-value)}
+\index{단측검정 (one-sided test)}
+\index{양측검정 (two-sided test)}
 
 \begin{verbatim}
 >>> dist.Prob(-delta)
 0.084
 \end{verbatim}
 
-Which is the same because the normal distribution is symmetric.
-The sum of the tails is 0.168, which is consistent with the estimate
-in Section~\ref{testdiff}, which was 0.17.
-\index{symmetric}
+정규분포는 대칭이기 때문에 동일하다. 꼬리 합은 0.168로, ~\ref{testdiff}절 추정값과 일치한다; 값이 0.17이였다.
+\index{대칭(symmetric)}
 
 
 
-\section{Correlation test}
+\section{상관검정 (Correlation test)}
 
-In Section~\ref{corrtest} we used a permutation test for the correlation
-between birth weight and mother's age, and found that it is
-statistically significant, with p-value less than 0.001.
-\index{p-value}
-\index{birth weight}
-\index{weight!birth}
-\index{permutation}
-  \index{significant} \index{statistically significant}
+~\ref{corrtest}절에서 출생 체중과 산모 연령 사이 상관을 계산한느데 ㅅ누열 검정(permutation test)을 사용했고, p-값이 0.001보다 작아 통계적으로 유의적이라는 것을 발견했다.
+\index{p-값 (p-value)}
+\index{출생체중 (birth weight)}
+\index{체중 (weight)!출생 (birth)}
+\index{순열 (permutation)}
+  \index{유의성 (significant)} 
+  \index{통계적 유의성 (statistically significant)}
 
-Now we can do the same thing analytically.  The method is based
-on this mathematical result: given two variables that are normally distributed
-and uncorrelated, if we generate a sample with size $n$,
-compute Pearson's correlation, $r$, and then compute the transformed
-correlation
+이제 해석적으로 같은 것을 수행할 수 있다.
+메쏘드는 다음 수학적 결과에 기반한다: 정규분포를 따르고 상관되지 않는 두변수가 주어지고, 만약 $n$개 크기 표본을 생성하고, 피어슨 상관 $r$을 계산하고 나서, 변환된 상관을 계산하면, 
 %
 \[ t = r \sqrt{\frac{n-2}{1-r^2}} \]
 %
-the distribution of $t$ is Student's t-distribution with parameter
-$n-2$.  The t-distribution is an analytic distribution; the CDF can
-be computed efficiently using gamma functions.
-\index{Pearson coefficient of correlation}
-\index{correlation}
+$t$분포는 모수 $n-2$을 갖는 스튜던트 t-분포다.
+t-분포는 해석적 분포다; CDF는 감마 함수를 사용해서 효율적으로 계산될 수 있다.
+\index{피어슨 상관계수 (Pearson coefficient of correlation)}
+\index{상관 (correlation)}
 
-We can use this result to compute the sampling distribution of
-correlation under the null hypothesis; that is, if we generate
-uncorrelated sequences of normal values, what is the distribution of
-their correlation?  {\tt StudentCdf} takes the sample size, {\tt n}, and
-returns the sampling distribution of correlation:
-\index{null hypothesis}
-\index{sampling distribution}
+이 결과를 사용해서 귀무가설 아래에서 상관 표집분포를 계산할 수 있다; 즉, 만약 상관되지 않은 정규분포 값 시퀀스를 생성한다면, 두 시퀀스 상관 분포는 무엇일까요? {\tt StudentCdf}가 표본크기 {\tt n}을 인자로 받아 상관 표집분포를 반환한다.
+\index{귀무가설 (null hypothesis)}
+\index{표집분포 (sampling distribution)}
 
 \begin{verbatim}
 def StudentCdf(n):
@@ -628,95 +515,73 @@ def StudentCdf(n):
     return thinkstats2.Cdf(rs, ps)
 \end{verbatim}
 
-{\tt ts} is a NumPy array of values for $t$, the transformed
-correlation.  {\tt ps} contains the corresponding probabilities,
-computed using the CDF of the Student's t-distribution implemented in
-SciPy.  The parameter of the t-distribution, {\tt df}, stands for
-``degrees of freedom.''  I won't explain that term, but you can read
-about it at
-\url{http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)}.
-\index{NumPy}
+{\tt ts}는 $t$에 대한 값 넘파이(NumPy) 배열, 변환 상관이다.
+{\tt ps}는 대응되는 확률을 담고 있는데, SciPy로 구현된 스튜던트 t-분포 CDF를 사용해서 계산된다. t-분포 모수, {\tt df}는 ``자유도 (degrees of freedom)''의 두문자(acronym)다. 이 용어를 설명하지는 않지만, 웹사이트에서 자세한 내용 참조한다. \url{http://en.wikipedia.org/wiki/Degrees_of_freedom_(statistics)}.
+\index{넘파이 (NumPy)}
 \index{SciPy}
-\index{Student's t-distribution}
-\index{distribution!Student's t}
-\index{degrees of freedom}
+\index{스튜던트 t-분포 (Student's t-distribution)}
+\index{분포 (distribution)!스튜던트 t (Student's t)}
+\index{자유도 (degrees of freedom)}
 
 \begin{figure}
 % normal.py
-\centerline{\includegraphics[height=2.5in]{figs/normal4.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/normal4.pdf}}
 \caption{Sampling distribution of correlations for uncorrelated
 normal variables.}
 \label{normal4}
 \end{figure}
 
-To get from {\tt ts} to the correlation coefficients, {\tt rs},
-we apply the inverse transform,
+{\tt ts}로부터 상관계수 {\tt rs}를 얻기 위해서, 역변환을 적용한다.
 %
 \[ r = t / \sqrt{n - 2 + t^2} \]
 %
-The result is the sampling distribution of $r$ under the null hypothesis.
-Figure~\ref{normal4} shows this distribution along with the distribution
-we generated in Section~\ref{corrtest} by resampling.  They are nearly
-identical.  Although the actual distributions are not normal, 
-Pearson's coefficient of correlation is based on sample means
-and variances.  By the Central Limit Theorem, these moment-based
-statistics are normally distributed even if the data are not.
-\index{Central Limit Theorem}
-\index{CLT}
-\index{null hypothesis}
-\index{resampling}
+결과는 귀무가설 아래에서 $r$의 표집분포가 된다.
+그림~\ref{normal4}에 재표본추출로 ~\ref{corrtest}절에서 생성한 분포를 따라 이 분포를 함께 보여준다.
+두 분포가 거의 동일(identical)하다. 실제 분포가 정규분포는 아니지만, 피어슨 상관계수는 표본 평균과 분산에 기반한다. 중심극한정리에 의해서, 설사 데이터는 그렇지 않지만, 적률기반 통계량은 정규분포한다.
 
-From Figure~\ref{normal4}, we can see that the
-observed correlation, 0.07, is unlikely to occur if the variables
-are actually uncorrelated.
-Using the analytic distribution, we can compute just how unlikely:
-\index{analytic distribution}
+\index{중심극한정리 (Central Limit Theorem)}
+\index{CLT}
+\index{귀무가설 (null hypothesis)}
+\index{재표본추출 (resampling)}
+
+그림 ~\ref{normal4}로부터, 만약 변수가 실제로 상관되지 않는다면, 관측 상관 0.07은 일어날 것 같지 않다는 것을 볼 수 있다. 해석 분포를 사용해서, 얼마나 그럴것 같지 않은지를 계산할 수 있다.
+\index{해석 분포 (analytic distribution)}
 
 \begin{verbatim}
     t = r * math.sqrt((n-2) / (1-r))
     p_value = 1 - scipy.stats.t.cdf(t, df=n-2)
 \end{verbatim}
 
-We compute the value of {\tt t} that corresponds to {\tt r=0.07}, and
-then evaluate the t-distribution at {\tt t}.  The result is {\tt
-  6.4e-12}.  This example demonstrates an advantage of the analytic
-method: we can compute very small p-values.  But in practice it
-usually doesn't matter.
+{\tt r=0.07}에 상응하는 {\tt t} 값을 계산한다. 그리고 나서 {\tt t}에 t-분포를 평가한다. 결과는 {\tt 6.4e-12}가 나온다.
+이 예제는 해석적 방법의 장점을 시연한다: 매우 작은 p-값을 계산할 수 있다. 하지만, 실무에서 보통 문제가 되는 않는다.
 \index{SciPy}
-\index{p-value}
+\index{p-값 (p-value)}
 
 
-\section{Chi-squared test}
+\section{카이제곱 검정 (Chi-squared test)}
 
-In Section~\ref{casino2} we used the chi-squared statistic to
-test whether a die is crooked.  The chi-squared statistic measures
-the total normalized deviation from the expected values in a table:
+~\ref{casino2}절에서 카이제곱 통계량을 사용해서 주사위가 비뚤었는지 검정했다. 카이제곱 통계량은 표(table)에 기대값과 정규화된 총 편차를 측정한다:
 %
 \[ \goodchi^2 = \sum_i \frac{(O_i - E_i)^2}{E_i} \]
 %
-One reason the chi-squared statistic is widely used is that
-its sampling distribution under the null hypothesis is analytic;
-by a remarkable coincidence\footnote{Not really.}, it is called
-the chi-squared distribution.  Like the t-distribution, the
-chi-squared CDF can be computed efficiently using gamma functions.
-\index{deviation}
-\index{null hypothesis}
-\index{sampling distribution}
-\index{chi-squared test}
-\index{chi-squared distribution}
-\index{distribution!chi-squared}
+카이제곱 통계량이 널리 사용되는 이유는 귀무가설 아래에서 표집분포가 해석적(analytic)이기 때문이다; 놀라운 우연의 일치\footnote{정말.(Not really.)}로, 카이제곱 분포로 불린다.
+t-분포처럼 카이제곱 CDF는 감마 함수를 사용해서 효율적으로 계산될 수 있다.
+\index{편차 (deviation)}
+\index{귀무가설 (null hypothesis)}
+\index{표집분포 (sampling distribution)}
+\index{카이제곱 검정 (chi-squared test)}
+\index{카이제곱 분포 (chi-squared distribution)}
+\index{분포 (distribution)!카이제곱 (chi-squared)}
 
 \begin{figure}
 % normal.py
-\centerline{\includegraphics[height=2.5in]{figs/normal5.pdf}}
+%\centerline{\includegraphics[height=2.5in]{figs/normal5.pdf}}
 \caption{Sampling distribution of chi-squared statistics for
 a fair six-sided die.}
 \label{normal5}
 \end{figure}
 
-SciPy provides an implementation of the chi-squared distribution,
-which we use to compute the sampling distribution of the
-chi-squared statistic:
+SciPy는 카이제곱 분포 기능을 제공한다. 이것을 사용해서 카이제곱 통계량 표집분포를 계산한다.
 \index{SciPy}
 
 \begin{verbatim}
@@ -726,95 +591,67 @@ def ChiSquaredCdf(n):
     return thinkstats2.Cdf(xs, ps)
 \end{verbatim}
 
-Figure~\ref{normal5} shows the analytic result along with the
-distribution we got by resampling.  They are very similar,
-especially in the tail, which is the part we usually care most
-about.
-\index{resampling}
-\index{tail}
+그림~\ref{normal5}에 재표본추출로 얻은 분포와 함께 해석적 결과가 함께 나와 있다. 둘다 모두 매우 비슷한데, 특히 꼬리부분에 그렇다. 꼬리부분은 통상 가장 관심을 두는 부분이다.
+\index{재표본추출 (resampling)}
+\index{꼬리 (tail)}
 
-We can use this distribution to compute the p-value of the
-observed test statistic, {\tt chi2}:
-\index{test statistic}
-\index{p-value}
+이분포를 사용해서 관측 검정 통계량, {\tt chi2}의 p-값을 계산할 수 있다:
+\index{검정 통계량 (test statistic)}
+\index{p-값 (p-value)}
 
 \begin{verbatim}
     p_value = 1 - scipy.stats.chi2.cdf(chi2, df=n-1)
 \end{verbatim}
 
-The result is 0.041, which is consistent with the result
-from Section~\ref{casino2}.
+결과는 0.041로 ~\ref{casino2}절 결과와 일치한다.
 
-The parameter of the chi-squared distribution is ``degrees of
-freedom'' again.  In this case the correct parameter is {\tt n-1},
-where {\tt n} is the size of the table, 6.  Choosing this parameter
-can be tricky; to be honest, I am never confident that I have it
-right until I generate something like Figure~\ref{normal5} to compare
-the analytic results to the resampling results.
-\index{degrees of freedom}
+카이제곱 분포 모수는 다시 ``자유도(degrees of freedom)''가 된다.
+이 경우 맞는 모수는 {\tt n-1}ㅇ 되는데, 여기서 {\tt n}은 표(table) 크기로 6이다.
+이 모수를 선택한 것이 다소 까다로울 수 있다; 정직하게 해석결과와 재표본추출 결과를 비교하기 위해서, 그림~\ref{normal5}같은 것을 생성할 때가지 저자는 그것이 맞는지 확신할 수 없었다.
+\index{자유도 (degrees of freedom)}
 
 
-\section{Discussion}
+\section{토의 (Discussion)}
 
-This book focuses on computational methods like resampling and
-permutation.  These methods have several advantages over analysis:
-\index{resampling}
-\index{permutation}
-\index{computational methods}
+이책은 재표본추출과 순열 같은 수치해석적 방법(computational method)에 집중했다. 이 방법이 해석적인 방법에 대해서 몇가지 장점이 있다.
+
+\index{재표본추출 (resampling0}
+\index{순열 (permutation)}
+\index{수치해석적 방법 (computational methods)}
 
 \begin{itemize}
 
-\item They are easier to explain and understand.  For example, one of
-  the most difficult topics in an introductory statistics class is
-  hypothesis testing.  Many students don't really understand what
-  p-values are.  I think the approach I presented in
-  Chapter~\ref{testing}---simulating the null hypothesis and
-  computing test statistics---makes the fundamental idea clearer.
-\index{p-value}
-\index{null hypothesis}
+\item 수치해석적 방법이 설명하고 이해하기 더 쉽다. 예를 들어, 기초 통계에서 가장 어려운 주제가 가설검정이다. 많은 학생이 p-값이 무엇인지 정말 이해하지 못한다. ~\ref{testing}장에서 제시한 접근법---귀무가설을 모의시험하고 검정 통계량을 계산하는 것---이 근본개념을 좀더 명확하게 한다고 믿는다.
+\index{p-값 (p-value)}
+\index{귀무가설 (null hypothesis)}
 
-\item They are robust and versatile.  Analytic methods are often based
-  on assumptions that might not hold in practice.  Computational
-  methods require fewer assumptions, and can be adapted and extended
-  more easily.
-\index{robust}
+\item 수치해석적 방법이 강건하고 다목적이다. 해석적 방법은 실무에서 지지할 수 없는 가정에 종종 기반한다. 수치해석적 방법은 더 적은 가정을 요구하고 좀더 쉽게 확장과 개조를 할 수 있다.
+\index{강건성 (robust)}
 
-\item They are debuggable.  Analytic methods are often like a black
-  box: you plug in numbers and they spit out results.  But it's easy
-  to make subtle errors, hard to be confident that the results are
-  right, and hard to find the problem if they are not.  Computational
-  methods lend themselves to incremental development and testing,
-  which fosters confidence in the results.
-\index{debugging}
+\item 수치해석적 방법은 디버그(debuggable)할 수 있다. 해석적 방법은 종종 블랙박스다: 숫자를 집어 넣으면 결과가 튀어나온다. 하지만 미묘한 실수를 하기 쉽고, 결과가 맞는지 확신하기 어렵다. 그리고 만약 문제가 없다면 문제를 찾기가 어렵다. 수치해석적 방법은 점증 개발 및 테스트(incremental development and testing)를 할 수 있게 해서 결과에 신뢰감을 함양한다.
+\index{디버깅 (debugging)}
 
 \end{itemize}
 
-But there is one drawback: computational methods can be slow.  Taking
-into account these pros and cons, I recommend the following process:
+하지만, 한가지 단점이 있다: 수치해석적 방법은 느릴 수 있다.
+장점과 단점을 고려해서, 다음 과정(process)를 추천한다.
 
 \begin{enumerate}
 
-\item Use computational methods during exploration.  If you find a
-  satisfactory answer and the run time is acceptable, you can stop.
-\index{exploration}
+\item 탐색과정에서 수치해석적 방법을 사용하라. 만약 만족스러운 답을 찾고 실행시간이 수용가능하면, 멈출 수 있다.
+\index{탐색 (exploration)}
 
-\item If run time is not acceptable, look for opportunities to
-  optimize.  Using analytic methods is one of several methods of
-  optimization.
+\item 만약 실행시간을 받아들일 수 없다면, 최적화할 기회를 찾아봐라. 해석적 방법을 사용하는 것은 몇가지 최적화 방법중 하나다.
 
-\item If replacing a computational method with an analytic method is
-  appropriate, use the computational method as a basis of comparison, 
-  providing mutual validation between the computational and
-  analytic results.
-\index{model}
+\item 만약 수치해석적 방법을 해석적 방법으로 바꾸는 것이 적절하다면, 수치해석적 방법을 비교 기반으로 사용하라. 왜냐하면 수치해석적 결과와 해석적 결과 사이에 상호 타당성 검증기능을 제공하기 때문이다.
+\index{모형 (model)}
 
 \end{enumerate}
 
-For the vast majority of problems I have worked on, I didn't have
-to go past Step 1.
+저자가 해결하려고 노력한 방대한 문제에 대해서, 1단계를 지나갈 필요는 없다.
 
 
-\section{Exercises}
+\section{연습 문제}
 
 A solution to these exercises is in \verb"chap14soln.py"
 
