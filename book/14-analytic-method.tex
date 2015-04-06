@@ -1,136 +1,103 @@
 
-\chapter{Analytic methods}
+\chapter{해석적 방법 (Analytic methods)}
 \label{analysis}
 
-This book has focused on computational methods like simulation and
-resampling, but some of the problems we solved have
-analytic solutions that can be much faster.
-\index{resampling}
-\index{analytic methods}
-\index{computational methods}
+이책은 모의시험이나 재표본추출같은 수치해석적 방법(computational methods)에 집중했지만, 해결한 문제중 일부는 훨씬더 빠르게 해결할 수 있는 해석적 해(analytic solution)를 가지고 있다.
+\index{재표본추출 (resampling)}
+\index{해석적 방법 (analytic methods)}
+\index{수치해석적 방법 (computational methods)}
 
-I present some of these methods in this chapter, and explain
-how they work.  At the end of the chapter, I make suggestions
-for integrating computational and analytic methods for exploratory
-data analysis.
+이번 장에서 해석적 방법 일부를 제시하고, 어떻게 동작하는지 설명한다. 이장말미에 탐색적 데이터 분석을 위해서 수치해석적 방법과 해석적 방법 통합에 대한 제언을 한다.
 
-The code in this chapter is in {\tt normal.py}.  For information
-about downloading and working with this code, see Section~\ref{code}.
+이번 장에서 사용되는 코드는 {\tt normal.py}에 있다.
+코드를 다운로드하고 작업하는 것에 대한 정보는 ~\ref{code}을 참조한다.
 
 
-\section{Normal distributions}
+\section{정규분포}
 \label{why_normal}
-\index{normal distribution}
-\index{distribution!normal}
-\index{Gaussian distribution}
-\index{distribution!Gaussian}
+\index{정규분포 (normal distribution)}
+\index{분포(distribution)!정규(normal)}
+\index{가우스 분포 (Gaussian distribution)}
+\index{분포 (distribution)!가우스 (Gaussian)}
 
-As a motivating example, let's review the problem from
-Section~\ref{gorilla}:
-\index{gorilla}
+동기부여를 위한 사례로, ~\ref{gorilla} 절에 있던 문제를 검토하자.
+\index{고릴라 (gorilla)}
 
 \begin{quotation}
-\noindent Suppose you are a scientist studying gorillas in a wildlife
-preserve.  Having weighed 9 gorillas, you find sample mean $\xbar=90$ kg and
-sample standard deviation, $S=7.5$ kg.  If you use $\xbar$ to estimate
-the population mean, what is the standard error of the estimate?
+\noindent 야생동물 보호구에서 고릴라를 연구하는 과학자가 있다고 가정하자. 고릴라 9마리 체중을 재서, 표본평균 $\xbar=90$ kg와 표본 표준편차 $S=7.5$ kg을 얻었다. 만약 $\xbar$를 모집단 평균으로 추정한다면, 추정값의 표준오차는 얼마나 될까?
 \end{quotation}
 
-To answer that question, we need the sampling
-distribution of $\xbar$.  In Section~\ref{gorilla} we approximated
-this distribution by simulating the experiment (weighing
-9 gorillas), computing $\xbar$ for each simulated experiment, and
-accumulating the distribution of estimates.
-\index{standard error}
-\index{standard deviation}
+이 질문에 대답하기 위해서, $\xbar$ 표집 분포가 필요하다. ~\ref{gorilla}절에서, (고릴라 9마리 체중을 재는) 실험을 모의시험함으로써 분포를 근사했고, 각 모의시험 실험에 대해서 $\xbar$를 계산하고, 추정값 분포를 축적했다.
+\index{표준오차 (standard error)}
+\index{표준편차 (standard deviation)}
 
-The result is an approximation of the sampling distribution.  Then we
-use the sampling distribution to compute standard errors and
-confidence intervals:
-\index{confidence interval}
-\index{sampling distribution}
+결과는 표집분포를 근사했다. 그리고 나서, 표집분포를 사용해서 표준오차와 신뢰구간을 계산했다.
+\index{신뢰구간 (confidence interval)}
+\index{표집분포 (sampling distribution)}
 
 \begin{enumerate}
 
-\item The standard deviation of the sampling distribution is the
-  standard error of the estimate; in the example, it is about
-  2.5 kg.
+\item 표집분포 표준편차는 추정값의 표준오차다; 이 경우 약 2.5 kg이 된다.
 
-\item The interval between the 5th and 95th percentile of the sampling
-  distribution is a 90\% confidence interval.  If we run the
-  experiment many times, we expect the estimate to fall in this
-  interval 90\% of the time.  In the example, the 90\% CI is
-  $(86, 94)$ kg.
+\item 5번째와 95번째 백분위수 표집분포 구간이 90\% 신뢰구간이 된다. 만약 실험을 많이 수행한다면, 추정값이 90\% 신뢰구간에 떨어질 것으로 예상한다. 이 경우 90\% CI는 $(86, 94)$ kg이 된다.
 
 \end{enumerate}
 
-Now we'll do the same calculation analytically.  We
-take advantage of the fact that the weights of adult female gorillas
-are roughly normally distributed.  Normal distributions have two
-properties that make them amenable for analysis: they are ``closed'' under
-linear transformation and addition.  To explain what that means, I
-need some notation.  \index{analysis}
-\index{linear transformation}
-\index{addition, closed under}
+이제 해석적으로 동일한 계산을 수행한다. 성인 여성 고릴라 체중이 대략 정규분포한다는 사실을 이용한다.
+정규분포는 분석을 용이하게 하는 성질을 두개 갖고 있다; 선형 변환과 덧셈에 ``닫혀(closed)''있다.
+이것이 의미하는 바를 설명하기 위해서, 약간의 표기가 필요하다. 
+\index{분석 (analysis)}
+\index{선형변환 (linear transformation)}
+\index{덧셈, 닫혀있다. (addition, closed under)}
 
-If the distribution of a quantity, $X$, is
-normal with parameters $\mu$ and $\sigma$, you can write
+어떤 양(quantity)의 분포 $X$가 모수 $\mu$와 $\sigma$을 갖는 정규분포라면, 다음과 같이 표현할 수 있다.
 %
 \[ X \sim \normal~(\mu, \sigma^{2})\]
 %
-where the symbol $\sim$ means ``is distributed'' and the script letter
-$\normal$ stands for ``normal.''
+여기서, 기호 $\sim$ 는 ``분포한다(is distributed)''를 의미하고, 스크립트 문자 $\normal$는 ``정규(normal)''를 나타낸다.
 
 %The other analytic distributions in this chapter are sometimes
 %written $\mathrm{Exponential}(\lambda)$, $\mathrm{Pareto}(x_m,
 %\alpha)$ and, for lognormal, $\mathrm{Log}-\normal~(\mu,
 %\sigma^2)$.
-
-A linear transformation of $X$ is something like $X' = a X + b$, where
-$a$ and $b$ are real numbers.\index{linear transformation}
-A family of distributions is closed under
-linear transformation if $X'$ is in the same family as $X$.  The normal
-distribution has this property; if $X \sim \normal~(\mu,
-\sigma^2)$,
+$X$의 선형변환은 $X' = a X + b$와 같은 것으로, 여기서 $a$와 $b$는 실수다.
+\index{선형변환 (linear transformation)}
+만약, $X'$이 $X$와 같은 모임(족, family)이면, 분포 모임이 선형변환에 닫혀있다. 정규분포는 이 성질을 갖고 있다; 만약 $X \sim \normal~(\mu,
+\sigma^2)$이면,
 %
 \[ X' \sim \normal~(a \mu + b, a^{2} \sigma^2) \tag*{(1)} \]
 %
-Normal distributions are also closed under addition.  
-If $Z = X + Y$ and
-$X \sim \normal~(\mu_{X}, \sigma_{X}^{2})$ and
-$Y \sim \normal~(\mu_{Y}, \sigma_{Y}^{2})$ then
+정규분포는 또한 덧셈에도 닫혀있다.
+만약 $Z = X + Y$ 이고, $X \sim \normal~(\mu_{X}, \sigma_{X}^{2})$, $Y \sim \normal~(\mu_{Y}, \sigma_{Y}^{2})$이면,
 %
 \[ Z \sim \normal~(\mu_X + \mu_Y, \sigma_X^2 + \sigma_Y^2)  \tag*{(2)}\]
 %
-In the special case $Z = X + X$, we have
+특별한 경우 $Z = X + X$이면, 다음을 만족한다.
 %
 \[ Z \sim \normal~(2 \mu_X, 2 \sigma_X^2) \]
 %
-and in general if we draw $n$ values of $X$ and add them up, we have
+그리고, 일반적으로 $X$에서 $n$개 값을 추출한다면, 다음을 갖게 된다.
 %
 \[ Z \sim \normal~(n \mu_X, n \sigma_X^2)  \tag*{(3)}\]
 
 
-\section{Sampling distributions}
+\section{표집분포}
 
-Now we have everything we need to compute the sampling distribution of
-$\xbar$.  Remember that we compute $\xbar$ by weighing $n$ gorillas,
-adding up the total weight, and dividing by $n$.
-\index{sampling distribution}
-\index{gorilla}
-\index{weight}
+이제 $\xbar$ 표집분포를 계산하는데 필요한 모든 것을 갖췄다. $\xbar$를 계산하는데 $n$개 고릴라 체중을 재고, 더해서 전체 체중값을 얻고 나서, $n$으로 나눈다는 것을 기억하라.
+\index{표집분포 (sampling distribution)}
+\index{고릴라 (gorilla)}
+\index{체중 (weight)}
 
-Assume that the distribution of gorilla weights, $X$, is
-approximately normal:
+고릴라 체중 $X$ 분포가 근사적으로 정규분포라고 가정한다.
 %
 \[ X \sim \normal~(\mu, \sigma^2)\]
 %
-If we weigh $n$ gorillas, the total weight, $Y$, is distributed
+만약 $n$개 고릴라 체중을 잰다면, 전체체중 $Y$는 3번 방정식을 사용해서 다음과 같이 분포한다.
 %
 \[ Y \sim \normal~(n \mu, n \sigma^2) \]
 %
-using Equation 3.  And if we divide by $n$, the sample mean,
-$Z$, is distributed
+
+그리고 만약 $n$으로 나눈다면, $a = 1/n$으로 1번 방정식을 사용해서 표본평균 $Z$는 다음과 같이 분포한다.
 %
 \[ Z \sim \normal~(\mu, \sigma^2/n) \]
 %
